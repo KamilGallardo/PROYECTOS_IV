@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligent Boxing</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #121418;
+            --card-bg: #1e2126;
+            --text-color: #ffffff;
+            --accent-yellow: #e4e61c;
+            --icon-grey: #3f454f;
+            --border-radius: 20px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 0;
+        }
+        .header-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--card-bg);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--icon-grey);
+        }
+        header h1 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .tabs-container {
+            display: flex;
+            background-color: var(--card-bg);
+            border-radius: 30px;
+            padding: 5px;
+            gap: 3px;
+        }
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            color: #888;
+            padding: 10px 5px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .tab-btn.active {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .view-content {
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .view-content.active {
+            display: flex;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+        }
+        h2.section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--accent-yellow);
+        }
+
+        .builder-box {
+            border: 1px dashed var(--accent-yellow);
+            background-color: rgba(228, 230, 28, 0.03);
+        }
+        .btn-toggle-builder {
+            width: 100%;
+            padding: 10px;
+            background-color: #2d3139;
+            color: white;
+            border: 1px solid var(--icon-grey);
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+        .btn-toggle-builder.active {
+            background-color: var(--accent-yellow);
+            color: black;
+            border-color: var(--accent-yellow);
+        }
+        .slots-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .circuit-slot {
+            background-color: #121418;
+            border: 1px solid #3f454f;
+            border-radius: 10px;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+            color: #777;
+            text-transform: uppercase;
+        }
+        .circuit-slot.filled {
+            border-color: var(--accent-yellow);
+            color: white;
+            font-weight: bold;
+        }
+
+        .combo-card {
+            display: flex;
+            align-items: center;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            gap: 15px;
+            border: 2px solid transparent;
+            transition: border 0.2s ease;
+            cursor: pointer;
+        }
+        .combo-card.selected {
+            border: 2px solid var(--accent-yellow);
+        }
+        .combo-img-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: var(--icon-grey);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+        }
+        .combo-info { flex: 1; }
+        .combo-title { font-size: 15px; font-weight: bold; margin-bottom: 4px; }
+        .combo-sequence { font-size: 12px; color: var(--accent-yellow); font-weight: 500; }
+        .combo-action-btn {
+            width: 35px;
+            height: 35px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .flatpickr-calendar { background: transparent !important; box-shadow: none !important; border: none !important; color: white !important; width: 100% !important; }
+        .flatpickr-day.selected { background: var(--accent-yellow) !important; color: black !important; }
+        .flatpickr-day { color: white !important; }
+        
+        .results-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .result-item { text-align: center; }
+        .result-value { font-size: 36px; font-weight: bold; }
+        .result-unit { font-size: 14px; color: #888; }
+        
+        .max-force-card { background-color: var(--accent-yellow); color: black; border-radius: var(--border-radius); padding: 15px; display: flex; flex-direction: column; justify-content: center; }
+        .max-force-card .result-value { color: black; }
+
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .btn { padding: 15px; border: none; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; }
+        .btn-start { background-color: #2ecc71; color: white; }
+        .btn-stop { background-color: #e74c3c; color: white; }
+        .selected-status { font-size: 14px; color: #aaa; margin-bottom: 10px; font-style: italic; }
+
+        .history-list { max-height: 220px; overflow-y: auto; margin-top: 10px; padding-right: 5px; }
+        .history-item { display: flex; justify-content: space-between; align-items: center; font-size: 12px; padding: 10px 0; border-bottom: 1px solid #2d3139; }
+        .history-item:last-child { border: none; }
+        .history-tag { color: var(--accent-yellow); font-size: 14px; font-weight: bold; }
+        
+        .score-pill {
+            background-color: #3f454f;
+            color: #fff;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-top: 4px;
+            display: inline-block;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 180px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    
+    <header>
+        <div class="header-icon">&lt;</div>
+        <h1>Session</h1>
+        <div class="header-icon">⚙️</div>
+    </header>
+
+    <div class="tabs-container">
+        <button id="btn-tab-rendimiento" class="tab-btn active" onclick="switchTab('rendimiento')">Performance</button>
+        <button id="btn-tab-combos" class="tab-btn" onclick="switchTab('combos')">Combos</button>
+        <button id="btn-tab-historial" class="tab-btn" onclick="switchTab('historial')">History</button>
+    </div>
+
+    <div id="view-rendimiento" class="view-content active">
+        <div class="card">
+            <h2 class="section-title">Current Strike</h2>
+            <div class="selected-status" id="currentComboLabel">Selected Routine: None (Select from the tabs)</div>
+            
+            <div class="results-container">
+                <div class="result-item">
+                    <div class="result-unit">Reaction Time</div>
+                    <div class="result-value" id="mqttTime">0.00</div>
+                    <div class="result-unit">Seconds</div>
+                </div>
+                <div class="max-force-card result-item">
+                    <div class="result-unit" style="color: rgba(0,0,0,0.6); font-weight:bold;">Combo Score</div>
+                    <div class="result-value" id="mqttScore">0</div>
+                    <div class="result-unit" style="color: rgba(0,0,0,0.6);">Points</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-start" onclick="startSession()">Start</button>
+            <button class="btn btn-stop" onclick="stopSession()">Stop / Save</button>
+        </div>
+    </div>
+
+    <div id="view-combos" class="view-content">
+        <div class="card builder-box">
+            <h2 class="section-title" style="margin-bottom:8px;">Custom Circuit Builder</h2>
+            <button class="btn-toggle-builder" id="builderToggleBtn" onclick="toggleBuilderMode()">➕ Create Custom Circuit</button>
+            <div class="slots-container">
+                <div class="circuit-slot" id="slot-0">Slot 1</div>
+                <div class="circuit-slot" id="slot-1">Slot 2</div>
+                <div class="circuit-slot" id="slot-2">Slot 3</div>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button onclick="clearCustomCircuit()" style="flex:1; padding:8px; border:none; background:#444; color:white; border-radius:8px; font-weight:bold; cursor:pointer;">Clear</button>
+                <button id="btnLoadCircuit" onclick="loadCustomCircuit()" style="flex:2; padding:8px; border:none; background:var(--accent-yellow); color:black; border-radius:8px; font-weight:bold; cursor:pointer; display:none;">Load & Play Circuit</button>
+            </div>
+        </div>
+
+        <h2 class="section-title" style="margin-left: 5px; margin-top:5px;">Select your routine</h2>
+        
+        <div class="combo-card" id="card-combo-xos" onclick="handleComboSelection('XOS', 'Left-Center-Right', 'card-combo-xos')">
+            <div class="combo-img-placeholder">🥊</div>
+            <div class="combo-info">
+                <div class="combo-title">Left - Center - Right</div>
+                <div class="combo-sequence">Sequence: X - O - S</div>
+            </div>
+            <button class="combo-action-btn">&gt;</button>
+        </div>
+
+        <div class="combo-card" id="card-combo-xso" onclick="handleComboSelection('XSO', 'Left-Right-Center', 'card-combo-xso')">
+            <div class="combo-img-placeholder">🥊</div>
+            <div class="combo-info">
+                <div class="combo-title">Left - Right - Center</div>
+                <div class="combo-sequence">Sequence: X - S - O</div>
+            </div>
+            <button class="combo-action-btn">&gt;</button>
+        </div>
+
+        <div class="combo-card" id="card-combo-sox" onclick="handleComboSelection('SOX', 'Right-Center-Left', 'card-combo-sox')">
+            <div class="combo-img-placeholder">🥊</div>
+            <div class="combo-info">
+                <div class="combo-title">Right - Center - Left</div>
+                <div class="combo-sequence">Sequence: S - O - X</div>
+            </div>
+            <button class="combo-action-btn">&gt;</button>
+        </div>
+
+        <div class="combo-card" id="card-combo-sxs" onclick="handleComboSelection('SXS', 'Right-Left-Right', 'card-combo-sxs')">
+            <div class="combo-img-placeholder">🥊</div>
+            <div class="combo-info">
+                <div class="combo-title">Right - Left - Right</div>
+                <div class="combo-sequence">Sequence: S - X - S</div>
+            </div>
+            <button class="combo-action-btn">&gt;</button>
+        </div>
+
+        <div class="combo-card" id="card-combo-osx" onclick="handleComboSelection('OSX', 'Center-Right-Left', 'card-combo-osx')">
+            <div class="combo-img-placeholder">🥊</div>
+            <div class="combo-info">
+                <div class="combo-title">Center - Right - Left</div>
+                <div class="combo-sequence">Sequence: O - S - X</div>
+            </div>
+            <button class="combo-action-btn">&gt;</button>
+        </div>
+
+        <div class="combo-card" id="card-combo-oso" onclick="handleComboSelection('OSO', 'Center-Right-Center', 'card-combo-oso')">
+            <div class="combo-img-placeholder">🥊</div>
+            <div class="combo-info">
+                <div class="combo-title">Center - Right - Center</div>
+                <div class="combo-sequence">Sequence: O - S - O</div>
+            </div>
+            <button class="combo-action-btn">&gt;</button>
+        </div>
+
+        <div class="combo-card" id="card-combo-xsx" onclick="handleComboSelection('XSX', 'Left-Right-Left', 'card-combo-xsx')">
+            <div class="combo-img-placeholder">🥊</div>
+            <div class="combo-info">
+                <div class="combo-title">Left - Right - Left</div>
+                <div class="combo-sequence">Sequence: X - S - X</div>
+            </div>
+            <button class="combo-action-btn">&gt;</button>
+        </div>
+
+        <div class="combo-card" id="card-combo-sos" onclick="handleComboSelection('SOS', 'Right-Center-Right', 'card-combo-sos')">
+            <div class="combo-img-placeholder">🥊</div>
+            <div class="combo-info">
+                <div class="combo-title">Right - Center - Right</div>
+                <div class="combo-sequence">Sequence: S - O - S</div>
+            </div>
+            <button class="combo-action-btn">&gt;</button>
+        </div>
+
+        <div class="combo-card" id="card-combo-oxo" onclick="handleComboSelection('OXO', 'Center-Left-Center', 'card-combo-oxo')">
+            <div class="combo-img-placeholder">🥊</div>
+            <div class="combo-info">
+                <div class="combo-title">Center - Left - Center</div>
+                <div class="combo-sequence">Sequence: O - X - O</div>
+            </div>
+            <button class="combo-action-btn">&gt;</button>
+        </div>
+    </div>
+
+    <div id="view-historial" class="view-content">
+        <div class="card">
+            <h2 class="section-title">Long-Term Progress</h2>
+            <div style="font-size: 11px; color: #888; margin-bottom: 5px; text-align: center;">Average Session Reaction Time (s)</div>
+            <div class="chart-container">
+                <canvas id="progressChart"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 class="section-title">Session History</h2>
+            <input type="text" id="calendarInline" style="display:none;">
+            <div class="history-list" id="storageHistory"></div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    // Variables Globales
+    let comboQueue = [];
+    let currentQueueIndex = 0;
+    let currentRoutineName = "";
+    let isPlaylistMode = false;
+    let builderModeActive = false;
+    let selectedCustomCombos = [];
+    let progressChart = null; 
+
+    // Session tracking variables
+    let sessionActive = false;
+    let currentSessionTimes = [];
+    let currentSessionScores = [];
+
+    // TABS LOGIC
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.view-content').forEach(view => view.classList.remove('active'));
+
+        document.getElementById(`btn-tab-${tabName}`).classList.add('active');
+        document.getElementById(`view-${tabName}`).classList.add('active');
+
+        if(tabName === 'historial') {
+            updateHistoryUI();
+        }
+    }
+
+    // COMBO SELECTION & BUILDER LOGIC
+    function handleComboSelection(value, name, cardId) {
+        if (builderModeActive) {
+            if (selectedCustomCombos.length >= 3) {
+                alert("Maximum of 3 combos reached for the custom circuit!");
+                return;
+            }
+            selectedCustomCombos.push({ value: value, name: name });
+            updateBuilderSlotsUI();
+        } else {
+            currentRoutineName = name;
+            comboQueue = [value];
+            isPlaylistMode = false;
+            currentQueueIndex = 0;
+
+            document.querySelectorAll('.combo-card').forEach(card => card.classList.remove('selected'));
+            document.getElementById(cardId).classList.add('selected');
+            
+            document.getElementById('currentComboLabel').innerText = `Active: ${name} (${value})`;
+            setTimeout(() => switchTab('rendimiento'), 250);
+        }
+    }
+
+    function toggleBuilderMode() {
+        builderModeActive = !builderModeActive;
+        const btn = document.getElementById('builderToggleBtn');
+        if (builderModeActive) {
+            btn.innerText = "Selecting Combos... (Tap below)";
+            btn.classList.add('active');
+            document.querySelectorAll('.combo-card').forEach(card => card.classList.remove('selected'));
+        } else {
+            btn.innerText = "➕ Create Custom Circuit";
+            btn.classList.remove('active');
+        }
+    }
+
+    function clearCustomCircuit() {
+        selectedCustomCombos = [];
+        updateBuilderSlotsUI();
+    }
+
+    function updateBuilderSlotsUI() {
+        for (let i = 0; i < 3; i++) {
+            const slot = document.getElementById(`slot-${i}`);
+            if (selectedCustomCombos[i]) {
+                slot.innerText = selectedCustomCombos[i].name + ` (${selectedCustomCombos[i].value})`;
+                slot.classList.add('filled');
+            } else {
+                slot.innerText = `Slot ${i+1}`;
+                slot.classList.remove('filled');
+            }
+        }
+        document.getElementById('btnLoadCircuit').style.display = selectedCustomCombos.length > 0 ? "block" : "none";
+    }
+
+    function loadCustomCircuit() {
+        if (selectedCustomCombos.length === 0) return;
+        
+        comboQueue = selectedCustomCombos.map(item => item.value);
+        currentRoutineName = "Custom Circuit";
+        isPlaylistMode = true;
+        currentQueueIndex = 0;
+
+        document.getElementById('currentComboLabel').innerText = `Active: Custom Circuit [${comboQueue.length} Stages]`;
+        
+        builderModeActive = false;
+        const btn = document.getElementById('builderToggleBtn');
+        btn.innerText = "➕ Create Custom Circuit";
+        btn.classList.remove('active');
+
+        switchTab('rendimiento');
+    }
+
+    flatpickr("#calendarInline", { inline: true, defaultDate: "today" });
+    
+    // MQTT CONFIGURATION
+    const MQTT_HOST = "broker.emqx.io"; 
+    const MQTT_PORT = 8084; 
+    const MQTT_CLIENT_ID = "boxing_interface_" + parseInt(Math.random() * 1000, 10);
+    const TOPIC_KAMILOVSKY = "KAMILOVSKY"; 
+
+    let client = new Paho.MQTT.Client(MQTT_HOST, MQTT_PORT, MQTT_CLIENT_ID);
+    client.onConnectionLost = onConnectionLost;
+    client.onMessageArrived = onMessageArrived;
+
+    const connectOptions = {
+        useSSL: true, 
+        timeout: 5,
+        keepAliveInterval: 30,
+        onSuccess: onConnect,
+        onFailure: (err) => console.error("MQTT Connection error: ", err.errorMessage)
+    };
+
+    client.connect(connectOptions);
+
+    function onConnect() {
+        console.log("Connected to broker via WSS!");
+        client.subscribe(TOPIC_KAMILOVSKY);
+    }
+
+    function onConnectionLost(responseObject) {
+        if (responseObject.errorCode !== 0) {
+            setTimeout(() => client.connect(connectOptions), 3000);
+        }
+    }
+
+    // DATA RECEPTION
+    function onMessageArrived(message) {
+        let payload = message.payloadString.trim();
+        if (isNaN(payload)) return; 
+
+        let promedioMilisegundos = parseInt(payload);
+        if (!isNaN(promedioMilisegundos)) {
+            let promedioSegundos = promedioMilisegundos / 1000;
+            let comboScore = Math.max(0, Math.round(1000 - (promedioSegundos * 200)));
+
+            // Update live view
+            document.getElementById('mqttTime').innerText = promedioSegundos.toFixed(2);
+            document.getElementById('mqttScore').innerText = comboScore;
+            
+            document.getElementById('mqttTime').style.color = "var(--accent-yellow)";
+            setTimeout(() => { document.getElementById('mqttTime').style.color = "white"; }, 600);
+
+            // Save data temporarily to active session
+            if (sessionActive) {
+                currentSessionTimes.push(promedioSegundos);
+                currentSessionScores.push(comboScore);
+            }
+
+            // Continue circuit if in playlist mode
+            if (isPlaylistMode) {
+                currentQueueIndex++;
+                if (currentQueueIndex < comboQueue.length) {
+                    setTimeout(() => {
+                        sendMqttCommand(comboQueue[currentQueueIndex]);
+                    }, 1200);
+                } else {
+                    document.getElementById('currentComboLabel').innerText = "🎉 Custom Circuit Finished!";
+                    isPlaylistMode = false;
+                    currentQueueIndex = 0;
+                    finalizeSession(); // Auto-save when circuit ends
+                }
+            }
+        }
+    }
+
+    function sendMqttCommand(payloadStr) {
+        let message = new Paho.MQTT.Message(payloadStr);
+        message.destinationName = TOPIC_KAMILOVSKY;
+        client.send(message);
+    }
+
+    function startSession() {
+        if (comboQueue.length === 0) {
+            alert("⚠️ Choose a single combo or load a Custom Circuit first.");
+            return;
+        }
+        
+        sessionActive = true;
+        currentSessionTimes = [];
+        currentSessionScores = [];
+        currentQueueIndex = 0; 
+        
+        sendMqttCommand(comboQueue[0]);
+    }
+
+    function stopSession() {
+        sendMqttCommand("PARAR");
+        document.getElementById('currentComboLabel').innerText = "Session Stopped. Saving to history...";
+        isPlaylistMode = false;
+        currentQueueIndex = 0;
+        
+        finalizeSession();
+    }
+
+    // Calculate averages and save session
+    function finalizeSession() {
+        if (!sessionActive || currentSessionTimes.length === 0) {
+            sessionActive = false;
+            return; 
+        }
+
+        let totalTime = currentSessionTimes.reduce((a, b) => a + b, 0);
+        let avgTime = (totalTime / currentSessionTimes.length).toFixed(2);
+        
+        let totalScore = currentSessionScores.reduce((a, b) => a + b, 0);
+
+        saveSessionToHistory(currentRoutineName, avgTime, totalScore, currentSessionTimes.length);
+        sessionActive = false;
+    }
+
+    // LOCALSTORAGE & CHART UI
+    function saveSessionToHistory(routine, avgTime, totalScore, punchCount) {
+        let currentData = JSON.parse(localStorage.getItem("boxing_sessions")) || [];
+        let now = new Date();
+        let dateStamp = now.toLocaleDateString([], {month: 'short', day: 'numeric'});
+        let timeStamp = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        
+        let newRecord = {
+            routine: routine,
+            avgTime: avgTime,
+            score: totalScore,
+            strikes: punchCount,
+            dateLabel: `${dateStamp} ${timeStamp}`
+        };
+        
+        currentData.unshift(newRecord); 
+        if (currentData.length > 30) currentData.pop(); // Keep last 30 sessions
+        
+        localStorage.setItem("boxing_sessions", JSON.stringify(currentData));
+        updateHistoryUI();
+    }
+
+    function updateHistoryUI() {
+        let currentData = JSON.parse(localStorage.getItem("boxing_sessions")) || [];
+        let container = document.getElementById("storageHistory");
+        
+        if (currentData.length === 0) {
+            container.innerHTML = `<div style="color:#666; font-size:12px; text-align:center; padding:10px;">No complete sessions recorded yet. Start a session and press Stop to save.</div>`;
+            return;
+        }
+        
+        // Render session list
+        container.innerHTML = currentData.map(item => `
+            <div class="history-item">
+                <div style="display:flex; flex-direction:column; gap:2px;">
+                    <span>[${item.dateLabel}] <strong>${item.routine}</strong></span>
+                    <span style="font-size: 10px; color: #888;">Strikes Thrown: ${item.strikes}</span>
+                    <span class="score-pill">Total Score: ${item.score}</span>
+                </div>
+                <div style="text-align:right;">
+                    <span class="history-tag">${item.avgTime}s</span>
+                    <div style="font-size: 10px; color: #888;">Avg React Time</div>
+                </div>
+            </div>
+        `).join('');
+
+        renderProgressChart(currentData);
+    }
+
+    function renderProgressChart(data) {
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        
+        // Reverse data for chart to go from oldest to newest
+        const chartData = [...data].reverse();
+        
+        const labels = chartData.map((d, index) => `S${index + 1}`); 
+        const avgTimes = chartData.map(d => parseFloat(d.avgTime));
+
+        if (progressChart) {
+            progressChart.data.labels = labels;
+            progressChart.data.datasets[0].data = avgTimes;
+            progressChart.update();
+        } else {
+            progressChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Avg Reaction Time (s)',
+                        data: avgTimes,
+                        borderColor: '#e4e61c',
+                        backgroundColor: 'rgba(228, 230, 28, 0.1)',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#fff',
+                        pointRadius: 4,
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            grid: { color: '#2d3139' },
+                            ticks: { color: '#888', font: { size: 10 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#888', font: { size: 10 } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return chartData[context[0].dataIndex].dateLabel;
+                                },
+                                label: function(context) {
+                                    return ` Avg Time: ${context.raw}s`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    // Initialize UI
+    updateHistoryUI();
+</script>
+
+</body>
+</html>
