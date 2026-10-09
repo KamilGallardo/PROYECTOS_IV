@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEMANA 6 - Kamil Gallardo Toledo </title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="H_DEIDAD.css">
+    <style>
+        /* Solo para esta semana: matriz de Pugh, figuras y prompts */
+        .pugh-plus  { color: #0b7a3b; font-weight: 700; text-align: center; }
+        .pugh-minus { color: #b10a0a; font-weight: 700; text-align: center; }
+        .pugh-same  { color: #5a5a5a; text-align: center; }
+        .pugh-total td { font-weight: 700; background: rgba(13, 72, 210, 0.06); }
+        .pugh-win { background: rgba(13, 72, 210, 0.10); }
+        .nota { background-color: #f9f9f9; padding: 15px; border-left: 5px solid #ccc; margin-bottom: 15px; }
+        .frase { font-size: 1.15rem; font-weight: 600; color: #032472; background: rgba(13, 72, 210, 0.06);
+                 border-radius: 12px; padding: 16px 20px; margin: 16px 0; }
+        .figura { text-align: center; margin: 20px 0; }
+        .figura svg { width: 100%; height: auto; }
+        .figura figcaption { font-size: 0.9rem; color: #5a5a5a; margin-top: 8px; }
+        .prompt-box { background: #10131a; color: #e6e9ef; padding: 16px 18px; border-radius: 10px;
+                      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.55;
+                      white-space: pre-wrap; overflow-x: auto; }
+        .tabla-scroll { overflow-x: auto; }
+    </style>
+  </head>
+
+ <body class="d-flex flex-column h-100" style="background-color:#fffffe">
+    <main class="flex-shrink-0">
+
+    <div class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="nav-brand">KAMIL GALLARDO TOLEDO</div>
+      <div class="navbar-inner">
+        <a href="../index.html" class="btn-home">SEMANAS</a>
+        <a href="../final-project.html" class="btn-home">PROYECTO FINAL</a>
+        <a href="../about.html" class="btn-home">SOBRE MI</a>
+      </div>
+    </div>
+
+ <section class="week-header">
+            <div class="week-glass">
+                <h1>SEMANA 6: Generación y selección de concepto de diseño</h1>
+                <div>En esta fase pasamos de <i>qué problema resolvemos</i> a <i>cómo se ve, se maneja y se usa</i> Lumetriq. Con IA generativa (Claude e Imagen 3) construimos la tabla morfológica, buscamos analogías tecnológicas, generamos tres conceptos, los evaluamos con una matriz de Pugh y dejamos el concepto elegido listo para CAD en la semana 7.
+                </div>
+            </div>
+        </section>
+
+    <!-- Seccion de CONTENIDO-->
+        <section class="week-content">
+            <div class="week-layout">
+                <aside class="week-menu">
+                    <a href="#UNO" class="menu-link">Tabla morfológica</a>
+                    <a href="#DOS" class="menu-link">Analogías</a>
+                    <a href="#TRES" class="menu-link">Tres conceptos</a>
+                    <a href="#CUATRO" class="menu-link">Renders con IA</a>
+                    <a href="#CINCO" class="menu-link">Matriz de Pugh</a>
+                    <a href="#SEIS" class="menu-link">Concepto elegido</a>
+                    <a href="#SIETE" class="menu-link">Boceto técnico</a>
+                    <a href="#OCHO" class="menu-link">Wireframe de la app</a>
+                    <a href="#NUEVE" class="menu-link">Crítica técnica</a>
+                    <a href="#DIEZ" class="menu-link">Defensa</a>
+                    <a href="#Learning" class="menu-link">Reflexión</a>
+                </aside>
+
+                <div class="week-paper">
+
+    <!-- ===================== 1. TABLA MORFOLÓGICA ===================== -->
+    <h2 id="UNO">Tabla morfológica</h2>
+   <div class="command-block">
+    <h3>Prompt 1: exploración de alternativas por parámetro</h3>
+    <p><b>Herramienta:</b> Claude, con el rol de diseñador industrial especializado en hardware conectado para Latinoamérica. Toda variante debía ser fabricable con impresora 3D, CNC básica y componentes disponibles en México.</p>
+
+    <div class="nota">
+        <p><i><b>Restricciones de entrada:</b> resistencia a sudor, vibración y entornos con muchas señales de 2.4 GHz; instalación en pocos pasos (sacar del estuche, colocar, encender, sincronizar con la app y entrenar); dimensiones máximas de 14 × 14 cm. Se pidieron 7 parámetros con 3 variantes cada uno y la implicación de manufactura más importante. En una segunda iteración se cambió la forma A para incluir una cara posterior semicurva para costal, y la variante B de material para evaluar aluminio inyectado.</i></p>
+    </div>
+
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Parámetro</th><th>Variante A</th><th>Variante B</th><th>Variante C</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">Forma de carcasa</td>
+                <td>Cuerpo con cara posterior semicurva para costal y base plana desmontable <i>(impresión 3D en dos piezas)</i></td>
+                <td>Hexágono de bordes redondeados que se ensambla en mosaico <i>(impresión 3D)</i></td>
+                <td>Cúpula semiesférica sobre base ancha, resistente al vuelco <i>(impresión 3D con relleno variable)</i></td></tr>
+            <tr><td class="material-tag">Instalación / montaje</td>
+                <td>Apoyo libre sobre tapete de hule antiderrapante <i>(corte láser o troquel)</i></td>
+                <td>Parche de velcro industrial con contraparte adherible en piso o pared <i>(lámina doblada)</i></td>
+                <td>Anillo perimetral de silicona tipo ventosa <i>(molde de silicona u o-ring comercial)</i></td></tr>
+            <tr><td class="material-tag">Indicador de estado sin app</td>
+                <td>Anillo LED perimetral con código de colores <i>(difusor impreso translúcido)</i></td>
+                <td>Ventana con 3–5 LEDs discretos tipo semáforo <i>(mecanizado simple o inserto impreso)</i></td>
+                <td>Los mismos LEDs de estímulo muestran el estado con patrones especiales <i>(solo firmware)</i></td></tr>
+            <tr><td class="material-tag">Material y acabado</td>
+                <td>PETG o ABS impreso; ABS sellado con vapor de acetona <i>(impresión 3D + post-proceso)</i></td>
+                <td>Aluminio inyectado con anodizado o pintura en polvo <i>(maquila externa)</i></td>
+                <td>Tapa de policarbonato mecanizada en CNC sobre base impresa <i>(CNC + impresión 3D)</i></td></tr>
+            <tr><td class="material-tag">Interfaz física</td>
+                <td>Superficie táctil capacitiva bajo tapa translúcida <i>(PCB capacitiva comercial)</i></td>
+                <td>Membrana de silicona sobre switch de domo <i>(molde de silicona + domo metálico)</i></td>
+                <td>Superficie rígida con sensor piezoeléctrico o de fuerza debajo <i>(sensor pegado internamente)</i></td></tr>
+            <tr><td class="material-tag">Fuente de energía</td>
+                <td>Batería interna con carga por pogo pins <i>(pogo pins soldados)</i></td>
+                <td>Batería con USB-C protegido por tapa de silicona <i>(tapa moldeada o comprada)</i></td>
+                <td>Carga inductiva Qi en el estuche <i>(módulo Qi comercial)</i></td></tr>
+            <tr><td class="material-tag">Resistencia ambiental y sellado</td>
+                <td>O-ring entre tapa y base con tornillos, IP54 básico <i>(o-ring comprado)</i></td>
+                <td>Carcasa monobloque pegada, sin tornillos expuestos <i>(pegado estructural)</i></td>
+                <td>Doble carcasa con electrónica encapsulada en resina <i>(potting epóxico)</i></td></tr>
+        </tbody>
+    </table>
+    </div>
+    <br>
+
+    <h4>Pausa de reflexión: revisión de la tabla contra el PDS</h4>
+    <p>La tabla se generó antes de cerrar la arquitectura de la semana 5, así que la contrasté con el PDS y con las decisiones vigentes. Varias variantes son fabricables, pero no funcionan en un producto que recibe golpes de boxeo.</p>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Variante</th><th>Problema detectado</th><th>Decisión</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">Interfaz A: capacitiva</td><td>Un guante de boxeo (cuero o sintético con espuma) aísla la mano, así que la detección capacitiva a través del guante es poco confiable <b>[Hipótesis fuerte: probar con un guante real]</b>. Tampoco mide aceleración ni fuerza.</td><td><b>Descartada</b></td></tr>
+            <tr><td class="material-tag">Interfaz B: switch de domo</td><td>Es binario (no mide intensidad) y su fatiga no aguanta 10,000 impactos de ≈ 1,600–2,600 N (RF-06).</td><td><b>Descartada</b></td></tr>
+            <tr><td class="material-tag">Interfaz C: sensor bajo superficie rígida</td><td>Es la base correcta. Con la lista de componentes v2 evoluciona a <b>ADXL375 + 4 celdas de carga bajo un plato flotante</b>, que mide fuerza sin depender del montaje.</td><td><b>Se conserva y se mejora</b></td></tr>
+            <tr><td class="material-tag">Energía C: Qi</td><td>No encadena pods ni permite carga por apilamiento, y es menos eficiente (contradicción C3 del PDS).</td><td><b>Descartada</b></td></tr>
+            <tr><td class="material-tag">Energía A + B</td><td>No son excluyentes: el PDS pide apilamiento (pogo) y la revisión crítica dejó USB-C como vía base.</td><td><b>Se combinan</b></td></tr>
+            <tr><td class="material-tag">Indicador A + C</td><td>Usar el mismo aro de estímulo para mostrar el estado elimina piezas; la ventana de LEDs (B) duplica hardware.</td><td><b>Se combinan A y C</b></td></tr>
+            <tr><td class="material-tag">Material B: aluminio inyectado</td><td>El molde rebasa presupuesto y plazo, y una carcasa metálica bloquea el 2.4 GHz (sección D.9c de la semana 5).</td><td><b>Solo producción en volumen</b>; aluminio solo en el plato interno</td></tr>
+            <tr><td class="material-tag">Material C: policarbonato en la cara de golpe</td><td>Superficie dura donde llegan los nudillos.</td><td><b>Descartada para la cara de golpe</b>; útil como difusor</td></tr>
+            <tr><td class="material-tag">Sellado B y C</td><td>Impiden cambiar batería y PCB en menos de 5 minutos (RNF-06), y encapsular una celda de litio en resina dificulta disipar el calor.</td><td><b>Descartadas</b>; se queda el o-ring (A)</td></tr>
+            <tr><td class="material-tag">Montaje C: ventosa</td><td>Se despega con golpes laterales y en pisos con polvo o sudor.</td><td><b>Descartada</b></td></tr>
+            <tr><td class="material-tag">Forma B: hexágono</td><td>Exige orientación al apilar; los anillos de contacto concéntricos se eligieron justo para que la rotación no importe.</td><td><b>Descartada</b></td></tr>
+            <tr><td class="material-tag">Faltante</td><td>La tabla no incluye <b>montaje rígido en pared</b>, la posición más realista para boxeo (altura de rostro y torso).</td><td><b>Se agrega como variante D</b></td></tr>
+            <tr><td class="material-tag">Presupuesto de $500–600 por unidad</td><td>No es realista para un pod instrumentado: la lista v2 da ≈ $1,380–1,830. Solo una versión "reacción" (sin acelerómetro ni celdas) se acerca.</td><td><b>Se señala la contradicción</b>; el objetivo sigue siendo $1,500 por prototipo</td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+    <!-- ===================== 2. ANALOGÍAS ===================== -->
+    <h2 id="DOS">Analogías tecnológicas</h2>
+   <div class="command-block">
+    <h3>Prompt 2: soluciones de otros sectores para los parámetros más débiles</h3>
+    <p>Después de la revisión, los parámetros más débiles fueron el montaje, la medición de fuerza, la protección de los contactos y la confirmación al usuario. Para cada uno se buscó un producto de otro sector que ya resolvió un problema equivalente.</p>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Parámetro débil</th><th>Analogía</th><th>Qué resuelve ahí</th><th>Qué se transfiere a Lumetriq</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">Montaje rígido y removible</td><td>Bayoneta de lentes de cámara y soporte de luminaria de techo</td><td>Una pieza pesada se fija con ¼ de vuelta, en una sola orientación, sin herramientas</td><td>Placa fija en la pared y pod que se monta y desmonta con ¼ de vuelta y un seguro</td></tr>
+            <tr><td class="material-tag">Medición de fuerza sin importar dónde esté</td><td>Báscula de baño y plataforma de fuerza de laboratorio</td><td>Celdas bajo un plato miden la carga transmitida, no la aceleración</td><td>4 celdas de 50 kg bajo un plato flotante con topes (lista v2)</td></tr>
+            <tr><td class="material-tag">Superficie que recibe golpes y sensa</td><td>Pad de batería electrónica y parche de tambor con aro tensor</td><td>Una membrana tensada por un aro sobre un plato rígido con sensor; aguanta millones de golpes, mide intensidad y el parche se cambia</td><td>Vinipiel tensada con un aro sobre EVA y plato de aluminio; el sensor nunca recibe el golpe directo y la funda es reemplazable</td></tr>
+            <tr><td class="material-tag">Guiar el golpe al centro</td><td>Manopla de foco del entrenador (<i>focus mitt</i>)</td><td>Vinipiel sobre espuma con cara cóncava: "atrapa" el puño y le indica dónde pegar</td><td>Pad cóncavo (flecha ≈ 4 mm) con los mismos materiales; la concavidad sale de un anillo de EVA bajo la vinipiel</td></tr>
+            <tr><td class="material-tag">Contactos de carga expuestos</td><td>Cargador magnético de smartwatch y de laptop</td><td>Un conector pequeño que los imanes alinean y retienen</td><td>Conector pogo magnético rehundido a las 6 en punto, en la cara frontal y trasera</td></tr>
+            <tr><td class="material-tag">Confirmación al usuario</td><td>Juego <i>Simon</i>, semáforos y direccionales de auto</td><td>Color, patrón y posición comunican estado y dirección sin pantalla</td><td>Tres niveles de confirmación con el mismo arco de LED (ver "Concepto elegido")</td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+    <!-- ===================== 3. TRES CONCEPTOS ===================== -->
+    <h2 id="TRES">Tres conceptos</h2>
+   <div class="command-block">
+    <h3>Prompt 3: conceptos completos (objeto, app y landing)</h3>
+    <p>Los tres conceptos se diferencian en al menos 3 parámetros (forma, montaje, indicador y energía). Todos comparten la arquitectura electrónica de la semana 5 (ESP32, gateway BLE + ESP-NOW, aro WS2812B, 18650, app React Native) para que la comparación sea sobre diseño y no sobre electrónica.</p>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Aspecto</th><th>1. Reflejo</th><th>2. Golpe fijo</th><th>3. Cadena</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">Idea en una frase</td><td>Objetivo luminoso en la pared, a la altura del rival</td><td>Pod de piso robusto con centro cóncavo que "atrapa" el golpe</td><td>Módulos que se apilan, se cargan en torre y se encienden en secuencia</td></tr>
+            <tr><td class="material-tag">Combinación morfológica</td><td>Forma C (cúpula biomórfica) · Montaje D (pared, anclaje rápido) · Indicador A+C · Interfaz C · Energía B</td><td>Forma A modificada (disco con pad hundido) · Montaje A (libre en piso) · Indicador A+C · Interfaz C · Energía A+B</td><td>Cilindro apilable · Montaje A · Indicador A+C · Interfaz C · Energía A (anillos de cobre)</td></tr>
+            <tr><td class="material-tag">Instalación</td><td>Atornillar un soporte en la pared y encajar el pod</td><td>Sacar del estuche y ponerlo en el piso</td><td>Desapilar la torre de carga y repartir los pods</td></tr>
+            <tr><td class="material-tag">Uso diario</td><td>Sombra y combinaciones a la altura del rostro y torso</td><td>Agilidad de pies, patadas y reacción en el piso</td><td>Circuitos de reacción; al terminar, se apilan para cargar</td></tr>
+            <tr><td class="material-tag">Analogía tecnológica</td><td>Dianas reactivas de tiro y soporte de cámara de acción</td><td>Pad de e-drum y botón de máquina arcade</td><td>Torre de carga de radios portátiles y pogo de smartwatch</td></tr>
+            <tr><td class="material-tag">Implicación de manufactura principal</td><td>La unión "sin juntas" hule-plástico exige sobremoldeo o bi-material; soporte metálico aparte</td><td>Simple: pad TPU impreso + carcasa PETG</td><td>Contactos de cobre (PCB ENIG) y tolerancias de apilado estrechas</td></tr>
+            <tr><td class="material-tag">App</td><td>Modo "combinaciones": cada luz es un golpe (jab, cross, gancho)</td><td>Modo "agilidad" y competencia "el primero que toca gana"</td><td>Modo "secuencia": las luces corren de pod en pod</td></tr>
+            <tr><td class="material-tag">Landing</td><td>"Entrena tus reflejos a la altura del rival"</td><td>"Sin instalación: ponlo en el piso y entrena"</td><td>"Se carga en torre, sin cables"</td></tr>
+            <tr><td class="material-tag">Fortaleza</td><td>Mayor realismo y atractivo; la luz queda frente a los ojos</td><td>Protege la electrónica y centra el golpe</td><td>Cumple directo el apilamiento del PDS</td></tr>
+            <tr><td class="material-tag">Debilidad</td><td>Un domo no se apila; la superficie convexa desvía golpes; un anclaje de cámara de acción no aguanta un golpe de boxeo</td><td>En el piso un boxeador no puede golpear con técnica de puño</td><td>Contactos expuestos en la cara de golpe; es más un concepto de almacenamiento que de entrenamiento</td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+    <!-- ===================== 4. RENDERS ===================== -->
+    <h2 id="CUATRO">Renders con IA</h2>
+   <div class="command-block">
+    <h3>Prompt 4: visualización rápida con Imagen 3</h3>
+    <p><b>Método:</b> Claude, con el rol de director de arte, tradujo cada concepto a un prompt en inglés con materiales concretos (hule mate contra plástico brillante), relaciones espaciales precisas y términos mecánicos. Los prompts se ejecutaron en Imagen 3 (Gemini) y se iteró sobre el resultado: se renombró el concepto 2 a <b>Golpe fijo</b> y se eliminó el halo verde del piso para que la luz solo se vea dentro del hueco del pad.</p>
+
+    <div class="week-images">
+        <img src="../images/PRIMERA_PROPUESTA_DE_IMAGEN_SEGUN_PROMPT.jpg" alt="Tríptico de Imagen 3 con los conceptos Reflejo (pared), Golpe fijo (piso, cóncavo) y Cadena (apilable)">
+    </div>
+    <p style="text-align:center;"><i>Tríptico generado con Imagen 3: Reflejo (pared), Golpe fijo (piso, centro cóncavo) y Cadena (apilamiento modular).</i></p>
+
+    <p><code style="display:inline;">⦿ Prompt del concepto 1 (Reflejo):</code></p>
+    <div class="prompt-box">A photorealistic industrial design product shot of a smart boxing training pod mounted on a textured home gym wall. The device is a soft, biomorphic pebble-like dome, approximately 130mm in diameter. The central striking area features a matte, light-absorbing dark rubber texture, which transitions seamlessly without visible joints into a smooth, glossy hard plastic outer shell. The pod is firmly attached to the wall using a visible, mechanical two-prong quick-release mount made of rigid polymer, similar to action camera accessories. A glowing LED ring at the base of the dome emits a dynamic, bright cyan and white light, casting a crisp gradient glow against the wall. Cinematic studio lighting highlighting the contrast between the matte rubber and the glossy plastic.</div>
+    <br>
+
+    <h4>Los renders como filtro rápido antes de Pugh</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Criterio</th><th>Lo que comunica bien</th><th>Lo que el render inventa o exagera</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">Affordance del montaje</td><td>Reflejo deja claro que va en la pared; Cadena, que los módulos se apilan</td><td>El soporte de Reflejo es pequeño y lateral: no resistiría un golpe frontal de ≈ 2,500 N</td></tr>
+            <tr><td class="material-tag">Transición de materiales</td><td>Golpe fijo separa con claridad la piel de impacto (mate) de la carcasa dura</td><td>La unión "sin juntas" de Reflejo no es fabricable con FDM ni en un solo proceso</td></tr>
+            <tr><td class="material-tag">Viabilidad de componentes</td><td>Los aros LED y las muescas laterales lucen manufacturables</td><td>Los anillos de cobre de Cadena están expuestos en la cara de golpe, contra la decisión de contactos rehundidos</td></tr>
+            <tr><td class="material-tag">Escala</td><td>Golpe fijo y Cadena son coherentes con Ø 130 × 70 mm</td><td>La cúpula de Reflejo se ve más profunda que los 80 mm permitidos (RNF-01)</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>El render sirve para comunicar y detectar intención estética, pero <b>no valida ingeniería</b>: la IA dibuja con naturalidad soluciones que no se pueden fabricar o que no aguantan la carga. Por eso la selección se hizo con la matriz y no con la imagen más atractiva.</p>
+</div>
+
+    <!-- ===================== 5. PUGH ===================== -->
+    <h2 id="CINCO">Matriz de Pugh</h2>
+   <div class="command-block">
+    <h3>Prompt 5: selección con criterios ponderados</h3>
+    <div class="nota">
+        <p><i><b>Reglas:</b> el concepto 3 (Cadena) es el <b>datum</b> (todas sus casillas valen S). Cada concepto se califica contra él: <b>+</b> mejor, <b>–</b> peor, <b>S</b> igual. Diez criterios con pesos que suman 100: <b>4 de deseabilidad (40 %)</b> y <b>6 de factibilidad/viabilidad (60 %)</b>. Puntuación = Σ pesos de los + − Σ pesos de los −. La última columna evalúa, con las mismas reglas, el concepto combinado que propone la sección siguiente.</i></p>
+    </div>
+
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Criterio</th><th>Peso</th><th>1. Reflejo</th><th>2. Golpe fijo</th><th>3. Cadena (datum)</th><th class="pugh-win">Reflejo + Golpe fijo</th></tr>
+        </thead>
+        <tbody>
+            <tr><td colspan="6"><b>Deseabilidad (40)</b></td></tr>
+            <tr><td class="material-tag">D1. Golpeo a altura realista (rostro y torso)</td><td>12</td><td class="pugh-plus">+</td><td class="pugh-minus">–</td><td class="pugh-same">S</td><td class="pugh-plus pugh-win">+</td></tr>
+            <tr><td class="material-tag">D2. Visibilidad del estímulo a 2–3 m</td><td>10</td><td class="pugh-plus">+</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-plus pugh-win">+</td></tr>
+            <tr><td class="material-tag">D3. Seguridad y comodidad del golpe</td><td>10</td><td class="pugh-plus">+</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-plus pugh-win">+</td></tr>
+            <tr><td class="material-tag">D4. Instalación y transporte sin herramientas</td><td>8</td><td class="pugh-minus">–</td><td class="pugh-plus">+</td><td class="pugh-same">S</td><td class="pugh-same pugh-win">S</td></tr>
+            <tr><td colspan="6"><b>Factibilidad y viabilidad (60)</b></td></tr>
+            <tr><td class="material-tag">T1. Medición repetible e independiente del montaje</td><td>14</td><td class="pugh-minus">–</td><td class="pugh-plus">+</td><td class="pugh-same">S</td><td class="pugh-plus pugh-win">+</td></tr>
+            <tr><td class="material-tag">T2. Protección de electrónica y contactos</td><td>12</td><td class="pugh-same">S</td><td class="pugh-plus">+</td><td class="pugh-same">S</td><td class="pugh-plus pugh-win">+</td></tr>
+            <tr><td class="material-tag">T3. Carga por apilamiento (requisito del PDS)</td><td>10</td><td class="pugh-minus">–</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-same pugh-win">S</td></tr>
+            <tr><td class="material-tag">T4. Fabricable con impresión 3D y laboratorio</td><td>10</td><td class="pugh-minus">–</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-same pugh-win">S</td></tr>
+            <tr><td class="material-tag">T5. Costo ≤ $1,500 por prototipo</td><td>8</td><td class="pugh-minus">–</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-minus pugh-win">–</td></tr>
+            <tr><td class="material-tag">T6. Riesgo de calendario (8 semanas)</td><td>6</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-minus pugh-win">–</td></tr>
+            <tr class="pugh-total"><td>Σ + / Σ – / Σ S</td><td>—</td><td>3 / 5 / 2</td><td>3 / 1 / 6</td><td>0 / 0 / 10</td><td>5 / 2 / 3</td></tr>
+            <tr class="pugh-total"><td>Deseabilidad ponderada</td><td>40</td><td>+24</td><td>–4</td><td>0</td><td>+32</td></tr>
+            <tr class="pugh-total"><td>Factibilidad ponderada</td><td>60</td><td>–42</td><td>+26</td><td>0</td><td>+12</td></tr>
+            <tr class="pugh-total"><td><b>Puntuación total</b></td><td>100</td><td><b>–18</b></td><td><b>+22</b></td><td><b>0</b></td><td><b>+44</b></td></tr>
+            <tr class="pugh-total"><td>Lugar</td><td>—</td><td>4</td><td>2</td><td>3</td><td>1</td></tr>
+        </tbody>
+    </table>
+    </div>
+
+    <p><code style="display:inline;">⦿ Justificación de las calificaciones:</code></p>
+    <ul>
+        <li><b>Reflejo, D1–D3 (+):</b> golpear a la altura del rostro reproduce el gesto técnico real y deja el estímulo frente a los ojos; la forma suave no tiene aristas.</li>
+        <li><b>Reflejo, D4 (–):</b> requiere atornillar un soporte.</li>
+        <li><b>Reflejo, T1 (–):</b> la superficie convexa desvía los golpes que no llegan al centro, y en la pared la "fuerza" estimada con F = m·a cambia respecto al piso (contradicción C2).</li>
+        <li><b>Reflejo, T3–T5 (–):</b> un domo no se apila; la unión sin juntas no se imprime; el anclaje exige una pieza metálica adicional.</li>
+        <li><b>Golpe fijo, D1 (–):</b> en el piso solo admite patadas o golpes forzados hacia abajo; para boxeo es su mayor defecto.</li>
+        <li><b>Golpe fijo, T1–T2 (+):</b> el centro cóncavo guía el puño al centro del sensor (mejor repetibilidad) y el borde rígido protege el interior.</li>
+        <li><b>Combinado, T5–T6 (–):</b> placa de pared, celdas de carga y tres modos de montaje cuestan más y añaden trabajo; es su costo real.</li>
+    </ul>
+
+    <p><code style="display:inline;">⦿ Análisis:</code></p>
+    <ul>
+        <li><b>Reflejo gana en deseabilidad (+24) y pierde en factibilidad (–42).</b> Es el concepto que más atrae, pero tal como está dibujado no se puede construir bien.</li>
+        <li><b>Golpe fijo gana en factibilidad (+26) y pierde en deseabilidad (–4).</b> Es la mejor ingeniería, en la posición equivocada para el boxeo.</li>
+        <li>Como pide la metodología, el ganador (Golpe fijo) es <b>punto de partida, no decisión final</b>. Sus fortalezas y las de Reflejo son complementarias, así que se combinan.</li>
+        <li><b>Robustez:</b> el concepto combinado supera al datum tanto en deseabilidad (+32) como en factibilidad (+12). Golpe fijo solo lo superaría si la factibilidad pesara más del ≈ 80 % del total.</li>
+    </ul>
+</div>
+
+    <!-- ===================== 6. CONCEPTO ELEGIDO ===================== -->
+    <h2 id="SEIS">Concepto elegido</h2>
+   <div class="command-block">
+    <h3>Reflejo Fijo: Reflejo con la estructura de Golpe fijo</h3>
+    <p class="frase">"Un objetivo luminoso que se monta en la pared a la altura del rival, te dice dónde golpear y mide qué tan rápido y qué tan fuerte lo hiciste."</p>
+    <p><b>Qué toma de cada concepto:</b> de <b>Reflejo</b>, el golpeo en la pared con la luz frente a los ojos y una forma suave. De <b>Golpe fijo</b>, el pad cóncavo que centra el golpe y el labio rígido que protege. De <b>Cadena</b>, solo lo que el PDS exige: el apilamiento, con los contactos protegidos.</p>
+
+    <h4>Cambios de esta revisión (v2 del concepto)</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Observación</th><th>Antes</th><th>Ahora</th><th>Por qué</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">1. Material del pad</td><td>TPU 95A impreso + EVA</td><td><b>Vinipiel de tapicería sobre 2 capas de EVA de alta densidad</b>, tensada con un aro como un parche de tambor; diafragma de cámara de bicicleta en el hueco</td><td>Todo se compra en México sin impresora de filamento flexible. Es la misma construcción de una manopla de foco, y la funda se cambia en minutos</td></tr>
+            <tr><td class="material-tag">2. Tamaño</td><td>Ø 130 × 70 mm (pad Ø 90)</td><td><b>Ø 160 × 75 mm</b> (pad Ø 120 mm)</td><td>El pad se dimensiona por el guante y el labio por lo que debe alojar. Excede los 15 cm del PDS de forma deliberada; ver "Justificación del tamaño"</td></tr>
+            <tr><td class="material-tag">3. Luz</td><td>Aro completo de 16 LED</td><td><b>Arco de 120° (≈ 1/3 de la circunferencia) en la parte superior</b>, con 18 LED WS2812B bajo un difusor</td><td>Queda en la línea de visión, marca "arriba" (coincide con la orientación de la bayoneta) y permite estímulos direccionales: tercio izquierdo, centro y derecho</td></tr>
+            <tr><td class="material-tag">3b. Contactos de carga</td><td>Anillo concéntrico de contactos a R 55</td><td><b>Conector pogo magnético rehundido a las 6 en punto</b></td><td>El arco ocupa la parte superior del labio. Un conector pogo magnético comercial es una pieza discreta, no un anillo; con la orientación fija ya no hace falta que sea concéntrico</td></tr>
+            <tr><td class="material-tag">4. Durabilidad</td><td>Pad impreso, bumper de TPU</td><td>Funda reemplazable, burlete de hule EPDM, difusor rehundido, insertos de latón, fijador de rosca y plan de pruebas de 10,000 golpes</td><td>Ver la tabla de factibilidad y durabilidad</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <br>
+
+    <h4>Justificación del tamaño: Ø 160 × 75 mm con pad Ø 120</h4>
+    <p>El tamaño se calculó de adentro hacia afuera: primero el área que necesita el guante, después lo que debe alojar el labio.</p>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Elemento (radio)</th><th>Medida</th><th>Por qué</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">Pad</td><td>R 60 (Ø 120)</td><td>La cara de nudillos de un guante de 12–16 oz mide del orden de 9–10 cm de ancho <b>[Estimado: medir con un guante real]</b>. Con Ø 120, el guante cae completo sobre el pad aunque el golpe se desvíe ≈ 1–1.5 cm del centro, y menos golpes pegan en el labio rígido (mejora D3, seguridad)</td></tr>
+            <tr><td class="material-tag">Hueco con diafragma</td><td>1.5 mm</td><td>Deja flotar el pad sin que toque el labio, para que toda la fuerza pase por las celdas</td></tr>
+            <tr><td class="material-tag">Labio</td><td>15.5 mm (R 61.5–77)</td><td>Ventana del arco de luz (7 mm) + paredes de 2 mm por lado + margen para que el difusor no quede en el canto. A las 6 en punto aloja el conector pogo magnético (≈ 10–12 mm <b>[Verificar el modelo]</b>). También es el hombro donde se apoya otro pod al apilar</td></tr>
+            <tr><td class="material-tag">Burlete</td><td>3 mm</td><td>Protege el canto en golpes descentrados y caídas</td></tr>
+            <tr><td class="material-tag"><b>Total</b></td><td><b>R 80 → Ø 160</b></td><td>60 + 1.5 + 15.5 + 3 = 80 mm</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p><code style="display:inline;">⦿ Por qué no menos:</code> con Ø 150 y el mismo pad, el labio quedaría de 10.5 mm. No caben a la vez el difusor y el conector, el hombro de apilamiento es muy delgado y el difusor quedaría en el borde, donde más golpes de canto recibe.</p>
+    <p><code style="display:inline;">⦿ Por qué no más:</code> el pad ya cubre el guante; crecer el labio no mejora el golpe y sí aumenta masa, costo y tiempo de impresión. Ø 160 todavía cabe en una cama de impresión de 220 × 220 mm; arriba de ≈ Ø 180 habría que imprimir el cuerpo en partes.</p>
+    <p><code style="display:inline;">⦿ Por qué la profundidad se queda en 75 mm:</code> en la pared, cada milímetro de profundidad es brazo de palanca para los ganchos sobre la bayoneta. Los 75 mm ya alojan la espuma y la electrónica; el diámetro mayor da espacio sin hacer el pod más profundo.</p>
+    <p><code style="display:inline;">⦿ Efectos verificados por cálculo [Estimado]:</code></p>
+    <ul>
+        <li><b>Área útil:</b> el pad ocupa el 56 % del frente (antes 51 % con Ø 100 en Ø 140) y tiene 44 % más área que el pad de Ø 100.</li>
+        <li><b>Medición:</b> el plato pasa a Ø 118 × 3 mm (≈ 89 g). Con plato y pad de ≈ 0.2 kg sobre 4 celdas, la frecuencia propia queda en ≈ 1 kHz, todavía muy por encima del contenido del golpe (≈ 100 Hz).</li>
+        <li><b>Masa:</b> ≈ 0.6 kg, que la placa y los taquetes soportan sin problema.</li>
+        <li><b>Autonomía:</b> con 18 LED (40 % de brillo, 30 % de ciclo) el consumo es ≈ 263 mA y 3 h requieren ≈ 1,280 mAh con márgenes; la celda de 2,000 mAh alcanza.</li>
+        <li><b>Costo:</b> ≈ +$60–80 por pod (filamento, plato y espuma más grandes, 3 LED más).</li>
+        <li><b>Pugh:</b> no cambia el orden. Mejora D3 (menos golpes en el labio) y empeora un poco T5 (costo).</li>
+    </ul>
+    <div class="nota">
+        <p><i><b>Cambio al PDS:</b> el requisito RNF-01 (15 × 15 × 15 cm) se propone cambiar a <b>Ø 160 × 80 mm</b>. Es una desviación consciente y documentada: el límite se fijó antes de conocer el tamaño del guante y la geometría del labio. Debe aprobarlo el asesor. Para respaldarlo, se recomienda la prueba de cartón de la semana 7: círculos de Ø 100, 120 y 140 mm en la pared y conteo de golpes que caen completos dentro de cada uno.</i></p>
+    </div>
+    <br>
+
+    <h4>Material del pad: alternativas al TPU</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Material</th><th>Dónde se consigue</th><th>Costo por pod [Estimado]</th><th>Durabilidad y sensación</th><th>Veredicto</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">TPU 95A impreso</td><td>Filamento flexible; requiere extrusor directo y ajuste fino</td><td>$40–80</td><td>Buena, pero con capas visibles y calidad variable</td><td>Descartado por acceso</td></tr>
+            <tr><td class="material-tag"><b>Vinipiel + EVA de alta densidad</b></td><td>Vinipiel en tiendas de telas y tapicerías; EVA en tapetes tipo rompecabezas para gimnasio (autoservicios, Mercado Libre)</td><td>$30–60</td><td>Es la construcción de manoplas y costales; la vinipiel resiste abrasión y sudor y se reemplaza</td><td><b>Elegido</b></td></tr>
+            <tr><td class="material-tag">Hule EPDM o neopreno en lámina 3–5 mm</td><td>Tiendas de hules y empaques, ferreterías</td><td>$50–120</td><td>Homogéneo y durable; más firme</td><td>Alternativa si la EVA se aplasta</td></tr>
+            <tr><td class="material-tag">Tapete de hule SBR de gimnasio</td><td>Tiendas de equipo deportivo</td><td>$30–70</td><td>Muy durable, pero duro y pesado para el puño</td><td>Solo como base</td></tr>
+            <tr><td class="material-tag">Silicona RTV colada</td><td>Tiendas de manualidades y resinas</td><td>$80+</td><td>Muy durable; requiere molde impreso y curado</td><td>Versión futura</td></tr>
+            <tr><td class="material-tag">EVA sola (foami)</td><td>Papelerías</td><td>$10–20</td><td>Se marca y se comprime de forma permanente</td><td>Solo como capa interna</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p><b>Cómo se arma el pad (analogía: parche de tambor):</b> sobre el plato de aluminio Ø 118 va un disco de EVA de 12 mm; encima, un <b>anillo</b> de EVA de 4 mm solo en el borde. Al tensar la vinipiel sobre ambos, el centro queda ≈ 4 mm más bajo: la concavidad sale de la espuma, sin moldes. La vinipiel se sujeta con un <b>aro tensor de PETG</b> atornillado al plato (6 tornillos M3). Entre el pad flotante y el labio fijo queda un hueco de 1.5 mm, sellado con un <b>diafragma</b> cortado de cámara de bicicleta, como el borde de una bocina: deja moverse al pad sin desviar fuerza de las celdas y evita que entren sudor y polvo. <b>[Verificar en banco: tensión de la vinipiel, flecha real y que el diafragma no "robe" más del 2 % de la fuerza.]</b></p>
+    <br>
+
+    <h4>Arco de luz de 120°</h4>
+    <ul>
+        <li><b>Posición:</b> en el labio, entre R 64 y R 71 mm (≈ 140 mm de largo), de las 10 a las 2 en punto. Queda arriba del pad, donde el usuario mira, y fuera de la zona principal de golpe.</li>
+        <li><b>LED:</b> prototipo con tira WS2812B de 144 LED/m cortada en 3 tramos de 6 LED (cuerdas de 40° de ≈ 46 mm); 18 LED en total. Para el lote: una PCB en arco con 12–14 WS2812B 5050, que el equipo puede fabricar y soldar. La tira de 60 LED/m ya cotizada sirve, pero da solo 6 LED y exige un difusor más profundo.</li>
+        <li><b>Difusor:</b> PETG natural impreso al 100 % o policarbonato cortado (no acrílico, que se quiebra), rehundido 1 mm respecto al labio para que el guante no lo golpee de lleno.</li>
+        <li><b>Usos:</b> estímulo completo, estímulo direccional por tercios (izquierdo, centro, derecho para indicar jab, recto o gancho), barra de batería y estados de conexión.</li>
+        <li><b>Consumo:</b> 18 LED a 40 % de brillo dan ≈ 263 mA promedio; las 3 h siguen cubiertas con la celda de 2,000 mAh (ver justificación del tamaño).</li>
+    </ul>
+    <br>
+
+    <h4>Mejoras de diseño del concepto</h4>
+    <ol>
+        <li><b>Una sola interfaz de montaje.</b> La parte trasera tiene un receptáculo de bayoneta de ¼ de vuelta. La misma bayoneta recibe la placa de pared, un disco antiderrapante para piso y un adaptador semicurvo con correas para costal.</li>
+        <li><b>Medición que no depende del montaje.</b> Lista de componentes v2: ADXL375 + 4 celdas de 50 kg bajo el plato flotante (ahora Ø 118 × 3 mm) con topes + ADS1220 a 2 kSPS.</li>
+        <li><b>Apilamiento sin cargar el sensor.</b> La cara trasera tiene un rebaje Ø 122 × 3 mm: el pod de arriba se apoya en el <i>labio</i> del de abajo, nunca en su pad, y el rebaje centra la torre. Para apilar se alinean los arcos de luz, y el conector magnético termina de alinear.</li>
+        <li><b>Contactos que el guante no alcanza.</b> Conector pogo magnético rehundido a las 6 en punto (R 70), en ambas caras. En la pared, el trasero queda fuera de la placa (Ø 120) y no toca metal.</li>
+        <li><b>Placa embutida.</b> La placa de 3 mm entra en el rebaje trasero; el pod sobresale de la pared ≈ 75 mm (RNF-01 ≤ 80).</li>
+        <li><b>Mantenimiento por detrás y por delante.</b> Batería y PCB por la tapa trasera (4 tornillos, ocultos al estar montado); funda del pad por el frente, quitando el aro tensor.</li>
+    </ol>
+    <br>
+
+    <h4>Factibilidad y durabilidad</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Riesgo de desgaste o falla</th><th>Solución de diseño</th><th>Cómo se verifica</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">La vinipiel se raspa o se rompe</td><td>Funda reemplazable con aro tensor; refacción de ≈ $5–10 de material</td><td>Inspección cada 1,000 golpes en la prueba de 10,000</td></tr>
+            <tr><td class="material-tag">La EVA se aplasta de forma permanente</td><td>EVA de alta densidad en dos capas; plan B: neopreno o EPDM</td><td>Medir el espesor y la flecha antes y después de 10,000 golpes; cambiar de material si pierde más del 10 %</td></tr>
+            <tr><td class="material-tag">Grietas entre capas de impresión</td><td>PETG con 5 perímetros, 40–50 % gyroid, costillas radiales y capas perpendiculares a la carga del golpe</td><td>Inspección visual y con lupa tras la prueba de impactos</td></tr>
+            <tr><td class="material-tag">Tornillos que se aflojan</td><td>Insertos de latón termoinsertados y fijador de rosca medio</td><td>Torque de verificación cada 1,000 golpes</td></tr>
+            <tr><td class="material-tag">Golpes en el difusor del arco</td><td>Rehundido 1 mm, PETG al 100 % o policarbonato</td><td>Golpes descentrados dirigidos al arco</td></tr>
+            <tr><td class="material-tag">Golpes en el canto y caídas</td><td>Burlete de hule EPDM en la mitad frontal del canto, alojado en una ranura (no solo pegado)</td><td>Caída de 1 m sobre piso de concreto, 10 veces</td></tr>
+            <tr><td class="material-tag">El pad toca el labio y la fuerza "se brinca" las celdas</td><td>Hueco de 1.5 mm con diafragma flexible; guía radial con holgura de 0.5 mm</td><td>Carga descentrada a 25 mm con pesas: la lectura no debe caer más del 8 %</td></tr>
+            <tr><td class="material-tag">Sudor y polvo</td><td>O-ring en la tapa trasera, diafragma en el frente, USB-C con tapa en la mitad trasera del canto</td><td>Rocío de agua salina sobre el pod montado; revisión interna</td></tr>
+            <tr><td class="material-tag">La bayoneta gira con ganchos</td><td>Seguro con prisionero o pestillo</td><td>1,000 golpes reales sobre un muro de prueba</td></tr>
+            <tr><td class="material-tag">Cables de las celdas se rompen</td><td>Alivio de tensión con bridas y conector JST-PH</td><td>Prueba de continuidad tras los 10,000 golpes</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <br>
+
+    <h4>Los siete principios de diseño aplicados</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Principio</th><th>Cómo lo cumple Reflejo Fijo</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">1. Affordances</td><td>El pad cóncavo de vinipiel mate y oscura dice "golpea aquí"; el labio satinado y más claro dice "esto no es para golpear". El arco de luz marca dónde está "arriba" y dónde mirar.</td></tr>
+            <tr><td class="material-tag">2. Contour bias</td><td>Sin aristas vivas: frente con radio ≥ 8 mm, burlete de hule en el canto y pad cóncavo y acolchado.</td></tr>
+            <tr><td class="material-tag">3. Consistencia</td><td>Lenguaje de círculo y arco: pod, pad, arco de luz, placa de pared y el anillo de progreso de la app.</td></tr>
+            <tr><td class="material-tag">4. Restricciones</td><td>La bayoneta entra en una sola orientación (arco arriba, USB-C y conector abajo); para apilar se alinean los arcos y el conector magnético solo cierra en esa posición; el botón está rehundido; la salida superior está desenergizada si el Hall no detecta otro pod; los topes impiden sobrecargar las celdas.</td></tr>
+            <tr><td class="material-tag">5. Confirmación</td><td><b>Menor:</b> golpe registrado → destello blanco del arco y el contador sube en la app. <b>Importante:</b> fin de serie o récord → barrido verde de izquierda a derecha en todos los pods y vibración del teléfono. <b>Crítico:</b> batería &lt; 15 %, pod desconectado o sensor saturado → arco ámbar o rojo pulsante, banner rojo y pausa.</td></tr>
+            <tr><td class="material-tag">6. Costo-beneficio</td><td>Ver la tabla siguiente.</td></tr>
+            <tr><td class="material-tag">7. Ciclo de desarrollo</td><td>Se conservan los principios (pared, centro cóncavo, luz donde se mira) y se revisan las formas: la cúpula pasó a cilindro, el anclaje de cámara a bayoneta, el aro completo a arco y el TPU a vinipiel.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <br>
+
+    <h4>Costo-beneficio de cada decisión</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Característica</th><th>Costo por pod [Estimado]</th><th>Beneficio</th><th>Decisión</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">Celdas + ADS1220 + plato de aluminio</td><td>≈ $270–400</td><td>Fuerza en N independiente del montaje (T1, 14 pts)</td><td>Entra; banco en la semana 2 y decisión al cierre de la semana 3 (lista v2)</td></tr>
+            <tr><td class="material-tag">Placa de pared con bayoneta</td><td>≈ $40 (MDF o acrílico de 6 mm) en prototipo; ≈ $80–150 en acero</td><td>Golpeo a altura real (D1, 12 pts) e interfaz universal</td><td>Entra; acero solo si pasa la prueba de carga</td></tr>
+            <tr><td class="material-tag">Pad de vinipiel + EVA + diafragma</td><td>≈ $30–60 (menos que TPU + EVA)</td><td>Material accesible, reemplazable y probado en manoplas</td><td>Entra</td></tr>
+            <tr><td class="material-tag">Arco de 18 LED + difusor</td><td>≈ $40–70 (tramo de tira de 144 LED/m) <b>[Verificar precio]</b></td><td>Estímulo visible y direccional</td><td>Entra; PCB en arco para el lote</td></tr>
+            <tr><td class="material-tag">Tamaño Ø 160 (contra Ø 140)</td><td>≈ +$60–80</td><td>Pad Ø 120 a la medida del guante y labio funcional</td><td>Entra (ver justificación)</td></tr>
+            <tr><td class="material-tag">Conector pogo magnético</td><td>≈ $150 por par (prototipo)</td><td>Apilamiento del PDS</td><td>Diferido a las semanas 4–5</td></tr>
+            <tr><td class="material-tag">Burlete EPDM y botón rehundido</td><td>≈ $15–25</td><td>Protección del canto y encendido sin la app</td><td>Entra</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p><b>Lectura honesta del presupuesto:</b> la configuración B de la lista v2 sin pogo (≈ $1,380–1,830), más la placa, el arco, el burlete y el tamaño Ø 160, y con el pad más barato, queda en ≈ $1,510–1,980. <b>Ya no cabe en $1,500 sin ajustes:</b> con las palancas de la lista v2 (ESP32 DevKit local, ahorro ≈ $80–130, y plato de FR4 en el prototipo, ≈ −$50) el extremo bajo baja a ≈ $1,330–1,380. Si no cabe, la ruta de fuerza se presenta como mejora con presupuesto aparte, sin cambiar la carcasa.</p>
+    <br>
+
+    <h4>Prompt para el render del concepto elegido</h4>
+    <div class="prompt-box">Photorealistic industrial design hero shot of a smart boxing training pod mounted on a concrete gym wall at face height. The pod is a low-profile cylinder, 160 mm in diameter and 75 mm deep, with softly rounded front edges and a black rubber bumper strip around the front half of its side. The front face has a slightly concave striking pad, 120 mm wide, covered in matte black synthetic leather stretched like a drum head and held by a thin dark ring; its edge sits flush with a satin light-grey rigid rim about 15 mm wide. In the upper third of the rim, a curved light bar spanning about 120 degrees glows cyan behind a frosted diffuser, slightly recessed; the rest of the rim is unlit. A small recessed magnetic connector sits at the bottom of the rim. The pod sits almost flush against the wall on a hidden quarter-turn bayonet plate. Inset in the lower right corner: two identical pods stacked flat on a gym floor with their light bars aligned. Neutral studio lighting, shallow depth of field, no text, no logos, no full LED ring, no domes, no action-camera mounts.</div>
+</div>
+
+    <!-- ===================== 7. BOCETO TÉCNICO ===================== -->
+    <h2 id="SIETE">Boceto técnico</h2>
+   <div class="command-block">
+    <h3>Vistas frontal, lateral y en corte</h3>
+    <p>Medidas en mm. Primera aproximación para CAD; las alturas internas vienen del apilado de la lista de componentes v2 con la espuma del nuevo pad.</p>
+
+    <figure class="figura">
+        <svg viewBox="0 0 990 450" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vista frontal y vista lateral de Reflejo Fijo con cotas">
+            <style>
+                .tb { font: bold 14px Arial, sans-serif; fill: #032472; }
+                .ts { font: 11.5px Arial, sans-serif; fill: #4d5a78; }
+                .ln { stroke: #4d5a78; stroke-width: 1; fill: none; }
+                .dim { stroke: #b10a0a; stroke-width: 1; fill: none; }
+                .dt { font: 12px Arial, sans-serif; fill: #b10a0a; }
+            </style>
+            <text class="tb" x="120" y="24">VISTA FRONTAL</text>
+            <!-- frontal: centro (190,214), escala 2.1 px/mm -->
+            <circle cx="190" cy="214" r="168" fill="#2f333d"/>
+            <circle cx="190" cy="214" r="161.7" fill="#c9cfdc" stroke="#4d5a78"/>
+            <path d="M67.2 143.1 A141.75 141.75 0 0 1 312.8 143.1" fill="none" stroke="#9fe7f7" stroke-width="15" stroke-linecap="round"/>
+            <path d="M67.2 143.1 A141.75 141.75 0 0 1 312.8 143.1" fill="none" stroke="#20c4e8" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 5"/>
+            <circle cx="190" cy="214" r="129.2" fill="#7a808c"/>
+            <circle cx="190" cy="214" r="126" fill="#2b2f38"/>
+            <circle cx="190" cy="214" r="117.6" fill="none" stroke="#5a6070" stroke-width="3"/>
+            <circle cx="190" cy="214" r="80" fill="none" stroke="#3a3f4b"/>
+            <circle cx="190" cy="214" r="40" fill="none" stroke="#3a3f4b"/>
+            <rect x="177" y="356" width="26" height="10" rx="2" fill="#c77d3a"/>
+            <line class="dim" x1="22" y1="408" x2="358" y2="408"/>
+            <line class="dim" x1="22" y1="400" x2="22" y2="416"/><line class="dim" x1="358" y1="400" x2="358" y2="416"/>
+            <text class="dt" x="172" y="430">Ø 160</text>
+            <line class="dim" x1="64" y1="214" x2="316" y2="214" stroke-dasharray="4 3"/>
+            <text class="dt" x="206" y="208" style="fill:#ffb3b3">Ø 120 pad</text>
+            <line class="ln" x1="300" y1="112" x2="388" y2="70"/><text class="ts" x="392" y="68">Arco 120°: 18 LED bajo difusor</text>
+            <line class="ln" x1="340" y1="160" x2="388" y2="110"/><text class="ts" x="392" y="108">Labio PETG, 15.5 mm (R 61.5–77)</text>
+            <line class="ln" x1="355" y1="214" x2="388" y2="150"/><text class="ts" x="392" y="148">Burlete de hule EPDM en ranura</text>
+            <line class="ln" x1="316" y1="246" x2="388" y2="190"/><text class="ts" x="392" y="188">Diafragma de cámara de bici</text>
+            <line class="ln" x1="296" y1="276" x2="388" y2="230"/><text class="ts" x="392" y="228">Aro tensor de PETG (8 × M3)</text>
+            <line class="ln" x1="240" y1="296" x2="388" y2="270"/><text class="ts" x="392" y="268">Pad: vinipiel + EVA alta densidad</text>
+            <line class="ln" x1="203" y1="361" x2="388" y2="312"/><text class="ts" x="392" y="310">Conector pogo magnético (6 en punto)</text>
+
+            <text class="tb" x="650" y="24">VISTA LATERAL</text>
+            <rect x="634" y="40" width="16" height="350" fill="#d9dbe0"/>
+            <text class="ts" x="608" y="404">Pared</text>
+            <path d="M650 46 L790 46 Q807.5 46 807.5 63.5 L807.5 364.5 Q807.5 382 790 382 L650 382 Z" fill="#c9cfdc" stroke="#4d5a78" stroke-width="1.5"/>
+            <rect x="728" y="46" width="68" height="6" fill="#2f333d"/>
+            <rect x="728" y="376" width="68" height="6" fill="#2f333d"/>
+            <rect x="650" y="88" width="6.3" height="252" fill="none" stroke="#4d5a78" stroke-dasharray="4 3"/>
+            <path d="M807.5 88 Q799 214 807.5 340" fill="none" stroke="#2b2f38" stroke-width="4"/>
+            <rect x="676" y="380" width="24" height="5" fill="#10131a"/>
+            <rect x="712" y="380" width="10" height="5" fill="#10131a"/>
+            <line class="dim" x1="650" y1="414" x2="807.5" y2="414"/>
+            <line class="dim" x1="650" y1="406" x2="650" y2="422"/><line class="dim" x1="807.5" y1="406" x2="807.5" y2="422"/>
+            <text class="dt" x="676" y="436">≈ 75 (desde la pared)</text>
+            <line class="dim" x1="828" y1="46" x2="828" y2="382"/>
+            <line class="dim" x1="820" y1="46" x2="836" y2="46"/><line class="dim" x1="820" y1="382" x2="836" y2="382"/>
+            <text class="dt" x="836" y="218">Ø 160</text>
+            <line class="ln" x1="654" y1="120" x2="690" y2="108"/><text class="ts" x="668" y="100">Placa embutida</text>
+            <text class="ts" x="878" y="100">Frente cóncavo</text>
+            <text class="ts" x="878" y="116">(flecha ≈ 4)</text>
+            <text class="ts" x="878" y="300">Burlete solo en</text>
+            <text class="ts" x="878" y="316">la mitad frontal</text>
+            <text class="ts" x="664" y="374">USB-C + botón</text>
+        </svg>
+        <figcaption>Vista frontal y vista lateral montado en pared. Escala aproximada 2.1 px/mm; la placa y el rebaje trasero están ocultos (línea punteada).</figcaption>
+    </figure>
+
+    <figure class="figura">
+        <svg viewBox="0 0 930 430" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Corte lateral de Reflejo Fijo con ubicación de componentes">
+            <style>
+                .t2  { font: 13px Arial, sans-serif; fill: #1b1f2a; }
+                .tb2 { font: bold 14px Arial, sans-serif; fill: #032472; }
+                .ts2 { font: 11.5px Arial, sans-serif; fill: #4d5a78; }
+                .ln2 { stroke: #4d5a78; stroke-width: 1; fill: none; }
+            </style>
+            <text class="tb2" x="60" y="22">CORTE A-A (lateral, montado en pared)</text>
+            <rect x="34" y="34" width="26" height="336" fill="#d9dbe0"/>
+            <path d="M60 34 L200 34 Q217.5 34 217.5 51.5 L217.5 352.5 Q217.5 370 200 370 L60 370 Z" fill="#c9cfdc" stroke="#4d5a78" stroke-width="1.5"/>
+            <rect x="139" y="34" width="66" height="6.3" fill="#2f333d"/>
+            <rect x="139" y="363.7" width="66" height="6.3" fill="#2f333d"/>
+            <rect x="60" y="76" width="6.3" height="252" fill="#8a93a6"/>
+            <rect x="66.3" y="76" width="6.3" height="252" fill="#a9b2c6"/>
+            <rect x="81" y="96" width="4" height="212" fill="#3c8d5a"/>
+            <circle cx="76" cy="110" r="3" fill="#6b7280"/><circle cx="76" cy="294" r="3" fill="#6b7280"/>
+            <rect x="100" y="134" width="38" height="136" rx="8" fill="#f1c27d" stroke="#b07d2b"/>
+            <rect x="146" y="70" width="6.3" height="264" fill="#a9b2c6"/>
+            <rect x="140" y="196" width="6" height="12" fill="#7b2cbf"/>
+            <rect x="152.4" y="82" width="16.8" height="72" fill="#0d48d2"/>
+            <rect x="152.4" y="250" width="16.8" height="72" fill="#0d48d2"/>
+            <rect x="155" y="176" width="12" height="6" fill="#444"/><rect x="155" y="222" width="12" height="6" fill="#444"/>
+            <rect x="173.4" y="78" width="6.3" height="248" fill="#7c8698"/>
+            <rect x="169" y="74" width="11" height="9" fill="#5a6070"/>
+            <rect x="169" y="321" width="11" height="9" fill="#5a6070"/>
+            <path d="M179.7 76 L215.4 76 Q203 202 215.4 328 L179.7 328 Z" fill="#3a3f4b"/>
+            <path d="M207 80 L207 98 M207 306 L207 324" stroke="#9aa3b5" stroke-dasharray="2 2"/>
+            <path d="M215.4 76 Q203 202 215.4 328" fill="none" stroke="#111" stroke-width="3"/>
+            <path d="M211 73 q3 -3 6 0" stroke="#b10a0a" stroke-width="2" fill="none"/>
+            <path d="M211 331 q3 3 6 0" stroke="#b10a0a" stroke-width="2" fill="none"/>
+            <path d="M185 40.3 L203 40.3 Q217.5 40.3 217.5 54.8 L217.5 72.8 L185 72.8 Z" fill="#5a6274"/>
+            <rect x="205" y="54" width="6" height="12" fill="#20c4e8"/>
+            <rect x="211" y="52.9" width="6.5" height="14.7" fill="#bfeefa"/>
+            <path d="M185 331.2 L217.5 331.2 L217.5 349.2 Q217.5 363.7 203 363.7 L185 363.7 Z" fill="#5a6274"/>
+            <rect x="210" y="345" width="7.5" height="8" fill="#c77d3a"/>
+            <rect x="60" y="345" width="6.3" height="8" fill="#c77d3a"/>
+            <rect x="90" y="366" width="24" height="6" fill="#10131a"/>
+            <path d="M310 202 L228 202" stroke="#b10a0a" stroke-width="3"/>
+            <path d="M228 202 l12 -7 l0 14 z" fill="#b10a0a"/>
+            <text class="t2" x="252" y="192">Golpe</text>
+            <text class="ts2" x="56" y="392">0</text><text class="ts2" x="96" y="392">20</text><text class="ts2" x="138" y="392">40</text><text class="ts2" x="166" y="392">54</text><text class="ts2" x="206" y="392">75</text>
+            <text class="ts2" x="60" y="410">Profundidad desde la pared (mm)</text>
+            <line class="ln2" x1="209" y1="60" x2="420" y2="44"/><text class="ts2" x="424" y="48">Arco de 18 LED (arriba) + difusor rehundido 1 mm</text>
+            <line class="ln2" x1="214" y1="74" x2="420" y2="68"/><text class="ts2" x="424" y="72">Diafragma de cámara de bicicleta en el hueco de 1.5 mm</text>
+            <line class="ln2" x1="175" y1="79" x2="420" y2="92"/><text class="ts2" x="424" y="96">Aro tensor PETG que sujeta la vinipiel al plato</text>
+            <line class="ln2" x1="161" y1="118" x2="420" y2="116"/><text class="ts2" x="424" y="120">4 celdas de carga 50 kg a 90° (R ≈ 40), 44–52 mm</text>
+            <line class="ln2" x1="205" y1="140" x2="420" y2="140"/><text class="ts2" x="424" y="144">Pad Ø120: vinipiel 1 mm + EVA 12 mm + anillo EVA 4 mm, 57–74 mm</text>
+            <line class="ln2" x1="177" y1="165" x2="420" y2="164"/><text class="ts2" x="424" y="168">Plato flotante de aluminio Ø118 × 3 mm, 54–57 mm</text>
+            <line class="ln2" x1="143" y1="202" x2="420" y2="188"/><text class="ts2" x="424" y="192">ADXL375 atornillado al chasis, al centro</text>
+            <line class="ln2" x1="161" y1="225" x2="420" y2="212"/><text class="ts2" x="424" y="216">Topes M4 ajustables al ≈ 90 % de carga</text>
+            <line class="ln2" x1="118" y1="250" x2="420" y2="236"/><text class="ts2" x="424" y="240">Celda 18650 con pestañas, en cuna con espuma, 19–37 mm</text>
+            <line class="ln2" x1="83" y1="275" x2="420" y2="260"/><text class="ts2" x="424" y="264">PCB (ESP32, TP4056, AP2112K, ADS1220) sobre aisladores, 10 mm</text>
+            <line class="ln2" x1="69" y1="300" x2="420" y2="284"/><text class="ts2" x="424" y="288">Tapa trasera con o-ring: acceso a batería y PCB (4 tornillos)</text>
+            <line class="ln2" x1="63" y1="320" x2="420" y2="308"/><text class="ts2" x="424" y="312">Placa de pared Ø120 × 3 mm embutida en rebaje Ø122; bayoneta ¼ de vuelta + seguro</text>
+            <line class="ln2" x1="214" y1="349" x2="420" y2="332"/><text class="ts2" x="424" y="336">Conector pogo magnético rehundido a las 6 (frontal = salida, trasero = entrada)</text>
+            <line class="ln2" x1="190" y1="367" x2="420" y2="356"/><text class="ts2" x="424" y="360">Burlete EPDM en ranura, mitad frontal del canto</text>
+            <line class="ln2" x1="102" y1="371" x2="420" y2="380"/><text class="ts2" x="424" y="384">USB-C con tapa y botón rehundido, mitad trasera del canto</text>
+        </svg>
+        <figcaption>Corte lateral esquemático con la ubicación de componentes según la lista de componentes v2. Proporciones aproximadas.</figcaption>
+    </figure>
+
+    <h4>Especificación para CAD</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Pieza</th><th>Medidas aproximadas</th><th>Material y proceso</th><th>Notas</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">Envolvente</td><td>Ø 160 (con burlete) × ≈ 75 mm; máximo en CAD 78 mm</td><td>—</td><td>Requiere aprobar el cambio de RNF-01 a Ø 160 × 80 mm</td></tr>
+            <tr><td class="material-tag">Cuerpo / chasis</td><td>Ø 154 mm sin burlete; pared 2.5–3 mm</td><td>PETG o ASA impreso, 5 perímetros, 40–50 % gyroid</td><td>Cabe en cama de 220 × 220 mm; costillas radiales bajo celdas y topes; insertos de latón M3/M4</td></tr>
+            <tr><td class="material-tag">Labio frontal</td><td>Anillo R 61.5–77 mm (15.5 mm); frente R ≥ 8</td><td>PETG satinado claro</td><td>Ventana del arco de 120° (R 64–71) y alojamiento del conector a las 6</td></tr>
+            <tr><td class="material-tag">Pad de golpeo</td><td>Ø 120 mm, flecha ≈ 4 mm, ≈ 17 mm de espesor</td><td>Vinipiel 1 mm + EVA de alta densidad 12 mm + anillo de EVA 4 mm</td><td>Funda reemplazable; plan B: neopreno o EPDM 5 mm</td></tr>
+            <tr><td class="material-tag">Aro tensor</td><td>Ø 120 / Ø 108 mm × 4 mm</td><td>PETG, 8 tornillos M3</td><td>Sujeta la vinipiel y el diafragma al plato</td></tr>
+            <tr><td class="material-tag">Plato flotante</td><td>Ø 118 × 3 mm (≈ 89 g)</td><td>Aluminio 5052/6061 cortado (FR4 doble en prototipo)</td><td>Celdas a R ≈ 40 mm; guía radial con holgura de 0.5 mm</td></tr>
+            <tr><td class="material-tag">Arco de luz</td><td>120°, R 64–71 mm, ≈ 140 mm de largo</td><td>Tira WS2812B 144 LED/m (3 tramos de 6) o PCB en arco; difusor PETG natural o policarbonato</td><td>Difusor rehundido 1 mm</td></tr>
+            <tr><td class="material-tag">Burlete</td><td>Mitad frontal del canto, ≈ 3 mm</td><td>Burlete de hule EPDM (ferretería)</td><td>En ranura de retención, no solo adhesivo</td></tr>
+            <tr><td class="material-tag">Tapa trasera</td><td>Ø 122 mm, rebaje de 3 mm</td><td>PETG con o-ring</td><td>Receptáculo de bayoneta con 3 orejas; una más ancha da la orientación</td></tr>
+            <tr><td class="material-tag">Placa de pared</td><td>Ø 120 × 3 mm, 4 barrenos</td><td>MDF o acrílico de 6 mm en prototipo; acero de 3 mm en v2</td><td>Seguro con prisionero o pestillo</td></tr>
+            <tr><td class="material-tag">Masa total</td><td>≈ 0.6 kg <b>[Estimado]</b></td><td colspan="2">Cuerpo ≈ 230 g, plato ≈ 89 g, celda 18650 ≈ 45 g, pad y burlete ≈ 70 g, electrónica, celdas y tornillería ≈ 150 g</td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+    <!-- ===================== 8. WIREFRAME ===================== -->
+    <h2 id="OCHO">Wireframe de la app</h2>
+   <div class="command-block">
+    <h3>Pantalla principal (normal y alerta) y primeros tres pasos de instalación</h3>
+    <p>Baja fidelidad. Se mantienen la arquitectura de la semana 5 (la app habla con un solo pod gateway por BLE) y el lenguaje de círculo y arco del producto.</p>
+
+    <figure class="figura">
+        <svg viewBox="0 0 880 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wireframes de la app: pantalla normal, alerta y tres pasos de instalación">
+            <style>
+                .ph { fill: #ffffff; stroke: #1b1f2a; stroke-width: 2; }
+                .wt { font: 11px Arial, sans-serif; fill: #1b1f2a; }
+                .wb { font: bold 12px Arial, sans-serif; fill: #1b1f2a; }
+                .wh { font: bold 13px Arial, sans-serif; fill: #032472; }
+                .ws { font: 10px Arial, sans-serif; fill: #5a5a5a; }
+                .box { fill: #eef1f7; stroke: #9aa3b5; }
+                .btn { fill: #0d48d2; }
+                .btt { font: bold 11px Arial, sans-serif; fill: #fff; }
+            </style>
+            <text class="wh" x="38" y="18">Principal: normal</text>
+            <text class="wh" x="212" y="18">Principal: alerta</text>
+            <text class="wh" x="398" y="18">Paso 1</text>
+            <text class="wh" x="570" y="18">Paso 2</text>
+            <text class="wh" x="744" y="18">Paso 3</text>
+
+            <!-- normal -->
+            <rect class="ph" x="20" y="28" width="156" height="340" rx="18"/>
+            <text class="wb" x="34" y="56">Sesión · Combos 1</text>
+            <circle cx="98" cy="130" r="48" fill="none" stroke="#dfe3ec" stroke-width="10"/>
+            <path d="M98 82 A48 48 0 1 1 52 145" fill="none" stroke="#0d48d2" stroke-width="10"/>
+            <text class="wb" x="74" y="128">312 ms</text>
+            <text class="ws" x="68" y="143">reacción media</text>
+            <text class="wt" x="34" y="200">Golpes 42 / 60</text>
+            <text class="wt" x="34" y="218">Fuerza media 640 N</text>
+            <circle cx="44" cy="248" r="10" fill="#36b37e"/><circle cx="76" cy="248" r="10" fill="#36b37e"/>
+            <circle cx="108" cy="248" r="10" fill="#36b37e"/><circle cx="140" cy="248" r="10" fill="#36b37e"/>
+            <text class="ws" x="34" y="274">4 pods · batería 78–91 %</text>
+            <rect class="btn" x="34" y="320" width="128" height="30" rx="15"/><text class="btt" x="78" y="339">Pausar</text>
+
+            <!-- alerta -->
+            <rect class="ph" x="194" y="28" width="156" height="340" rx="18"/>
+            <rect x="200" y="40" width="144" height="48" rx="8" fill="#fde2e2" stroke="#b10a0a"/>
+            <text class="wb" x="208" y="58" style="fill:#b10a0a">Pod 3 desconectado</text>
+            <text class="ws" x="208" y="72">Los golpes se guardan</text>
+            <text class="ws" x="208" y="84">en el pod. Sesión en pausa.</text>
+            <circle cx="272" cy="140" r="38" fill="none" stroke="#dfe3ec" stroke-width="10"/>
+            <text class="wb" x="252" y="144">Pausa</text>
+            <circle cx="218" cy="210" r="10" fill="#36b37e"/><circle cx="250" cy="210" r="10" fill="#f2a900"/>
+            <circle cx="282" cy="210" r="10" fill="#b0b6c3"/><circle cx="314" cy="210" r="10" fill="#36b37e"/>
+            <text class="wb" x="279" y="214" style="fill:#fff">!</text>
+            <text class="ws" x="208" y="240">Pod 2: batería 12 %</text>
+            <text class="ws" x="208" y="254">Pod 3: sin señal</text>
+            <rect class="btn" x="208" y="300" width="128" height="30" rx="15"/><text class="btt" x="244" y="319">Reintentar</text>
+            <text class="ws" x="226" y="348">Seguir sin el pod 3</text>
+
+            <!-- paso 1 -->
+            <rect class="ph" x="368" y="28" width="156" height="340" rx="18"/>
+            <text class="wb" x="382" y="56">1. Monta la placa</text>
+            <rect x="382" y="72" width="128" height="120" class="box"/>
+            <circle cx="446" cy="124" r="32" fill="#c9cfdc" stroke="#4d5a78"/>
+            <circle cx="446" cy="124" r="22" fill="#2b2f38"/>
+            <path d="M424 112 A26 26 0 0 1 468 112" fill="none" stroke="#20c4e8" stroke-width="4"/>
+            <path d="M484 104 A40 40 0 0 1 488 144" fill="none" stroke="#0d48d2" stroke-width="2"/>
+            <text class="ws" x="478" y="164">¼</text>
+            <line x1="390" y1="178" x2="502" y2="178" stroke="#9aa3b5" stroke-dasharray="3 3"/>
+            <text class="ws" x="404" y="189">altura de la barbilla</text>
+            <text class="wt" x="382" y="214">Atornilla la placa en</text>
+            <text class="wt" x="382" y="229">concreto o block. Coloca el</text>
+            <text class="wt" x="382" y="244">pod con el arco de luz</text>
+            <text class="wt" x="382" y="259">arriba y gira ¼ de vuelta.</text>
+            <rect class="btn" x="382" y="320" width="128" height="30" rx="15"/><text class="btt" x="424" y="339">Listo</text>
+
+            <!-- paso 2 -->
+            <rect class="ph" x="542" y="28" width="156" height="340" rx="18"/>
+            <text class="wb" x="556" y="56">2. Enciende los pods</text>
+            <rect x="556" y="72" width="128" height="120" class="box"/>
+            <circle cx="620" cy="136" r="38" fill="#c9cfdc" stroke="#4d5a78"/>
+            <circle cx="620" cy="136" r="27" fill="#2b2f38"/>
+            <path d="M590 120 A33 33 0 0 1 650 120" fill="none" stroke="#20c4e8" stroke-width="5" stroke-dasharray="6 5"/>
+            <text class="wt" x="556" y="214">Mantén 2 s el botón del</text>
+            <text class="wt" x="556" y="229">canto. El arco parpadea en</text>
+            <text class="wt" x="556" y="244">azul: está listo para</text>
+            <text class="wt" x="556" y="259">emparejar.</text>
+            <rect class="btn" x="556" y="320" width="128" height="30" rx="15"/><text class="btt" x="580" y="339">Ya parpadea</text>
+
+            <!-- paso 3 -->
+            <rect class="ph" x="716" y="28" width="156" height="340" rx="18"/>
+            <text class="wb" x="730" y="56">3. Golpea cada pod</text>
+            <rect x="730" y="72" width="128" height="34" rx="6" class="box"/><text class="wt" x="740" y="93">Pod-A3F2 · encontrado</text>
+            <rect x="730" y="112" width="128" height="34" rx="6" class="box"/><text class="wt" x="740" y="133">Pod-7C10 · encontrado</text>
+            <text class="wt" x="730" y="174">Golpea cada pod una vez.</text>
+            <text class="wt" x="730" y="189">Su arco se pone verde y</text>
+            <text class="wt" x="730" y="204">aparece aquí numerado.</text>
+            <circle cx="760" cy="240" r="12" fill="#36b37e"/><text class="ws" x="756" y="244" style="fill:#fff">1</text>
+            <circle cx="796" cy="240" r="12" fill="#36b37e"/><text class="ws" x="792" y="244" style="fill:#fff">2</text>
+            <circle cx="832" cy="240" r="12" fill="none" stroke="#9aa3b5" stroke-dasharray="3 3"/>
+            <rect class="btn" x="730" y="320" width="128" height="30" rx="15"/><text class="btt" x="770" y="339">Entrenar</text>
+        </svg>
+        <figcaption>Wireframes de baja fidelidad. En la alerta, la sesión se pausa y los eventos quedan guardados en el pod (operación sin conexión de la semana 5).</figcaption>
+    </figure>
+
+    <ul>
+        <li><b>Normal:</b> el anillo de progreso repite la forma del pod; muestra tiempo de reacción, golpes y fuerza media; los pods aparecen como círculos con su estado.</li>
+        <li><b>Alerta:</b> banner rojo con la causa y lo que pasa con los datos ("se guardan en el pod"), el pod afectado en gris, la batería baja en ámbar y dos salidas: reintentar o seguir sin ese pod.</li>
+        <li><b>Paso 1:</b> la instrucción "arco de luz arriba" fija la orientación de la bayoneta sin necesidad de leer marcas.</li>
+        <li><b>Paso 3:</b> el emparejamiento se confirma <b>golpeando el pod</b>. El usuario aprende el gesto principal desde el primer minuto y sabe cuál pod es cuál.</li>
+    </ul>
+</div>
+
+    <!-- ===================== 9. CRÍTICA TÉCNICA ===================== -->
+    <h2 id="NUEVE">Crítica técnica</h2>
+   <div class="command-block">
+    <h3>Prompt 6: revisión del boceto antes de CAD</h3>
+    <p><code style="display:inline;">⦿ Problemas críticos (máximo 3):</code></p>
+    <ol>
+        <li><b>Giro de la bayoneta en ganchos.</b> Un gancho descentrado genera un par que puede destrabar un ¼ de vuelta. <b>Ajuste:</b> seguro obligatorio (prisionero lateral o pestillo con resorte) y orejas con rampa de autobloqueo; probar con golpes descentrados a 25 mm del centro.</li>
+        <li><b>Pad flotante contra labio fijo.</b> Si el pad toca el labio al comprimirse o con un golpe en ángulo, parte de la fuerza se va al chasis sin pasar por las celdas. <b>Ajuste:</b> hueco de 1.5 mm con diafragma flexible, guía radial con holgura de 0.5 mm y verificación con carga descentrada (pérdida &lt; 8 %).</li>
+        <li><b>Calor durante la carga.</b> Con o-ring, diafragma y la celda detrás de la PCB, cargar a 500 mA sin ventilación puede calentar el interior. <b>Ajuste:</b> el modo carga apaga el arco de LED; se mide la temperatura de la celda durante una carga completa con criterio &lt; 45 °C.</li>
+    </ol>
+    <p><b>Resuelto en esta revisión:</b> la profundidad pasó de 70 a 75 mm (máximo 78 en CAD), con margen para la espuma y las tolerancias de impresión; el diámetro pasó a Ø 160 para que el labio de 15.5 mm aloje el arco, el conector y el hombro de apilamiento. <b>Pendiente:</b> aprobación del cambio de RNF-01.</p>
+    <p><code style="display:inline;">⦿ Preguntas abiertas:</code></p>
+    <ul>
+        <li>¿Altura fija de montaje o un riel vertical con varias posiciones para usuarios de distinta estatura?</li>
+        <li>¿Qué tipo de pared tiene el gimnasio piloto? En tablaroca la placa necesita un tablero de madera intermedio.</li>
+        <li>¿Basta un solo pod gateway si cuatro pods están en paredes distintas a más de 5 m? Se valida con la prueba de ESP-NOW de la semana 4.</li>
+        <li>¿Los estímulos por tercio del arco se distinguen bien a 2–3 m? Se prueba con 5 usuarios.</li>
+        <li>¿Aprueba el asesor ampliar RNF-01 a Ø 160 × 80 mm?</li>
+    </ul>
+    <p><code style="display:inline;">⦿ Fortaleza principal:</code> un solo diseño de pod, hecho con materiales que se consiguen en México, sirve para pared, piso y costal con la misma bayoneta y mide la fuerza igual en los tres.</p>
+    <p><code style="display:inline;">⦿ Veredicto:</code> <b>listo para CAD con 3 ajustes</b> (seguro de la bayoneta, hueco y diafragma del pad, y prueba térmica de carga).</p>
+</div>
+
+    <!-- ===================== 10. DEFENSA ===================== -->
+    <h2 id="DIEZ">Defensa del concepto (3 minutos)</h2>
+   <div class="command-block">
+    <h3>Guion</h3>
+    <ol>
+        <li><b>Concepto (1 min):</b> Reflejo Fijo es un objetivo luminoso de 16 cm que se monta en la pared a la altura del rival, te dice dónde golpear con un arco de luz en la parte superior y mide qué tan rápido y qué tan fuerte lo hiciste. Su pad cóncavo de vinipiel centra el golpe, el labio rígido lo protege, y con la misma bayoneta también va en el piso o en un costal.</li>
+        <li><b>Por qué ganó (1 min):</b> obtuvo +44 contra +22 de Golpe fijo y −18 de Reflejo. Gana en golpeo a altura realista (D1, 12 pts), visibilidad (D2) y seguridad del golpe (D3), que Golpe fijo no tenía; y gana en medición independiente del montaje (T1, 14 pts) y protección (T2, 12 pts), que Reflejo no tenía.</li>
+        <li><b>Riesgo principal y mitigación (1 min):</b> que la placa o la bayoneta no aguanten golpes reales. Se mitiga con prueba de carga estática (≥ 3,500 N de compresión <b>[Hipótesis]</b>) y 1,000 golpes reales sobre un muro de prueba, empezando con placa de MDF o acrílico y pasando a acero solo si hace falta.</li>
+    </ol>
+
+    <h4>Preguntas de autoevaluación</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>Pregunta</th><th>Respuesta</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">¿Se describe en una oración sin tecnicismos?</td><td>Sí: "Un objetivo luminoso en la pared que te dice dónde golpear y mide qué tan rápido y fuerte lo hiciste".</td></tr>
+            <tr><td class="material-tag">¿Por qué este y no los otros dos?</td><td>Combina D1–D3 de Reflejo con T1–T2 de Golpe fijo; es el único que es positivo en deseabilidad y factibilidad a la vez.</td></tr>
+            <tr><td class="material-tag">¿Parámetro más crítico y qué pasa si cambia?</td><td>El montaje. Si la bayoneta no aguanta y el pod regresa al piso, se pierde D1 y deja de servir para boxeo de puño; la medición sí se conserva gracias a las celdas.</td></tr>
+            <tr><td class="material-tag">¿Criterio de deseabilidad de mayor peso y cómo sabemos que se cumple?</td><td>D1 (12 pts). Hoy es una <b>hipótesis</b> basada en la entrevista con el atleta de boxeo; se valida montando 2 pods a la altura de la barbilla y observando a 5 usuarios de un gimnasio de box en la semana 7.</td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+<h2 id="Learning">Reflexión sobre aprendizajes</h2>
+        <div>
+           <p>
+            Esta semana pasamos de saber <i>con qué</i> se construye el dispositivo a decidir <i>cómo se ve, cómo se instala y cómo se usa</i>. La tabla morfológica me ayudó a abrir el espacio de soluciones, pero al revisarla contra el PDS me di cuenta de que una variante puede ser fabricable y aun así no servir para el producto: una interfaz capacitiva no detecta bien a través de un guante y una carcasa encapsulada en resina impide cambiar la batería. Las analogías tecnológicas fueron lo que más me sorprendió, porque soluciones como la bayoneta de una cámara o el pad de una batería electrónica resolvían justo los puntos débiles.
+<br>
+Los renders con IA fueron útiles para visualizar y comunicar los conceptos, aunque aprendí a leerlos con cuidado, porque la IA dibuja con naturalidad cosas que no aguantan un golpe, como el anclaje del concepto Reflejo. Por eso la matriz de Pugh fue clave: el concepto que más me gustaba, Reflejo, quedó en último lugar tal como estaba planteado, mientras que Golpe fijo resolvía la ingeniería pero en una posición poco útil para el boxeo. Combinarlos, junto con la nueva propuesta de componentes, me permitió conservar lo que hace atractivo al producto y darle una base técnica sólida. En la revisión final también ajusté detalles que parecían menores pero cambian mucho la factibilidad: sustituir el TPU por vinipiel sobre espuma, como en una manopla, hace que el pad se fabrique con materiales que puedo comprar y que se pueda reemplazar; y reducir el aro de luz a un arco superior no solo ahorra componentes, también define la orientación del dispositivo y permite indicar direcciones. Comprendí que seleccionar un concepto no es elegir la imagen más bonita, sino justificar cada decisión con criterios medibles y estar dispuesto a corregir lo que no funciona antes de llegar al CAD.
+           </p>
+    </div>
+
+                    </div>
+                </div>
+        </section>
+
+     <!--FIN CONTENIDO-->
+
+    </main>
+
+    <footer>
+      <p> 2026 &#60;kamil-gallardo&#62;  </p>
+    </footer>
+
+    <script>
+        const links = document.querySelectorAll('.menu-link');
+
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+    </script>
+
+  </body>
+</html>
