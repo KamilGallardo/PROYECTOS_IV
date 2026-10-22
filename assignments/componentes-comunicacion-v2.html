@@ -49,7 +49,7 @@
 
     <div style="background-color: #f9f9f9; padding: 15px; border-left: 5px solid #ccc; margin-bottom: 15px;">
         <p><i><b>Etiquetas:</b> <b>[Confirmado]</b> = verificado en la fuente indicada. <b>[Cotizado]</b> = precio que ya tenía el equipo. <b>[Estimado]</b> = cálculo o rango propio. <b>[Hipótesis]</b> = supuesto por validar en banco. <b>[Pendiente]</b> = falta verificar.</i></p>
-        <p><i><b>Qué no cambia:</b> pod cilíndrico <b>Ø140 × 75 mm</b> (concepto Reflejo Fijo de la semana 6; antes Ø130 × 70), ESP32-WROOM-32E, ADXL375 como medición directa de aceleración, gateway BLE + ESP-NOW, apilamiento con conector pogo magnético rehundido a las 6 en punto, LDO AP2112K, TP4056 con protección, 18650 con pestañas, app React Native. Este documento solo cambia el <b>subsistema de sensado de fuerza</b>, la <b>estructura mecánica</b> que recibe el golpe y el <b>pad</b>.</i></p>
+        <p><i><b>Qué no cambia:</b> pod cilíndrico <b>Ø160 × 75 mm</b> (concepto Reflejo Fijo de la semana 6; antes Ø130 × 70 y Ø140 × 75), ESP32-WROOM-32E, ADXL375 como medición directa de aceleración, gateway BLE + ESP-NOW, apilamiento con conector pogo magnético rehundido a las 6 en punto, LDO AP2112K, TP4056 con protección, 18650 con pestañas, app React Native. Este documento solo cambia el <b>subsistema de sensado de fuerza</b>, la <b>estructura mecánica</b> que recibe el golpe y el <b>pad</b>.</i></p>
     </div>
     <br>
 
@@ -103,7 +103,7 @@
             <tr><td class="material-tag">¿Depende del montaje (piso/pared/apilado)?</td><td><b>Sí</b></td><td><b>No</b></td><td>No</td><td>No</td></tr>
             <tr><td class="material-tag">Captura el pico del golpe</td><td>Sí</td><td>Sí (2 kSPS)</td><td>Depende del ADC</td><td><b>No</b></td></tr>
             <tr><td class="material-tag">Resistencia</td><td>Alta (10,000 g)</td><td>Alta si hay topes</td><td>Media (despegue, fatiga del adhesivo)</td><td>Media</td></tr>
-            <tr><td class="material-tag">Espacio en Ø140 mm (plato Ø100)</td><td>Mínimo</td><td>4 × (34 × 34 × 7 mm) en un círculo de Ø≈80 mm</td><td>Similar a B</td><td>Similar a B</td></tr>
+            <tr><td class="material-tag">Espacio en Ø160 mm (plato Ø118)</td><td>Mínimo</td><td>4 × (34 × 34 × 7 mm) en un círculo de Ø≈80 mm</td><td>Similar a B</td><td>Similar a B</td></tr>
             <tr><td class="material-tag">Costo extra por pod</td><td>$0</td><td>≈ $270–400 <b>[Estimado]</b></td><td>≈ $60–120 + horas</td><td>≈ $110</td></tr>
             <tr><td class="material-tag">Riesgo para 8 semanas</td><td>Bajo</td><td>Medio</td><td><b>Alto</b></td><td>No cumple</td></tr>
             <tr><td class="material-tag">Veredicto</td><td>Respaldo</td><td><b>Recomendado</b></td><td>Versión futura</td><td>Descartado</td></tr>
@@ -116,15 +116,15 @@
     <div class="code-area">
 <pre>
    (golpe →)  frente del pod, de afuera hacia la pared · profundidad desde la pared
-   ┌──────────── Ø140 con burlete (cuerpo Ø134) ────────────┐
-   │ Pad Ø100: vinipiel 1 mm + EVA 12 mm + anillo EVA 4 mm  │ 57–74 mm  ← cóncavo, flecha ≈ 4 mm
-   │ Labio R51.5–67: arco 120° de 15 LED arriba, pogo a las 6│           ← diafragma de cámara de bici en el hueco de 1.5 mm
-   │══ Plato flotante de aluminio Ø100 × 3 mm ══════════════│ 54–57 mm
+   ┌──────────── Ø160 con burlete (cuerpo Ø154) ────────────┐
+   │ Pad Ø120: vinipiel 1 mm + EVA 12 mm + anillo EVA 4 mm  │ 57–74 mm  ← cóncavo, flecha ≈ 4 mm
+   │ Labio R61.5–77: arco 120° de 18 LED arriba, pogo a las 6│           ← diafragma de cámara de bici en el hueco de 1.5 mm
+   │══ Plato flotante de aluminio Ø118 × 3 mm ══════════════│ 54–57 mm
    │  [celda]  [tope]          [tope]  [celda]              │ 44–52 mm  ← 4 celdas a 90°, 4 topes M4
    │▓▓ Cubierta del chasis (PETG, costillas) ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓│ 40–44 mm  ← ADXL375 atornillado aquí, centro
    │  18650 en cuna con espuma                              │ 19–37 mm
    │  PCB (ESP32, ADS1220, TP4056, AP2112K) sobre aisladores│ ≈ 10 mm
-   │  Tapa trasera Ø112 + o-ring + bayoneta ¼ de vuelta     │ 0–7 mm    ← placa de pared de 3 mm embutida
+   │  Tapa trasera Ø122 + o-ring + bayoneta ¼ de vuelta     │ 0–7 mm    ← placa de pared de 3 mm embutida
    └────────────────────────────────────────────────────────┘ ≈ 75 mm total (máx. 78 en CAD)
 </pre>
     </div>
@@ -136,8 +136,8 @@
             <tr><th>Pieza</th><th>Especificación</th><th>Por qué</th></tr>
         </thead>
         <tbody>
-            <tr><td class="material-tag">Plato flotante</td><td>Aluminio 5052 o 6061, Ø100 × 3 mm, con 4 barrenos</td><td>Reparte la carga del puño entre las 4 celdas y los topes; protege todo lo de abajo. Alternativa barata: 2 placas FR4 de 1.6 mm pegadas, menos rígida</td></tr>
-            <tr><td class="material-tag">4 celdas 50 kg</td><td>Medio puente, 34 × 34 × 7 mm, 1.0 mV/V</td><td>Galgas ya pegadas y calibradas de fábrica <b>[Confirmado: Unit SEN-10245]</b></td></tr>
+            <tr><td class="material-tag">Plato flotante</td><td>Aluminio <b>6061-T6</b>, Ø118 × 3 mm (≈ 89 g), con 4 barrenos; celdas a R ≈ 40 mm. Con 5052-H32, subir a 4 mm</td><td>Reparte la carga del puño entre las 4 celdas y los topes; protege todo lo de abajo. Alternativa barata: 2 placas FR4 de 1.6 mm pegadas, menos rígida</td></tr>
+            <tr><td class="material-tag">4 celdas 50 kg</td><td>Medio puente, 34 × 34 × 7 mm, 1.0 mV/V. <b>Cada celda necesita un apoyo con hueco bajo su centro</b> (la parte que se flexiona no debe tocar el chasis)</td><td>Galgas ya pegadas y calibradas de fábrica <b>[Confirmado: Unit SEN-10245]</b></td></tr>
             <tr><td class="material-tag">4 topes ajustables</td><td>Tornillo M4 con contratuerca, cabeza bajo el plato</td><td>El hueco se ajusta con una <b>galga de espesores</b> (≈ 0.2–0.3 mm <b>[Hipótesis: medir la deflexión real de la celda a 45 kg]</b>). Al llegar al 90 % de carga, el plato toca los topes y el resto va al chasis</td></tr>
             <tr><td class="material-tag">Guía lateral</td><td>Holgura radial ≈ 0.5 mm + O-ring o anillo de PTFE</td><td>Los ganchos llegan en ángulo; las celdas no deben recibir cargas laterales</td></tr>
             <tr><td class="material-tag">Retención anti-levantamiento</td><td>4 tornillos de hombro con arandela de hule</td><td>El plato no se sale al levantar o voltear el pod</td></tr>
@@ -166,8 +166,8 @@
             <tr><th>Capa</th><th>Especificación</th><th>Proveedor</th><th>Costo por pod</th></tr>
         </thead>
         <tbody>
-            <tr><td class="material-tag">Piel</td><td>Vinipiel de tapicería ≈ 1 mm, tensada con <b>aro tensor de PETG</b> (Ø100/Ø90 × 4 mm, 6 × M3 al plato)</td><td>Tiendas de telas y tapicerías</td><td>≈ $10–20 <b>[Estimado]</b></td></tr>
-            <tr><td class="material-tag">Núcleo</td><td>Disco de EVA de alta densidad 12 mm + <b>anillo</b> de EVA 4 mm en el borde: al tensar la vinipiel el centro queda ≈ 4 mm más bajo (pad cóncavo sin molde)</td><td>Tapetes de gimnasio tipo rompecabezas (autoservicio, ML)</td><td>≈ $15–30 <b>[Estimado]</b></td></tr>
+            <tr><td class="material-tag">Piel</td><td>Vinipiel de tapicería ≈ 1 mm, tensada con <b>aro tensor de PETG</b> (Ø120/Ø108 × 4 mm, 8 × M3 al plato)</td><td>Tiendas de telas y tapicerías</td><td>≈ $10–20 <b>[Estimado]</b></td></tr>
+            <tr><td class="material-tag">Núcleo</td><td>EVA de celda cerrada en 2 capas: <b>base 6 mm firme</b> (≈ 200–230 kg/m³, Shore A 40–45, tipo ortopédica) que evita tocar fondo + <b>confort 6 mm</b> (≈ 100–120 kg/m³, tatami de gimnasio) + <b>anillo</b> de 4 mm en el borde: al tensar la vinipiel el centro queda ≈ 4 mm más bajo (pad cóncavo sin molde)</td><td>Tapetes de gimnasio tipo rompecabezas (autoservicio, ML)</td><td>≈ $15–30 <b>[Estimado]</b></td></tr>
             <tr><td class="material-tag">Sello</td><td>Diafragma de cámara de bicicleta en el hueco de 1.5 mm entre pad y labio</td><td>Refaccionaria de bicicletas</td><td>≈ $5–10 <b>[Estimado]</b></td></tr>
             <tr><td class="material-tag"><b>Total pad</b></td><td></td><td></td><td><b>≈ $30–60</b></td></tr>
         </tbody>
@@ -196,16 +196,16 @@
             <tr><td class="material-tag">5</td><td><b>Adaptador TSSOP-16 → DIP</b></td><td><b>Nuevo</b>: el ADS1220 tiene paso 0.65 mm; va en el adaptador para que la PCB principal respete ≥ 0.8 mm</td><td>Local</td><td>15–40 <b>[Estimado]</b></td></tr>
             <tr><td class="material-tag">6</td><td>Disco piezoeléctrico + LM393</td><td><b>Se elimina</b>: la celda detecta toques ligeros mejor que el piezo</td><td>—</td><td>−10</td></tr>
             <tr><td class="material-tag">7</td><td>Celda 18650 protegida con pestañas</td><td>Se mantiene</td><td>Steren / ML</td><td>125 <b>[Cotizado]</b></td></tr>
-            <tr><td class="material-tag">8</td><td>Arco de 120° con 15 LED WS2812B (tira de 144 LED/m, 3 tramos de 5) + difusor PETG</td><td><b>Cambia</b> (semana 6): arco superior en lugar de aro completo</td><td>Unit / ML</td><td>40–70 <b>[Estimado]</b></td></tr>
+            <tr><td class="material-tag">8</td><td>Arco de 120° con 18 LED WS2812B (tira de 144 LED/m, 3 tramos de 6) + difusor PETG</td><td><b>Cambia</b> (semana 6): arco superior en lugar de aro completo</td><td>Unit / ML</td><td>40–70 <b>[Estimado]</b></td></tr>
             <tr><td class="material-tag">9</td><td>TP4056 USB-C con protección</td><td>Se mantiene</td><td>Unit</td><td>9 <b>[Cotizado]</b></td></tr>
             <tr><td class="material-tag">10</td><td>AP2112K-3.3</td><td>Se mantiene (reemplaza AMS1117)</td><td>—</td><td>10–20 <b>[Estimado]</b></td></tr>
             <tr><td class="material-tag">11</td><td>Conector pogo magnético (par, frontal y trasero, a las 6) + Hall</td><td>Se mantiene; <b>compra diferida a semana 4–5</b></td><td>Amazon / ML</td><td>≈ 150 <b>[Cotizado]</b></td></tr>
-            <tr><td class="material-tag">12</td><td><b>Plato de aluminio Ø100 × 3 mm</b></td><td><b>Nuevo</b></td><td>Taller de corte / torno</td><td>60–150 <b>[Estimado]</b></td></tr>
+            <tr><td class="material-tag">12</td><td><b>Plato de aluminio 6061-T6 Ø118 × 3 mm</b></td><td><b>Nuevo</b></td><td>Taller de corte / torno</td><td>60–150 <b>[Estimado]</b></td></tr>
             <tr><td class="material-tag">13</td><td><b>Topes M4, tornillos de hombro, insertos de latón, arandelas de hule, fijador</b></td><td><b>Nuevo</b></td><td>Ferretería / Unit</td><td>50–90 <b>[Estimado]</b></td></tr>
             <tr><td class="material-tag">14</td><td>Pasivos, conectores JST-PH, aisladores de silicona, programador</td><td>Ajustado</td><td>Unit</td><td>80–130 <b>[Estimado]</b></td></tr>
             <tr><td class="material-tag">15</td><td>PCB 2 capas</td><td>Se mantiene</td><td>Laboratorio / externa</td><td>30–120 <b>[Estimado]</b></td></tr>
-            <tr><td class="material-tag">16</td><td>Carcasa PETG/ASA (cuerpo, labio, tapa, aro tensor, difusor) + burlete EPDM + placa de pared</td><td>Ajustado (Ø140 × 75)</td><td>Filamento, ferretería, MDF/acrílico</td><td>140–280 <b>[Estimado]</b></td></tr>
-            <tr><td class="material-tag">17</td><td><b>Pad Ø100: vinipiel tensada + EVA alta densidad 12 mm + anillo EVA 4 mm + diafragma</b></td><td><b>Decidido</b> (ver 4.4; semana 6)</td><td>Tapicería / tapetes EVA / refaccionaria</td><td>30–60 <b>[Estimado]</b></td></tr>
+            <tr><td class="material-tag">16</td><td>Carcasa PETG/ASA (cuerpo, labio, tapa, aro tensor, difusor) + burlete EPDM + placa de pared</td><td>Ajustado (Ø160 × 75)</td><td>Filamento, ferretería, MDF/acrílico</td><td>140–280 <b>[Estimado]</b></td></tr>
+            <tr><td class="material-tag">17</td><td><b>Pad Ø120: vinipiel tensada + EVA alta densidad 12 mm + anillo EVA 4 mm + diafragma</b></td><td><b>Decidido</b> (ver 4.4; semana 6)</td><td>Tapicería / tapetes EVA / refaccionaria</td><td>30–60 <b>[Estimado]</b></td></tr>
             <tr><td class="material-tag">—</td><td>HX711</td><td><b>No se usa</b></td><td>—</td><td>0</td></tr>
         </tbody>
     </table>
@@ -303,9 +303,9 @@
             <tr><td class="material-tag">Sensado de fuerza</td><td>ADXL375 (aceleración) + 4 celdas de 50 kg bajo plato flotante + ADS1220 a 2 kSPS. Fuerza en N medida, con saturación declarada</td></tr>
             <tr><td class="material-tag">Piezo</td><td>Se elimina</td></tr>
             <tr><td class="material-tag">HX711</td><td>No se usa</td></tr>
-            <tr><td class="material-tag">Tamaño</td><td>Ø140 × 75 mm (máx. 78 en CAD), masa ≈ 0.5 kg</td></tr>
-            <tr><td class="material-tag">Estructura</td><td>Plato de aluminio Ø100 × 3 mm, 4 topes ajustables, chasis con costillas e insertos de latón, burlete de EPDM</td></tr>
-            <tr><td class="material-tag">Pad</td><td>Vinipiel tensada con aro sobre EVA de alta densidad (pad Ø100 cóncavo) + diafragma; TPU 95A como alternativa; PU colado de poliéter como mejora si hay entrega local &lt; 2 semanas; espuma de colchón descartada</td></tr>
+            <tr><td class="material-tag">Tamaño</td><td>Ø160 × 75 mm (máx. 78 en CAD), masa ≈ 0.6 kg</td></tr>
+            <tr><td class="material-tag">Estructura</td><td>Plato de aluminio 6061-T6 Ø118 × 3 mm, 4 topes ajustables, chasis con costillas e insertos de latón, burlete de EPDM</td></tr>
+            <tr><td class="material-tag">Pad</td><td>Vinipiel tensada con aro sobre EVA de alta densidad (pad Ø120 cóncavo) + diafragma; TPU 95A como alternativa; PU colado de poliéter como mejora si hay entrega local &lt; 2 semanas; espuma de colchón descartada</td></tr>
             <tr><td class="material-tag">Hito</td><td>Banco de celdas en la semana 2; decisión al cierre de la semana 3; respaldo: solo ADXL375</td></tr>
         </tbody>
     </table>
