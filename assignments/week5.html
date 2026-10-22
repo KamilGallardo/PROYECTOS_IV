@@ -40,7 +40,7 @@
  <section class="week-header">
             <div class="week-glass">
                 <h1>SEMANA 5 (v1.0): PDS, arquitectura del sistema y BOM</h1>
-                <div>Versión final del entregable de la semana 5, revisada contra la rúbrica del curso y alineada con el concepto <b>Reflejo Fijo</b> de la semana 6 (Ø 140 × 75 mm). Incluye el PDS de una página, el diagrama de 3 capas, la decisión de IA, los componentes críticos, el BOM a 10 unidades y la defensa.
+                <div>Versión final del entregable de la semana 5, revisada contra la rúbrica del curso y alineada con el concepto <b>Reflejo Fijo</b> de la semana 6 (Ø 160 × 75 mm). Incluye el PDS de una página, el diagrama de 3 capas, la decisión de IA, los componentes críticos, el BOM a 10 unidades y la defensa.
                 </div>
             </div>
         </section>
@@ -83,7 +83,7 @@
             <tr><td class="material-tag">BOM con fuente, precio y tiempo de entrega</td><td><span class="mid">Parcial</span>: precios estimados y sin tiempos de entrega</td><td><span class="ok">Cumple</span>: precios confirmados donde fue posible y entrega por línea</td></tr>
             <tr><td class="material-tag">Decisión de IA (edge, nube o híbrida) en 3 puntos</td><td><span class="mid">Parcial</span>: tabla del Paso 2, sin decisión resumida</td><td><span class="ok">Cumple</span></td></tr>
             <tr><td class="material-tag">3 componentes críticos: ≥ 10 unidades en México con entrega &lt; 2 semanas, JLCPCB y plan B</td><td><span class="mid">Parcial</span>: ADXL375, ESP32 y 18650 con existencias "pendientes"; con la lista v2 ya no son los más críticos</td><td><span class="ok">Cumple</span>: ADXL375, ADS1220 y celdas de carga, con existencias y JLCPCB verificados hoy</td></tr>
-            <tr><td class="material-tag">Costo a 10 unidades y precio = BOM / 0.30</td><td><span class="mid">Desactualizado</span>: BOM de $815 sin la ruta de fuerza y con el ADXL375 a USD 6.38 (hoy USD 22.73)</td><td><span class="ok">Cumple</span>: BOM de $1,390 → precio de referencia $4,633</td></tr>
+            <tr><td class="material-tag">Costo a 10 unidades y precio = BOM / 0.30</td><td><span class="mid">Desactualizado</span>: BOM de $815 sin la ruta de fuerza y con el ADXL375 a USD 6.38 (hoy USD 22.73)</td><td><span class="ok">Cumple</span>: BOM de $1,460 → precio de referencia $4,867</td></tr>
             <tr><td class="material-tag">Manufactura: sin BGA, pitch ≥ 0.8 mm</td><td><span class="mid">Riesgo</span>: no se revisó el ADS1220 (TSSOP, 0.65 mm) ni el ADXL375 (LGA)</td><td><span class="ok">Resuelto</span>: ambos los ensambla JLCPCB (partes Extended); a mano solo se suelda lo que cumple ≥ 0.8 mm</td></tr>
             <tr><td class="material-tag">Respuestas a las 4 preguntas y defensa de una decisión</td><td><span class="no">Falta</span></td><td><span class="ok">Cumple</span></td></tr>
             <tr><td class="material-tag">Verificable por un tercero</td><td><span class="mid">Parcial</span>: muchos "[Hipótesis]" como criterio</td><td><span class="ok">Cumple</span>: cada requisito dice qué medir, con qué y cuántas veces</td></tr>
@@ -94,14 +94,15 @@
     <br>
 
     <h4>Tamaño: una sola medida en todas las semanas</h4>
-    <p><b>Decisión: se adopta Ø 140 × 75 mm</b> (máximo 78 mm en CAD), la medida que ya fija el concepto Reflejo Fijo de la semana 6. Así la semana 5 se adapta a la 6 y no al revés, porque el boceto, la especificación para CAD y el render ya están hechos con esa medida.</p>
+    <p><b>Decisión: se adopta Ø 160 × 75 mm</b> (máximo 78 mm en CAD), la medida de la última revisión del concepto Reflejo Fijo de la semana 6. La semana 5 se adapta a la 6, porque el boceto y la especificación para CAD ya están hechos con esa medida. <b>Esto cambia el límite de tamaño del PDS</b> (RD-04) de Ø ≤ 140 a Ø ≤ 160 mm.</p>
     <ul>
-        <li><b>Ø 140 es el máximo del PDS</b> (RD-04), así que no se crece más.</li>
-        <li><b>El pad pasa de Ø 90 a Ø 100 mm:</b> +23 % de área de golpeo (frente a 95 mm) y espacio para el aro tensor y el diafragma.</li>
+        <li><b>El pad pasa a Ø 120 mm:</b> +44 % de área de golpeo frente a Ø 100 mm; un puño mal colocado todavía cae en el pad y no en el labio.</li>
+        <li><b>El cuerpo (Ø 154 sin burlete) cabe en una cama de impresión de 220 × 220 mm</b>; no se crece más porque ya no cabría.</li>
         <li><b>Profundidad de 75 mm:</b> 5 mm más para los 17 mm del pad de vinipiel + EVA y para las tolerancias de impresión, sin pasar los 80 mm.</li>
-        <li><b>El plato flotante pasa a Ø 100 × 3 mm</b> y las 4 celdas siguen cabiendo en un círculo de Ø ≈ 80 mm.</li>
+        <li><b>El plato flotante pasa a Ø 118 × 3 mm</b> (≈ 89 g) con las 4 celdas a R ≈ 40 mm; el arco de luz pasa a 18 LED (3 tramos de 6).</li>
+        <li><b>Costo:</b> ≈ +$70 por pod a 10 unidades (plato, carcasa, pad, arco y placa más grandes).</li>
     </ul>
-    <p><b>Qué cambiar en <code>week5.html</code></b> para que no se contradiga con esta versión: secciones C.3, E y K.1 (dicen Ø 130 × 70); C.1 y D.10 (dicen Flutter, pero la decisión vigente es React Native); el piezo y el HX711 (ya no se usan); y RF-19 (iOS 14, cuando React Native pide iOS 15.1 o superior). La lista de componentes v2 y la arquitectura de comunicación v2 ya están actualizadas con Ø 140 × 75 mm, pad de vinipiel + EVA, arco de 15 LED y conector pogo magnético.</p>
+    <p><b>Qué cambiar en <code>week5.html</code></b> para que no se contradiga con esta versión: secciones C.3, E y K.1 (dicen Ø 130 × 70); C.1 y D.10 (dicen Flutter, pero la decisión vigente es React Native); el piezo y el HX711 (ya no se usan); y RF-19 (iOS 14, cuando React Native pide iOS 15.1 o superior). La lista de componentes v2 y la arquitectura de comunicación v2 ya están actualizadas con Ø 160 × 75 mm, pad Ø 120 de vinipiel + EVA, arco de 18 LED y conector pogo magnético.</p>
 </div>
 
     <!-- ===================== 1. PDS ===================== -->
@@ -137,10 +138,10 @@
     <table class="material-table">
         <thead><tr><th>ID</th><th>Requisito</th><th>Verificación</th></tr></thead>
         <tbody>
-            <tr><td class="material-tag">RD-01</td><td>El sistema debe operar ≥ 3 h por carga con el perfil de uso: 15 LED al 40 % con 30 % de ciclo, radio activo y ADC a 2 kSPS.</td><td>Descarga de 4.2 V hasta el corte con registro de corriente; 3 unidades; mínimo ≥ 3 h.</td></tr>
+            <tr><td class="material-tag">RD-01</td><td>El sistema debe operar ≥ 3 h por carga con el perfil de uso: 18 LED al 40 % con 30 % de ciclo, radio activo y ADC a 2 kSPS.</td><td>Descarga de 4.2 V hasta el corte con registro de corriente; 3 unidades; mínimo ≥ 3 h.</td></tr>
             <tr><td class="material-tag">RD-02</td><td>El pod debe resistir ≥ 10,000 golpes de ≈ 1,500 N sin grietas, sin tornillos flojos y con cambio de ganancia ≤ 5 %, y soportar 3,500 N estáticos sin daño.</td><td>Péndulo o actuador con inspección cada 1,000 golpes y recalibración al final; prensa con celda de referencia a 3,500 N.</td></tr>
             <tr><td class="material-tag">RD-03</td><td>El sistema debe distinguir golpes reales de toques, vibración, caídas y apilado con F1 ≥ 0.90.</td><td>300 eventos etiquetados con video, separados por usuario; matriz de confusión.</td></tr>
-            <tr><td class="material-tag">RD-04</td><td>El pod debe medir Ø ≤ 140 mm y ≤ 78 mm de profundidad, pesar ≤ 0.6 kg, y su estímulo debe verse a 3 m.</td><td>Vernier y báscula en 5 unidades; 5 usuarios identifican el tercio encendido a 3 m con luz de gimnasio (≥ 9 de 10 aciertos).</td></tr>
+            <tr><td class="material-tag">RD-04</td><td>El pod debe medir Ø ≤ 160 mm y ≤ 78 mm de profundidad, pesar ≤ 0.7 kg, y su estímulo debe verse a 3 m.</td><td>Vernier y báscula en 5 unidades; 5 usuarios identifican el tercio encendido a 3 m con luz de gimnasio (≥ 9 de 10 aciertos).</td></tr>
         </tbody>
     </table>
     </div>
@@ -165,7 +166,7 @@
         <tbody>
             <tr><td class="material-tag">RR-01 Manufactura</td><td>El sistema debe usar una PCB de 2 capas sin BGA. Todo lo que se suelda a mano debe tener pitch ≥ 0.8 mm; los dos CI de paso fino (ADS1220 y ADXL375) solo los ensambla JLCPCB. Carcasa en FDM (PETG/ASA) y ensamble ≤ 1.5 h por unidad.</td><td>DRC; lista de piezas de soldadura manual con su pitch; cronometrar 3 ensambles.</td></tr>
             <tr><td class="material-tag">RR-02 Regulatorio</td><td>El sistema debe radiar solo a través del módulo certificado ESP32-WROOM-32E, usar una celda 18650 con protección y no presentarse como dispositivo médico. Es un prototipo académico, sin venta.</td><td>Revisión documental: certificados del módulo y ficha de la celda. La homologación para venta queda como <b>[Verificar]</b>.</td></tr>
-            <tr><td class="material-tag">RR-03 Tiempo y costo</td><td>Los componentes críticos deben llegar en ≤ 2 semanas a México; 5 unidades deben funcionar en la semana 13; el prototipo debe costar ≤ $3,000 (meta ≈ $1,500–1,900) y el BOM a 10 unidades ≤ $1,400 por pod.</td><td>Órdenes de compra con fecha de pedido y de llegada; facturas.</td></tr>
+            <tr><td class="material-tag">RR-03 Tiempo y costo</td><td>Los componentes críticos deben llegar en ≤ 2 semanas a México; 5 unidades deben funcionar en la semana 13; el prototipo debe costar ≤ $3,000 (meta ≈ $1,500–1,900) y el BOM a 10 unidades ≤ $1,500 por pod.</td><td>Órdenes de compra con fecha de pedido y de llegada; facturas.</td></tr>
             <tr><td class="material-tag">RR-04 Compatibilidad</td><td>La app debe funcionar en Android 8 o superior y en iOS 15.1 o superior (mínimo de React Native <b>[Verificar con la versión elegida]</b>).</td><td>Una sesión completa en ≥ 1 dispositivo real por plataforma.</td></tr>
         </tbody>
     </table>
@@ -259,7 +260,7 @@
             <text class="pr" x="172" y="520">SPI + INT/DRDY</text>
             <rect class="n" x="420" y="540" width="140" height="65" rx="8"/>
             <text class="bb" x="432" y="562">Arco 120°</text>
-            <text class="bx" x="432" y="580">15 LED WS2812B</text>
+            <text class="bx" x="432" y="580">18 LED WS2812B</text>
             <path class="ar1" d="M490 472 L490 538"/>
             <text class="pr" x="496" y="520">RMT</text>
             <rect class="n" x="575" y="540" width="172" height="65" rx="8"/>
@@ -317,7 +318,7 @@
             <tr><th>Componente</th><th>Por qué es crítico</th><th>≥ 10 unidades en México, entrega &lt; 2 semanas</th><th>JLCPCB</th><th>Plan B</th></tr>
         </thead>
         <tbody>
-            <tr><td class="material-tag">ADXL375BCCZ (acelerómetro ±200 g)</td><td>Un solo fabricante (Analog Devices); es la pieza más cara del BOM (≈ 30 %)</td><td><span class="mid">Con importación.</span> LCSC: 64 en inventario, USD 23.80 (1) y 22.73 (10+) <b>[Confirmado]</b>; envío a México ≈ 5–10 días <b>[Estimado]</b>. Módulo en Amazon MX a $344 <b>[Cotizado]</b>; existencias de 10 <b>[Verificar]</b></td><td><span class="ok">Sí</span>, C662206, parte Extended <b>[Confirmado]</b></td><td>H3LIS331DL (±100/200/400 g) en módulo <b>[Verificar disponibilidad]</b>. Si nada llega, la fuerza sigue medida por las celdas y el ADXL375 queda en 1–2 unidades</td></tr>
+            <tr><td class="material-tag">ADXL375BCCZ (acelerómetro ±200 g)</td><td>Un solo fabricante (Analog Devices); es la pieza más cara del BOM (≈ 29 %)</td><td><span class="mid">Con importación.</span> LCSC: 64 en inventario, USD 23.80 (1) y 22.73 (10+) <b>[Confirmado]</b>; envío a México ≈ 5–10 días <b>[Estimado]</b>. Módulo en Amazon MX a $344 <b>[Cotizado]</b>; existencias de 10 <b>[Verificar]</b></td><td><span class="ok">Sí</span>, C662206, parte Extended <b>[Confirmado]</b></td><td>H3LIS331DL (±100/200/400 g) en módulo <b>[Verificar disponibilidad]</b>. Si nada llega, la fuerza sigue medida por las celdas y el ADXL375 queda en 1–2 unidades</td></tr>
             <tr><td class="material-tag">ADS1220IPWR (ADC 24 bits, 2 kSPS)</td><td>Sin él, la fuerza no se mide a la velocidad del golpe; paso de 0.65 mm</td><td><span class="ok">Sí.</span> Unit Electronics (outlet): 83 piezas a $95.40 <b>[Confirmado]</b>; entrega local en 1–3 días <b>[Estimado]</b></td><td><span class="ok">Sí</span>, C48263, parte Extended <b>[Confirmado]</b></td><td>Módulo ADS1115 de Unit ($47, 860 SPS): mide, pero subestima el pico (≈ 8–12 muestras en la subida)</td></tr>
             <tr><td class="material-tag">Celda de carga 50 kg SEN-10245 (×4 por pod)</td><td>Se necesitan 40 para 10 pods, de un mismo lote para que la ganancia sea parecida</td><td><span class="ok">Sí.</span> Unit Electronics: 191 disponibles; $22 (1), $18.76 (10+) y $14.97 (35+) <b>[Confirmado]</b></td><td>No aplica (pieza mecánica, cableada a un conector JST-PH)</td><td>Celdas genéricas de báscula de medio puente de 50 kg con el mismo formato de 34 × 34 mm (Mercado Libre o Amazon); recalibrar el conjunto</td></tr>
         </tbody>
@@ -341,17 +342,17 @@
             <tr><td class="material-tag">3</td><td>ADS1220IPWR (CI, ensamblado por JLCPCB o en adaptador)</td><td>Unit Electronics</td><td>95 <b>[Confirmado]</b></td><td>950</td><td>1–3 días</td></tr>
             <tr><td class="material-tag">4</td><td>4 celdas de carga 50 kg SEN-10245 (precio por 35+)</td><td>Unit Electronics</td><td>60 <b>[Confirmado]</b></td><td>600</td><td>1–3 días</td></tr>
             <tr><td class="material-tag">5</td><td>Pasivos, TP4056/MCP73831, AP2112K-3.3, USB-C, TVS, fusible, JST-PH, Hall</td><td>Unit / LCSC</td><td>70 <b>[Estimado]</b></td><td>700</td><td>1–10 días</td></tr>
-            <tr><td class="material-tag">6</td><td>Arco de 15 LED WS2812B (tira de 144 LED/m) + difusor</td><td>Unit / Mercado Libre</td><td>50 <b>[Estimado]</b></td><td>500</td><td>1–5 días</td></tr>
+            <tr><td class="material-tag">6</td><td>Arco de 18 LED WS2812B (tira de 144 LED/m, 3 tramos de 6) + difusor</td><td>Unit / Mercado Libre</td><td>60 <b>[Estimado]</b></td><td>600</td><td>1–5 días</td></tr>
             <tr><td class="material-tag">7</td><td>Celda 18650 protegida con pestañas</td><td>Steren / Mercado Libre</td><td>150 <b>[Estimado]</b></td><td>1,500</td><td>1–5 días</td></tr>
             <tr><td class="material-tag">8</td><td>Conector pogo magnético (frontal y trasero)</td><td>Amazon MX / Mercado Libre</td><td>80 <b>[Estimado]</b></td><td>800</td><td>2–7 días</td></tr>
             <tr><td class="material-tag">9</td><td>PCB de 2 capas + ensamble parcial (2 CI Extended), prorrateado con envío</td><td>JLCPCB</td><td>90 <b>[Estimado]</b></td><td>900</td><td>7–12 días</td></tr>
-            <tr><td class="material-tag">10</td><td>Plato flotante de aluminio Ø 100 × 3 mm</td><td>Taller de corte local</td><td>60 <b>[Estimado]</b></td><td>600</td><td>3–7 días</td></tr>
+            <tr><td class="material-tag">10</td><td>Plato flotante de aluminio 6061-T6 Ø 118 × 3 mm</td><td>Taller de corte local</td><td>80 <b>[Estimado]</b></td><td>800</td><td>3–7 días</td></tr>
             <tr><td class="material-tag">11</td><td>Topes M4, tornillos de hombro, insertos de latón, arandelas de hule, fijador</td><td>Ferretería / Unit</td><td>60 <b>[Estimado]</b></td><td>600</td><td>1–3 días</td></tr>
-            <tr><td class="material-tag">12</td><td>Carcasa PETG/ASA (cuerpo, labio, tapa, aro tensor) ≈ 250 g</td><td>Filamento (Unit / Amazon MX)</td><td>90 <b>[Estimado]</b></td><td>900</td><td>1–5 días</td></tr>
-            <tr><td class="material-tag">13</td><td>Pad: vinipiel + EVA de alta densidad + diafragma de cámara</td><td>Tapicería / tapetes EVA / refaccionaria</td><td>45 <b>[Estimado]</b></td><td>450</td><td>Mismo día</td></tr>
+            <tr><td class="material-tag">12</td><td>Carcasa PETG/ASA (cuerpo, labio, tapa, aro tensor) ≈ 320 g</td><td>Filamento (Unit / Amazon MX)</td><td>115 <b>[Estimado]</b></td><td>1,150</td><td>1–5 días</td></tr>
+            <tr><td class="material-tag">13</td><td>Pad Ø 120: vinipiel + EVA (base firme + capa de confort) + diafragma de cámara</td><td>Tapicería / proveedor de EVA ortopédica / tatami / refaccionaria</td><td>55 <b>[Estimado]</b></td><td>550</td><td>Mismo día</td></tr>
             <tr><td class="material-tag">14</td><td>Burlete EPDM + botón</td><td>Ferretería / Unit</td><td>20 <b>[Estimado]</b></td><td>200</td><td>Mismo día</td></tr>
-            <tr><td class="material-tag">15</td><td>Placa de pared (MDF o acrílico de 6 mm)</td><td>Corte láser local</td><td>40 <b>[Estimado]</b></td><td>400</td><td>2–5 días</td></tr>
-            <tr><td class="material-tag"><b>Total</b></td><td></td><td></td><td><b>1,390</b></td><td><b>13,900</b></td><td><b>≤ 12 días</b></td></tr>
+            <tr><td class="material-tag">15</td><td>Placa de pared Ø 120 (MDF o acrílico de 6 mm)</td><td>Corte láser local</td><td>45 <b>[Estimado]</b></td><td>450</td><td>2–5 días</td></tr>
+            <tr><td class="material-tag"><b>Total</b></td><td></td><td></td><td><b>1,460</b></td><td><b>14,600</b></td><td><b>≤ 12 días</b></td></tr>
         </tbody>
     </table>
     </div>
@@ -359,13 +360,13 @@
 
     <p><code style="display:inline;">⦿ Precio de referencia (BOM ≤ 30 % del precio):</code></p>
     <ul>
-        <li>1,390 / 0.30 ≈ <b>$4,633 MXN sin IVA</b> (≈ $5,375 con IVA del 16 %).</li>
-        <li>Con el módulo ADXL375 de Amazon ($344) en lugar del CI: BOM ≈ $1,314 → ≈ $4,380.</li>
-        <li>Con H3LIS331DL (≈ $200 <b>[Estimado]</b>): BOM ≈ $1,170 → ≈ $3,900.</li>
+        <li>1,460 / 0.30 ≈ <b>$4,867 MXN sin IVA</b> (≈ $5,645 con IVA del 16 %).</li>
+        <li>Con el módulo ADXL375 de Amazon ($344) en lugar del CI: BOM ≈ $1,384 → ≈ $4,613.</li>
+        <li>Con H3LIS331DL (≈ $200 <b>[Estimado]</b>): BOM ≈ $1,240 → ≈ $4,133.</li>
         <li>No incluye mano de obra, empaque, garantía ni servicios en la nube (≈ USD 25 al mes de Supabase Pro durante el piloto).</li>
     </ul>
-    <p><b>Por qué subió frente a la semana 5 ($815 → $1,390):</b> entra la ruta de fuerza (celdas + ADS1220 + plato ≈ $215), el ADXL375 cuesta hoy 3.6 veces más y se agregan la placa de pared, el burlete y el conector magnético del concepto de la semana 6.</p>
-    <p><b>Prototipo (1 unidad, con módulos):</b> ≈ $1,400–1,900 según la lista de componentes v2; cabe en la referencia de $3,000 del curso, y en $1,500 solo en el extremo bajo.</p>
+    <p><b>Por qué subió frente a la semana 5 ($815 → $1,460):</b> entra la ruta de fuerza (celdas + ADS1220 + plato ≈ $235), el ADXL375 cuesta hoy 3.6 veces más y se agregan la placa de pared, el burlete y el conector magnético del concepto de la semana 6, con el tamaño de Ø 160 mm.</p>
+    <p><b>Prototipo (1 unidad, con módulos):</b> ≈ $1,450–1,980 según la lista de componentes v2; cabe en la referencia de $3,000 del curso, y en $1,500 solo en el extremo bajo.</p>
 </div>
 
     <!-- ===================== 6. MANUFACTURA ===================== -->
@@ -410,8 +411,8 @@
     <p class="frase">"Si el pod se monta en pared, piso o costal, la aceleración cambia con el montaje; la fuerza entre el plato y el chasis, no."</p>
     <ol>
         <li><b>Problema:</b> con solo un acelerómetro, F = m·a depende de la masa efectiva y de lo que está detrás del pod. El mismo golpe da números distintos en la pared y en el piso (contradicción C2 de la semana 5), y Reflejo Fijo se monta de tres formas.</li>
-        <li><b>Decisión:</b> 4 celdas de 50 kg bajo un plato de aluminio Ø 100 × 3 mm, leídas por un ADS1220 a 2 kSPS (≈ 18–28 muestras en la subida de 9–14 ms del golpe), con topes al 90 % de carga y bandera de saturación. El ADXL375 se conserva para la detección y para el rango por encima de 1,750 N.</li>
-        <li><b>Costo y riesgo:</b> ≈ $215 por pod a 10 unidades y un riesgo medio de calendario. Se mitiga con un banco de celdas en la semana 2 y una decisión al cierre de la semana 3; el respaldo es solo el ADXL375 con el índice calibrado.</li>
+        <li><b>Decisión:</b> 4 celdas de 50 kg bajo un plato de aluminio Ø 118 × 3 mm, leídas por un ADS1220 a 2 kSPS (≈ 18–28 muestras en la subida de 9–14 ms del golpe), con topes al 90 % de carga y bandera de saturación. El ADXL375 se conserva para la detección y para el rango por encima de 1,750 N.</li>
+        <li><b>Costo y riesgo:</b> ≈ $235 por pod a 10 unidades y un riesgo medio de calendario. Se mitiga con un banco de celdas en la semana 2 y una decisión al cierre de la semana 3; el respaldo es solo el ADXL375 con el índice calibrado.</li>
         <li><b>Cómo se demuestra:</b> RF-03. Pesas de 5–40 kg (±3 %), caída de masa conocida (±15 % en el pico) y la misma serie en pared, piso y costal (diferencia ≤ 10 %).</li>
     </ol>
 </div>
@@ -420,7 +421,7 @@
     <h2 id="ANEXO">Anexo: componentes y comunicación v2</h2>
    <div class="command-block">
     <h3>Detalle técnico que respalda este PDS</h3>
-    <p>El PDS resume; el anexo explica cada decisión con sus cálculos, alternativas y fuentes. Está actualizado con las medidas de la semana 6 (Ø 140 × 75 mm).</p>
+    <p>El PDS resume; el anexo explica cada decisión con sus cálculos, alternativas y fuentes. Está actualizado con las medidas de la semana 6 (Ø 160 × 75 mm).</p>
     <div class="tabla-scroll">
     <table class="material-table">
         <thead><tr><th>Parte del anexo</th><th>Qué contiene</th><th>Requisitos del PDS que respalda</th></tr></thead>
@@ -430,7 +431,7 @@
         </tbody>
     </table>
     </div>
-    <p style="text-align:center; margin-top:18px;"><a href="../assignments/componentes-comunicacion-v2.html" class="anexo-btn">ABRIR ANEXO: COMPONENTES Y COMUNICACIÓN v2</a></p>
+    <p style="text-align:center; margin-top:18px;"><a href="componentes-comunicacion-v2.html" class="anexo-btn">ABRIR ANEXO: COMPONENTES Y COMUNICACIÓN v2</a></p>
 </div>
 
 <h2 id="Learning">Reflexión sobre aprendizajes</h2>
