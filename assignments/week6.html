@@ -123,18 +123,18 @@
         </thead>
         <tbody>
             <tr><td class="material-tag">Interfaz A: capacitiva</td><td>Un guante de boxeo (cuero o sintético con espuma) aísla la mano, así que la detección capacitiva a través del guante es poco confiable <b>[Hipótesis fuerte: probar con un guante real]</b>. Tampoco mide aceleración ni fuerza.</td><td><b>Descartada</b></td></tr>
-            <tr><td class="material-tag">Interfaz B: switch de domo</td><td>Es binario (no mide intensidad) y su fatiga no aguanta 10,000 impactos de ≈ 1,600–2,600 N (RF-06).</td><td><b>Descartada</b></td></tr>
+            <tr><td class="material-tag">Interfaz B: switch de domo</td><td>Es binario (no mide intensidad) y su fatiga no aguanta 10,000 impactos de ≈ 1,600–2,600 N (RD-02 pide 10,000 golpes).</td><td><b>Descartada</b></td></tr>
             <tr><td class="material-tag">Interfaz C: sensor bajo superficie rígida</td><td>Es la base correcta. Con la lista de componentes v2 evoluciona a <b>ADXL375 + 4 celdas de carga bajo un plato flotante</b>, que mide fuerza sin depender del montaje.</td><td><b>Se conserva y se mejora</b></td></tr>
             <tr><td class="material-tag">Energía C: Qi</td><td>No encadena pods ni permite carga por apilamiento, y es menos eficiente (contradicción C3 del PDS).</td><td><b>Descartada</b></td></tr>
             <tr><td class="material-tag">Energía A + B</td><td>No son excluyentes: el PDS pide apilamiento (pogo) y la revisión crítica dejó USB-C como vía base.</td><td><b>Se combinan</b></td></tr>
             <tr><td class="material-tag">Indicador A + C</td><td>Usar el mismo aro de estímulo para mostrar el estado elimina piezas; la ventana de LEDs (B) duplica hardware.</td><td><b>Se combinan A y C</b></td></tr>
             <tr><td class="material-tag">Material B: aluminio inyectado</td><td>El molde rebasa presupuesto y plazo, y una carcasa metálica bloquea el 2.4 GHz (sección D.9c de la semana 5).</td><td><b>Solo producción en volumen</b>; aluminio solo en el plato interno</td></tr>
             <tr><td class="material-tag">Material C: policarbonato en la cara de golpe</td><td>Superficie dura donde llegan los nudillos.</td><td><b>Descartada para la cara de golpe</b>; útil como difusor</td></tr>
-            <tr><td class="material-tag">Sellado B y C</td><td>Impiden cambiar batería y PCB en menos de 5 minutos (RNF-06), y encapsular una celda de litio en resina dificulta disipar el calor.</td><td><b>Descartadas</b>; se queda el o-ring (A)</td></tr>
+            <tr><td class="material-tag">Sellado B y C</td><td>Impiden abrir el pod para cambiar batería y PCB, y encapsular una celda de litio en resina dificulta disipar el calor.</td><td><b>Descartadas</b>; se queda el o-ring (A)</td></tr>
             <tr><td class="material-tag">Montaje C: ventosa</td><td>Se despega con golpes laterales y en pisos con polvo o sudor.</td><td><b>Descartada</b></td></tr>
             <tr><td class="material-tag">Forma B: hexágono</td><td>Exige orientación al apilar; los anillos de contacto concéntricos se eligieron justo para que la rotación no importe.</td><td><b>Descartada</b></td></tr>
             <tr><td class="material-tag">Faltante</td><td>La tabla no incluye <b>montaje rígido en pared</b>, la posición más realista para boxeo (altura de rostro y torso).</td><td><b>Se agrega como variante D</b></td></tr>
-            <tr><td class="material-tag">Presupuesto de $500–600 por unidad</td><td>No es realista para un pod instrumentado: la lista v2 da ≈ $1,380–1,830. Solo una versión "reacción" (sin acelerómetro ni celdas) se acerca.</td><td><b>Se señala la contradicción</b>; el objetivo sigue siendo $1,500 por prototipo</td></tr>
+            <tr><td class="material-tag">Presupuesto de $500–600 por unidad</td><td>No es realista para un pod instrumentado: la lista v2 da ≈ $1,380–1,830. Solo una versión "reacción" (sin acelerómetro ni celdas) se acerca.</td><td><b>Se señala la contradicción</b>; el PDS v1.0 fija BOM ≤ $1,500 por pod a 10 unidades y prototipo ≤ $3,000 (RR-03)</td></tr>
         </tbody>
     </table>
     </div>
@@ -195,7 +195,7 @@
     <p><b>Método:</b> Claude, con el rol de director de arte, tradujo cada concepto a un prompt en inglés con materiales concretos (hule mate contra plástico brillante), relaciones espaciales precisas y términos mecánicos. Los prompts se ejecutaron en Imagen 3 (Gemini) y se iteró sobre el resultado: se renombró el concepto 2 a <b>Golpe fijo</b> y se eliminó el halo verde del piso para que la luz solo se vea dentro del hueco del pad.</p>
 
     <div class="week-images">
-        <img src="../images/PRIMERA_PROPUESTA_DE_IMAGEN_SEGUN_PROMPT.jpg" alt="Tríptico de Imagen 3 con los conceptos Reflejo (pared), Golpe fijo (piso, cóncavo) y Cadena (apilable)">
+        <img src="PRIMERA_PROPUESTA_DE_IMAGEN_SEGUN_PROMPT.jpg" alt="Tríptico de Imagen 3 con los conceptos Reflejo (pared), Golpe fijo (piso, cóncavo) y Cadena (apilable)">
     </div>
     <p style="text-align:center;"><i>Tríptico generado con Imagen 3: Reflejo (pared), Golpe fijo (piso, centro cóncavo) y Cadena (apilamiento modular).</i></p>
 
@@ -213,7 +213,7 @@
             <tr><td class="material-tag">Affordance del montaje</td><td>Reflejo deja claro que va en la pared; Cadena, que los módulos se apilan</td><td>El soporte de Reflejo es pequeño y lateral: no resistiría un golpe frontal de ≈ 2,500 N</td></tr>
             <tr><td class="material-tag">Transición de materiales</td><td>Golpe fijo separa con claridad la piel de impacto (mate) de la carcasa dura</td><td>La unión "sin juntas" de Reflejo no es fabricable con FDM ni en un solo proceso</td></tr>
             <tr><td class="material-tag">Viabilidad de componentes</td><td>Los aros LED y las muescas laterales lucen manufacturables</td><td>Los anillos de cobre de Cadena están expuestos en la cara de golpe, contra la decisión de contactos rehundidos</td></tr>
-            <tr><td class="material-tag">Escala</td><td>Golpe fijo y Cadena son coherentes con Ø 130 × 70 mm</td><td>La cúpula de Reflejo se ve más profunda que los 80 mm permitidos (RNF-01)</td></tr>
+            <tr><td class="material-tag">Escala</td><td>Golpe fijo y Cadena son coherentes con Ø 130 × 70 mm</td><td>La cúpula de Reflejo se ve más profunda que los 78 mm permitidos (RD-04)</td></tr>
         </tbody>
     </table>
     </div>
@@ -244,7 +244,7 @@
             <tr><td class="material-tag">T2. Protección de electrónica y contactos</td><td>12</td><td class="pugh-same">S</td><td class="pugh-plus">+</td><td class="pugh-same">S</td><td class="pugh-plus pugh-win">+</td></tr>
             <tr><td class="material-tag">T3. Carga por apilamiento (requisito del PDS)</td><td>10</td><td class="pugh-minus">–</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-same pugh-win">S</td></tr>
             <tr><td class="material-tag">T4. Fabricable con impresión 3D y laboratorio</td><td>10</td><td class="pugh-minus">–</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-same pugh-win">S</td></tr>
-            <tr><td class="material-tag">T5. Costo ≤ $1,500 por prototipo</td><td>8</td><td class="pugh-minus">–</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-minus pugh-win">–</td></tr>
+            <tr><td class="material-tag">T5. Costo: BOM ≤ $1,500 por pod a 10 unidades (RR-03)</td><td>8</td><td class="pugh-minus">–</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-minus pugh-win">–</td></tr>
             <tr><td class="material-tag">T6. Riesgo de calendario (8 semanas)</td><td>6</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-same">S</td><td class="pugh-minus pugh-win">–</td></tr>
             <tr class="pugh-total"><td>Σ + / Σ – / Σ S</td><td>—</td><td>3 / 5 / 2</td><td>3 / 1 / 6</td><td>0 / 0 / 10</td><td>5 / 2 / 3</td></tr>
             <tr class="pugh-total"><td>Deseabilidad ponderada</td><td>40</td><td>+24</td><td>–4</td><td>0</td><td>+32</td></tr>
@@ -290,7 +290,7 @@
         </thead>
         <tbody>
             <tr><td class="material-tag">1. Material del pad</td><td>TPU 95A impreso + EVA</td><td><b>Vinipiel de tapicería sobre 2 capas de EVA de alta densidad</b>, tensada con un aro como un parche de tambor; diafragma de cámara de bicicleta en el hueco</td><td>Todo se compra en México sin impresora de filamento flexible. Es la misma construcción de una manopla de foco, y la funda se cambia en minutos</td></tr>
-            <tr><td class="material-tag">2. Tamaño</td><td>Ø 130 × 70 mm (pad Ø 90)</td><td><b>Ø 160 × 75 mm</b> (pad Ø 120 mm)</td><td>El pad se dimensiona por el guante y el labio por lo que debe alojar. Excede los 15 cm del PDS de forma deliberada; ver "Justificación del tamaño"</td></tr>
+            <tr><td class="material-tag">2. Tamaño</td><td>Ø 130 × 70 mm (pad Ø 90)</td><td><b>Ø 160 × 75 mm</b> (pad Ø 120 mm)</td><td>El pad se dimensiona por el guante y el labio por lo que debe alojar. El PDS v1.0 lo adopta en RD-04 (Ø ≤ 160, ≤ 78 mm); ver "Justificación del tamaño"</td></tr>
             <tr><td class="material-tag">3. Luz</td><td>Aro completo de 16 LED</td><td><b>Arco de 120° (≈ 1/3 de la circunferencia) en la parte superior</b>, con 18 LED WS2812B bajo un difusor</td><td>Queda en la línea de visión, marca "arriba" (coincide con la orientación de la bayoneta) y permite estímulos direccionales: tercio izquierdo, centro y derecho</td></tr>
             <tr><td class="material-tag">3b. Contactos de carga</td><td>Anillo concéntrico de contactos a R 55</td><td><b>Conector pogo magnético rehundido a las 6 en punto</b></td><td>El arco ocupa la parte superior del labio. Un conector pogo magnético comercial es una pieza discreta, no un anillo; con la orientación fija ya no hace falta que sea concéntrico</td></tr>
             <tr><td class="material-tag">4. Durabilidad</td><td>Pad impreso, bumper de TPU</td><td>Funda reemplazable, burlete de hule EPDM, difusor rehundido, insertos de latón, fijador de rosca y plan de pruebas de 10,000 golpes</td><td>Ver la tabla de factibilidad y durabilidad</td></tr>
@@ -328,7 +328,7 @@
         <li><b>Pugh:</b> no cambia el orden. Mejora D3 (menos golpes en el labio) y empeora un poco T5 (costo).</li>
     </ul>
     <div class="nota">
-        <p><i><b>Cambio al PDS:</b> el requisito RNF-01 (15 × 15 × 15 cm) se propone cambiar a <b>Ø 160 × 80 mm</b>. Es una desviación consciente y documentada: el límite se fijó antes de conocer el tamaño del guante y la geometría del labio. Debe aprobarlo el asesor. Para respaldarlo, se recomienda la prueba de cartón de la semana 7: círculos de Ø 100, 120 y 140 mm en la pared y conteo de golpes que caen completos dentro de cada uno.</i></p>
+        <p><i><b>Cambio al PDS (aplicado):</b> el límite original de 15 × 15 × 15 cm se fijó antes de conocer el tamaño del guante y la geometría del labio. El PDS v1.0 de la semana 5 ya lo actualizó en <b>RD-04: Ø ≤ 160 mm, ≤ 78 mm de profundidad y ≤ 0.7 kg</b>. Como respaldo con datos propios se recomienda la prueba de cartón: círculos de Ø 100, 120 y 140 mm en la pared y conteo de golpes que caen completos dentro de cada uno.</i></p>
     </div>
     <br>
 
@@ -367,7 +367,7 @@
         <li><b>Medición que no depende del montaje.</b> Lista de componentes v2: ADXL375 + 4 celdas de 50 kg bajo el plato flotante (ahora Ø 118 × 3 mm) con topes + ADS1220 a 2 kSPS.</li>
         <li><b>Apilamiento sin cargar el sensor.</b> La cara trasera tiene un rebaje Ø 122 × 3 mm: el pod de arriba se apoya en el <i>labio</i> del de abajo, nunca en su pad, y el rebaje centra la torre. Para apilar se alinean los arcos de luz, y el conector magnético termina de alinear.</li>
         <li><b>Contactos que el guante no alcanza.</b> Conector pogo magnético rehundido a las 6 en punto (R 70), en ambas caras. En la pared, el trasero queda fuera de la placa (Ø 120) y no toca metal.</li>
-        <li><b>Placa embutida.</b> La placa de 3 mm entra en el rebaje trasero; el pod sobresale de la pared ≈ 75 mm (RNF-01 ≤ 80).</li>
+        <li><b>Placa embutida.</b> La placa de 3 mm entra en el rebaje trasero; el pod sobresale de la pared ≈ 75 mm (RD-04 ≤ 78).</li>
         <li><b>Mantenimiento por detrás y por delante.</b> Batería y PCB por la tapa trasera (4 tornillos, ocultos al estar montado); funda del pad por el frente, quitando el aro tensor.</li>
     </ol>
     <br>
@@ -430,7 +430,7 @@
         </tbody>
     </table>
     </div>
-    <p><b>Lectura honesta del presupuesto:</b> la configuración B de la lista v2 sin pogo (≈ $1,380–1,830), más la placa, el arco, el burlete y el tamaño Ø 160, y con el pad más barato, queda en ≈ $1,510–1,980. <b>Ya no cabe en $1,500 sin ajustes:</b> con las palancas de la lista v2 (ESP32 DevKit local, ahorro ≈ $80–130, y plato de FR4 en el prototipo, ≈ −$50) el extremo bajo baja a ≈ $1,330–1,380. Si no cabe, la ruta de fuerza se presenta como mejora con presupuesto aparte, sin cambiar la carcasa.</p>
+    <p><b>Lectura honesta del presupuesto:</b> la configuración B de la lista v2 sin pogo (≈ $1,380–1,830), más la placa, el arco, el burlete y el tamaño Ø 160, y con el pad más barato, queda en ≈ $1,510–1,980. Cumple el límite del prototipo del PDS v1.0 (RR-03: ≤ $3,000) y queda dentro de la meta de $1,500–1,900 salvo en el extremo alto; con las palancas de la lista v2 (ESP32 DevKit local, ≈ −$80–130, y plato de FR4, ≈ −$50) baja a ≈ $1,330–1,380. <b>A 10 unidades</b> el BOM de la semana 5 es de $1,460 por pod, apenas debajo del límite de $1,500 de RR-03: cualquier sobrecosto del ADXL375 lo rebasa, por eso su plan B (H3LIS331DL) sigue vigente.</p>
     <br>
 
     <h4>Prompt para el render del concepto elegido</h4>
@@ -572,7 +572,7 @@
             <tr><th>Pieza</th><th>Medidas aproximadas</th><th>Material y proceso</th><th>Notas</th></tr>
         </thead>
         <tbody>
-            <tr><td class="material-tag">Envolvente</td><td>Ø 160 (con burlete) × ≈ 75 mm; máximo en CAD 78 mm</td><td>—</td><td>Requiere aprobar el cambio de RNF-01 a Ø 160 × 80 mm</td></tr>
+            <tr><td class="material-tag">Envolvente</td><td>Ø 160 (con burlete) × ≈ 75 mm; máximo en CAD 78 mm</td><td>—</td><td>Cumple RD-04 del PDS v1.0 (Ø ≤ 160, ≤ 78 mm, ≤ 0.7 kg)</td></tr>
             <tr><td class="material-tag">Cuerpo / chasis</td><td>Ø 154 mm sin burlete; pared 2.5–3 mm</td><td>PETG o ASA impreso, 5 perímetros, 40–50 % gyroid</td><td>Cabe en cama de 220 × 220 mm; costillas radiales bajo celdas y topes; insertos de latón M3/M4</td></tr>
             <tr><td class="material-tag">Labio frontal</td><td>Anillo R 61.5–77 mm (15.5 mm); frente R ≥ 8</td><td>PETG satinado claro</td><td>Ventana del arco de 120° (R 64–71) y alojamiento del conector a las 6</td></tr>
             <tr><td class="material-tag">Pad de golpeo</td><td>Ø 120 mm, flecha ≈ 4 mm, ≈ 17 mm de espesor</td><td>Vinipiel 1 mm + EVA de alta densidad 12 mm + anillo de EVA 4 mm</td><td>Funda reemplazable; plan B: neopreno o EPDM 5 mm</td></tr>
@@ -706,14 +706,13 @@
         <li><b>Pad flotante contra labio fijo.</b> Si el pad toca el labio al comprimirse o con un golpe en ángulo, parte de la fuerza se va al chasis sin pasar por las celdas. <b>Ajuste:</b> hueco de 1.5 mm con diafragma flexible, guía radial con holgura de 0.5 mm y verificación con carga descentrada (pérdida &lt; 8 %).</li>
         <li><b>Calor durante la carga.</b> Con o-ring, diafragma y la celda detrás de la PCB, cargar a 500 mA sin ventilación puede calentar el interior. <b>Ajuste:</b> el modo carga apaga el arco de LED; se mide la temperatura de la celda durante una carga completa con criterio &lt; 45 °C.</li>
     </ol>
-    <p><b>Resuelto en esta revisión:</b> la profundidad pasó de 70 a 75 mm (máximo 78 en CAD), con margen para la espuma y las tolerancias de impresión; el diámetro pasó a Ø 160 para que el labio de 15.5 mm aloje el arco, el conector y el hombro de apilamiento. <b>Pendiente:</b> aprobación del cambio de RNF-01.</p>
+    <p><b>Resuelto en esta revisión:</b> la profundidad pasó de 70 a 75 mm (máximo 78 en CAD), con margen para la espuma y las tolerancias de impresión; el diámetro pasó a Ø 160 para que el labio de 15.5 mm aloje el arco, el conector y el hombro de apilamiento. El cambio ya está en RD-04 del PDS v1.0.</p>
     <p><code style="display:inline;">⦿ Preguntas abiertas:</code></p>
     <ul>
         <li>¿Altura fija de montaje o un riel vertical con varias posiciones para usuarios de distinta estatura?</li>
         <li>¿Qué tipo de pared tiene el gimnasio piloto? En tablaroca la placa necesita un tablero de madera intermedio.</li>
         <li>¿Basta un solo pod gateway si cuatro pods están en paredes distintas a más de 5 m? Se valida con la prueba de ESP-NOW de la semana 4.</li>
         <li>¿Los estímulos por tercio del arco se distinguen bien a 2–3 m? Se prueba con 5 usuarios.</li>
-        <li>¿Aprueba el asesor ampliar RNF-01 a Ø 160 × 80 mm?</li>
     </ul>
     <p><code style="display:inline;">⦿ Fortaleza principal:</code> un solo diseño de pod, hecho con materiales que se consiguen en México, sirve para pared, piso y costal con la misma bayoneta y mide la fuerza igual en los tres.</p>
     <p><code style="display:inline;">⦿ Veredicto:</code> <b>listo para CAD con 3 ajustes</b> (seguro de la bayoneta, hueco y diafragma del pad, y prueba térmica de carga).</p>
