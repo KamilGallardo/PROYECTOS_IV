@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEMANA 8 - Kamil Gallardo Toledo </title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="H_DEIDAD.css">
+    <style>
+        /* Solo para esta semana: prototipado, DFM y lanzamiento */
+        .ok   { color: #0b7a3b; font-weight: 700; }
+        .mid  { color: #a86400; font-weight: 700; }
+        .no   { color: #b10a0a; font-weight: 700; }
+        .nota { background-color: #f9f9f9; padding: 15px; border-left: 5px solid #ccc; margin-bottom: 15px; }
+        .frase { font-size: 1.15rem; font-weight: 600; color: #032472; background: rgba(13, 72, 210, 0.06);
+                 border-radius: 12px; padding: 16px 20px; margin: 16px 0; }
+        .figura { text-align: center; margin: 20px 0; }
+        .figura svg { width: 100%; height: auto; }
+        .figura figcaption { font-size: 0.9rem; color: #5a5a5a; margin-top: 8px; }
+        .prompt-box { background: #10131a; color: #e6e9ef; padding: 16px 18px; border-radius: 10px;
+                      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.55;
+                      white-space: pre-wrap; overflow-x: auto; }
+        .calc { background: #f4f6fb; border: 1px solid #dfe3ec; padding: 14px 18px; border-radius: 10px;
+                font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.6;
+                white-space: pre-wrap; overflow-x: auto; color: #1b1f2a; }
+        .tabla-scroll { overflow-x: auto; }
+        .num { text-align: right; white-space: nowrap; }
+        .tot td { font-weight: 700; background: rgba(13, 72, 210, 0.06); }
+        .neg { color: #b10a0a; }
+        .tag-d { color: #0d48d2; font-weight: 700; }
+        .tag-f { color: #a86400; font-weight: 700; }
+        .tag-s { color: #5a5a5a; font-weight: 700; }
+        .chips { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+        .chip { background: rgba(13, 72, 210, 0.06); border-radius: 10px; padding: 10px 14px; min-width: 150px; }
+        .chip b { display: block; font-size: 1.25rem; color: #032472; }
+        .chip span { font-size: 0.85rem; color: #5a5a5a; }
+        .descarga { display: inline-block; background: #0d48d2; color: #fff !important; font-weight: 700;
+                    padding: 12px 22px; border-radius: 24px; text-decoration: none; letter-spacing: 0.3px; }
+        .descarga:hover { background: #032472; }
+        .flujo td, .flujo th { font-size: 0.78rem; padding: 4px 6px; }
+        .flujo td.material-tag { white-space: nowrap; }
+    </style>
+  </head>
+
+ <body class="d-flex flex-column h-100" style="background-color:#fffffe">
+    <main class="flex-shrink-0">
+
+    <div class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="nav-brand">KAMIL GALLARDO TOLEDO</div>
+      <div class="navbar-inner">
+        <a href="../index.html" class="btn-home">SEMANAS</a>
+        <a href="../final-project.html" class="btn-home">PROYECTO FINAL</a>
+        <a href="../about.html" class="btn-home">SOBRE MI</a>
+      </div>
+    </div>
+
+ <section class="week-header">
+            <div class="week-glass">
+                <h1>SEMANA 8: Prototipado y diseño para manufactura</h1>
+                <div>Lumetriq ya tiene concepto (semana 6) y un modelo económico que cierra a 5 años (semana 7). Esta semana define qué supuesto se prueba primero y con qué prototipo, reporta el prototipo que ya se construyó, aplica el proceso DFM de 5 pasos al pod <b>Reflejo Fijo</b> (Ø 160 × 77 mm) y lo revisa con la Ley General de Economía Circular.
+                </div>
+            </div>
+        </section>
+
+        <section class="week-content">
+            <div class="week-layout">
+                <aside class="week-menu">
+                    <a href="#UNO" class="menu-link">Por qué prototipar</a>
+                    <a href="#DOS" class="menu-link">Tipos de prototipo</a>
+                    <a href="#TRES" class="menu-link">Supuestos y preguntas</a>
+                    <a href="#CUATRO" class="menu-link">Plan de prototipado</a>
+                    <a href="#CINCO" class="menu-link">Reporte de prototipo</a>
+                    <a href="#SEIS" class="menu-link">Revisión DFM</a>
+                    <a href="#SIETE" class="menu-link">Ensamble (DFA)</a>
+                    <a href="#OCHO" class="menu-link">Escala económica</a>
+                    <a href="#NUEVE" class="menu-link">Economía circular</a>
+                    <a href="#DIEZ" class="menu-link">Defensa del plan</a>
+                    <a href="#TAREA" class="menu-link">Tarea: BOM actualizado</a>
+                    <a href="#SALIDA" class="menu-link">Preguntas de salida</a>
+                    <a href="#Learning" class="menu-link">Reflexión</a>
+                </aside>
+
+                <div class="week-paper">
+
+    <div class="nota">
+        <p><i><b>Cómo leer esta página:</b> versión del 25 de noviembre de 2026. Precios en MXN, por pod y en lotes de 100, iguales a los del BOM de la semana 7 ($1,000 por pod, $4,000 por paquete de 4). <b>[Estimado]</b> = cálculo propio que falta medir; <b>[Verificar]</b> = dato que hay que confirmar con el proveedor o en la fuente oficial; <b>[Por llenar]</b> = evidencia que se captura en las pruebas de esta semana. La hora de ensamble se valúa a <b>$77.32</b>: el sueldo del empleado del business case ($10,000 al mes ÷ 174.6 h × 1.35 de prestaciones).</i></p>
+    </div>
+
+    <!-- ===================== 1. POR QUÉ PROTOTIPAR ===================== -->
+    <h2 id="UNO">Por qué prototipar</h2>
+   <div class="command-block">
+    <h3>El Business Blueprint como mapa de qué prototipar</h3>
+    <p>El prototipo no es una versión temprana del pod: es la pregunta más barata que podemos hacerle al mundo real. Antes de decidir qué construir, revisamos cuál bloque del blueprint tiene más incertidumbre hoy.</p>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Bloque</th><th>Lo que ya sabemos</th><th>Lo que no sabemos</th><th>Incertidumbre</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">Clientes</td><td>Coaches y gimnasios de box, HIIT y funcional; 1,131 establecimientos en el SAM (semana 4)</td><td>Ninguna entrevista fue con quien paga: el dueño del gimnasio</td><td><span class="no">Alta</span></td></tr>
+            <tr><td class="material-tag">Modelo de ingresos y precio</td><td>Paquete de 4 pods a $6,000 con la app incluida (semana 7)</td><td>Si alguien paga ese precio. La cita de la semana 4: "Es gratis. Todo es gratis"</td><td><span class="no">Alta</span></td></tr>
+            <tr><td class="material-tag">Canales</td><td>Venta directa con demo en el gimnasio; landing ya construida</td><td>Cuántas demos hacen falta para cerrar una venta</td><td><span class="no">Alta</span></td></tr>
+            <tr><td class="material-tag">Propuesta de valor</td><td>Versión 3: un reto que los alumnos quieren repetir, con ranking semana tras semana</td><td>Si el ranking cambia lo que hacen los alumnos (H2 de la semana 4)</td><td><span class="mid">Media</span></td></tr>
+            <tr><td class="material-tag">Oferta</td><td>PCB diseñada, módulos comprados, placas de acero en corte, arco de LED medido</td><td>Si el plato flotante mide ±15 % en la pared (RF-03) y aguanta 10,000 golpes (RD-02)</td><td><span class="mid">Media</span></td></tr>
+            <tr><td class="material-tag">Costos</td><td>BOM cotizado en $1,000 por pod</td><td>Cuánto tarda el ensamble real (ver la revisión DFM)</td><td><span class="mid">Media</span></td></tr>
+            <tr><td class="material-tag">Socios</td><td>Proveedores en México y taller de corte</td><td>El ADXL375 solo se consigue en Amazon o en distribuidores de EE. UU.</td><td><span class="mid">Media</span></td></tr>
+            <tr><td class="material-tag">Equipo y recursos</td><td>Tres fundadores, 2 impresoras 3D y una estación de soldadura</td><td>Dos impresoras dan ≈ 1,000 pods al año y el plan del año 1 pide 1,200</td><td><span class="ok">Baja</span>: ya está calculado</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p><b>Lectura:</b> los tres bloques con incertidumbre alta son de negocio, no del artefacto. Por eso el primer prototipo de esta semana es un <b>prototipo de negocio</b>; el de experiencia (el pod en la pared con un coach) es la siguiente hipótesis.</p>
+    <br>
+    <h4>Prototipo de exploración contra producto de primera iteración</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th></th><th>Prototipo de exploración (ahora)</th><th>Producto de primera iteración (final)</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">Qué es en Lumetriq</td><td>Landing con precio, arco de LED en el banco, pod con cables a la vista</td><td>Paquete de 4 pods que un coach instala y usa sin que el equipo esté presente</td></tr>
+            <tr><td class="material-tag">Éxito</td><td>Aprender algo que no sabíamos</td><td>El coach lo instala y lo usa solo</td></tr>
+            <tr><td class="material-tag">Requisito del PDS</td><td>Cada prototipo responde a uno (RF-03, RD-01, RD-02)</td><td>RR-03: 5 unidades funcionando en la semana 13</td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+    <!-- ===================== 2. TIPOS DE PROTOTIPO ===================== -->
+    <h2 id="DOS">Tipos de prototipo</h2>
+   <div class="command-block">
+    <h3>Los cuatro tipos aplicados a Lumetriq</h3>
+    <p>La regla de la clase: usar la resolución mínima que responde la pregunta.</p>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Tipo</th><th>Pregunta de Lumetriq</th><th>Qué se construye</th><th>Resolución</th><th>Estado</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">Forma</td><td>¿El guante cae completo dentro del pad de Ø 120 mm y el arco se ve a 3 m?</td><td>Prueba de cartón de la semana 6: círculos de Ø 100, 120 y 140 mm en la pared y un arco de luz encendido arriba</td><td>Baja</td><td><span class="mid">Pendiente</span></td></tr>
+            <tr><td class="material-tag">Función</td><td>¿Una sola 18650 alimenta el arco de 18 LED sin elevador?</td><td>Tira WS2812B de 18 LED en cian al 100 % con multímetro en serie</td><td>Baja</td><td><span class="ok">Hecho</span> (reporte abajo)</td></tr>
+            <tr><td class="material-tag">Función</td><td>¿Las 4 celdas bajo el plato de acero de 1.9 mm leen igual al centro, en R30 y en R45?</td><td>Esqueleto de acero con celdas y ADS1220 en el banco, con pesas</td><td>Alta</td><td><span class="mid">En construcción</span>: placas en corte</td></tr>
+            <tr><td class="material-tag">Experiencia</td><td>¿Un coach coloca 4 pods, los empareja y arranca "Sigue la luz" en menos de 5 minutos sin instrucciones?</td><td>Pod completo + app básica en un gimnasio de box</td><td>Alta</td><td><span class="mid">Siguiente hipótesis</span></td></tr>
+            <tr><td class="material-tag">Negocio</td><td>¿Un dueño de gimnasio deja sus datos para una demo después de ver el precio de $6,000?</td><td>Landing con precio real y formulario de pre-registro</td><td>Alta en el mensaje, baja en el producto</td><td><span class="ok">Primero</span> (plan abajo)</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p><code style="display:inline;">⦿ El prototipo de negocio es el más subestimado:</code> el pod completo tarda semanas; la landing ya está hecha y responde en una semana la pregunta de la que depende todo el business case: si alguien paga $6,000 por 4 pods.</p>
+</div>
+
+    <!-- ===================== 3. SUPUESTOS ===================== -->
+    <h2 id="TRES">Supuestos y preguntas: Pregunta → Prototipa → Evidencia</h2>
+   <div class="command-block">
+    <h3>Paso 1: los supuestos que hay que probar primero</h3>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Criterio</th><th>Supuesto de Lumetriq</th><th>Si resulta falso</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">Mayor riesgo</td><td>Un dueño de gimnasio de box o HIIT paga $6,000 por un paquete de 4 pods con la app incluida</td><td>No hay negocio: el plan del año 1 son 300 paquetes y el aumento sobre el costo ya es de solo 11.6 %</td></tr>
+            <tr><td class="material-tag">Mayor indefinición</td><td>El plato flotante de acero de 1.9 mm con 4 celdas mide la fuerza con error ≤ ±15 % en la pared (RF-03)</td><td>Se pierde la métrica que ningún competidor tiene (la fuerza) y queda un pod de luces más</td></tr>
+            <tr><td class="material-tag">Mayor controversia</td><td>El ADXL375 se queda: 34 % del BOM para medir la aceleración pico</td><td>Si la fuerza de las celdas basta, sobran $344 por pod (ver la revisión DFM)</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <br>
+    <h4>Preguntas mal formuladas contra bien formuladas</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Mal formulada</th><th>Bien formulada</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">"¿Funciona el pod?"</td><td>"¿Puede un coach colocar 4 pods en sus placas, emparejarlos y arrancar «Sigue la luz» en menos de 5 minutos sin instrucciones?"</td></tr>
+            <tr><td class="material-tag">"¿Está bien el diseño?"</td><td>"¿Sabe el alumno qué pod golpear, a 3 m y sin que el coach hable?"</td></tr>
+            <tr><td class="material-tag">"¿Es viable el negocio?"</td><td>"¿Deja nombre y teléfono para una demo un dueño de gimnasio de box en Puebla que ve el precio de $6,000 por 4 pods?"</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p><b>Las cuatro reglas aplicadas:</b> se hace en un día (la landing ya existe; falta el formulario), se vale falsificar (el pod de la landing es un dibujo animado, no una foto), hay variaciones (dos tarjetas de precio) y se diseña para que el dueño <b>actúe</b> (deje sus datos), no para que opine.</p>
+</div>
+
+    <!-- ===================== 4. PLAN ===================== -->
+    <h2 id="CUATRO">Plan de prototipado</h2>
+   <div class="command-block">
+    <h3>Parte A del taller: prototipo de negocio</h3>
+    <div class="prompt-box">PLAN DE PROTOTIPADO
+Equipo: Lumetriq · Concepto: Reflejo Fijo
+
+SUPUESTO A VALIDAR:
+Un dueño de gimnasio de box o HIIT en Puebla pagaría $6,000 por un
+paquete de 4 pods con la app incluida.
+
+PREGUNTA PRECISA:
+¿Puede un dueño de gimnasio de box en Puebla, después de ver la
+landing con el precio, pedir una demo dejando nombre y teléfono,
+sin que el equipo se lo pida?
+
+TIPO DE PROTOTIPO:
+[ ] Forma  [ ] Función  [ ] Experiencia  [x] Negocio
+Resolución: [x] Alta en el mensaje y el precio  [x] Baja en el producto
+Por qué esta resolución: la pregunta es de precio y de mensaje. El pod
+terminado no cambia lo que el dueño ve en la landing; el precio y la
+propuesta de valor sí tienen que ser los reales.
+
+QUÉ VAN A CONSTRUIR:
+· La landing de Lumetriq (ya construida) publicada en GitHub Pages.
+· Cambiar el botón de correo por un formulario de Tally o Google Forms
+  (nombre, gimnasio, teléfono, cuántos alumnos por clase) para poder
+  contar los pre-registros.
+· Dos tarjetas impresas con QR, como variación:
+  A) "Paquete de 4 pods: $6,000, la app incluida"
+  B) "Circuito de 12 pods: $18,000, lo que pagan menos de 2 alumnos
+     en un año"
+· Tiempo: 1 h el formulario, 1 h las tarjetas, 1 día de visitas.
+
+CÓMO VAN A CAPTURAR EVIDENCIA:
+· Visitar 10 gimnasios de box y HIIT de Puebla (lista del DENUE).
+  5 reciben la tarjeta A y 5 la B.
+· 3 minutos con el dueño: se le enseña la landing en el teléfono y
+  se le deja la tarjeta. No se le pide que se registre.
+· Se registra: si pregunta el precio antes de que se lo digamos, sus
+  objeciones textuales, y si deja datos en el formulario en 7 días.
+· Métrica: dueños que dejan datos ÷ dueños visitados, por tarjeta.
+
+UMBRAL DE ÉXITO:
+Si 3 de 10 dueños dejan sus datos en el formulario y al menos 1
+agenda la demo en menos de 7 días, el supuesto queda validado para
+pasar al piloto. Con 0 o 1 registros: se revisa la oferta (por
+ejemplo, un solo paquete de prueba) antes de tocar el diseño.</div>
+    <br>
+    <h4>Siguiente hipótesis: prototipo de experiencia</h4>
+    <ul>
+        <li><b>Pregunta:</b> ¿puede un coach colocar 4 pods en sus placas, emparejarlos y arrancar "Sigue la luz" en menos de 5 minutos sin instrucciones?</li>
+        <li><b>Qué se construye:</b> 1 pod completo + 3 maquetas impresas con el mismo peso, la app con el flujo de instalación de la semana 6 y las placas montadas en un tablero.</li>
+        <li><b>Umbral:</b> 3 de 5 coaches lo logran en menos de 5 minutos, sin ayuda.</li>
+        <li><b>Por qué después:</b> si nadie paga, no hay producto que instalar; si pagan, este es el riesgo que sigue.</li>
+    </ul>
+</div>
+
+    <!-- ===================== 5. REPORTE ===================== -->
+    <h2 id="CINCO">Reporte de prototipo</h2>
+   <div class="command-block">
+    <h3>Prototipo de función ya construido: el arco de 18 LED</h3>
+    <p>Este prototipo se construyó antes de esta clase y respondió una pregunta de la que dependía la batería. Al ser de función, la evidencia es una medición y no una observación de usuarios.</p>
+    <div class="prompt-box">REPORTE DE PROTOTIPO — Semana 8
+Equipo: Lumetriq · Concepto: Reflejo Fijo
+
+TIPO DE PROTOTIPO: Función
+RESOLUCIÓN: Baja (tira suelta, sin carcasa ni difusor)
+MATERIALES Y TIEMPO: tramo de 18 LED WS2812B (tira de 144 LED/m),
+fuente de ≈ 5 V y multímetro en serie. Menos de 1 h.
+
+PREGUNTA QUE RESPONDÍA:
+¿Puede una sola celda 18650 alimentar el arco de 18 LED directo, sin
+elevador, y dar las 3 h de uso que pide el PDS (RD-01)?
+
+EVIDENCIA RECOLECTADA (medición, no opinión):
+· 18 LED en cian al 100 % (verde + azul), a 4.927 V: 0.326 A (1.61 W).
+· Es el peor caso: ≈ 18 mA por LED, dos canales al máximo.
+· Con el perfil del PDS (40 % de brillo, 30 % del tiempo encendidos)
+  el arco promedia ≈ 0.04 A [Estimado].
+
+¿SE VALIDÓ EL SUPUESTO? Parcialmente.
+Por qué: el consumo es bajo para una 18650 y la autonomía calculada
+es de ≈ 5.7 h con la celda de 1,800 mAh (ver la prueba T4 de la
+semana 9). Falta comprobar que el azul y el blanco se vean bien a
+3.5–3.7 V, que es lo que da la celda casi descargada.
+
+APRENDIZAJE CLAVE:
+La carga real del pod son los LED y el ESP32. Los sensores suman
+menos de 3 mA.
+
+CAMBIO AL DISEÑO:
+Una sola 18650; los LED van directo de la batería y solo el ESP32
+pasa por el elevador MT3608 a 5 V. Aviso de batería baja a 3.55 V y
+apagado a 3.40 V.
+
+SIGUIENTE HIPÓTESIS A PROTOTIPAR:
+El precio: ¿un dueño de gimnasio deja sus datos al ver $6,000?</div>
+    <br>
+    <h4>Formato que se llena tras las visitas del prototipo de negocio</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Dueño</th><th>Tarjeta</th><th>¿Preguntó el precio antes que nosotros?</th><th>Objeción textual</th><th>¿Dejó datos en 7 días?</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">1</td><td>A</td><td>[Por llenar]</td><td>[Por llenar]</td><td>[Por llenar]</td></tr>
+            <tr><td class="material-tag">2</td><td>B</td><td>[Por llenar]</td><td>[Por llenar]</td><td>[Por llenar]</td></tr>
+            <tr><td class="material-tag">3</td><td>A</td><td>[Por llenar]</td><td>[Por llenar]</td><td>[Por llenar]</td></tr>
+            <tr><td class="material-tag">4–10</td><td>A/B</td><td colspan="3">Misma tabla; se registra comportamiento, no si "les gustó"</td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+    <!-- ===================== 6. DFM ===================== -->
+    <h2 id="SEIS">Revisión DFM del concepto</h2>
+   <div class="command-block">
+    <h3>Parte B del taller: el proceso de 5 pasos aplicado al pod</h3>
+    <p><b>Método:</b> el prompt de la clase (ingeniero de manufactura, proceso de Ulrich y Eppinger) con nuestros datos: concepto Reflejo Fijo, BOM de la semana 7, carcasa de PETG impresa en 5 piezas, esqueleto de tres placas de acero y PCB de una cara fresada en el laboratorio. Volumen: <b>100 pods (25 paquetes)</b>, el lote del BOM. La salida se revisó contra las decisiones vigentes del proyecto y los tiempos de ensamble se estimaron operación por operación.</p>
+    <div class="prompt-box">════════════════════════════════════════════════════════
+REVISIÓN DFM
+Concepto: Reflejo Fijo · Volumen: 100 unidades (25 paquetes)
+════════════════════════════════════════════════════════
+
+COSTO UNITARIO ESTIMADO (actual):
+· BOM electrónico (módulos, celdas, energía, LED,
+  pasivos, pines y cable):                           $706.37
+· PCB (fenólica de una cara, monoFab):               $7.80
+· Carcasa (PETG, 205 g + 10 % de merma):             $60.89
+· Mecánica (placas, separadores, tornillos, pad):    $224.94
+· Ensamble manual (4.1 h × $77.32):                  $315.72
+· Gastos indirectos (15 %):                          $197.36
+Total actual:                                        $1,513.08/pod
+
+────────────────────────────────────────────────────────
+OPORTUNIDADES DE REDUCCIÓN:
+
+Componente 1 — Módulo ADXL375 ($344, 34 % del BOM):
+Problema: la fuerza ya la miden las 4 celdas; el módulo solo se
+consigue en Amazon o en distribuidores de EE. UU.
+Alternativa: (a) quitarlo y detectar el impacto con las celdas
+(ADS1220 a 2 kSPS: una muestra cada 0.5 ms); (b) en PCBA, el chip
+suelto [Verificar existencia y precio en jlcpcb.com/parts].
+Ahorro estimado: $344/pod con (a).
+
+Componente 2 — Placas de acero ($110 + ≈ 1 h de taller):
+Problema: ≈ 28 barrenos a taladro y 14 roscas hechos a mano en acero, con
+brocas de cobalto y machuelos M3 que se rompen. La base de 6.35 mm
+pesa 0.64 kg.
+Alternativa: corte láser de fibra con todos los barrenos en la misma
+pasada (forma neta) y tuercas en lugar de roscas machueladas
+[Verificar cotización]. Opción: base de aluminio de 1/4" (−0.42 kg).
+Ahorro estimado: ≈ 45 min de ensamble = $58/pod.
+
+Componente 3 — Módulo ADS1220 ($95):
+Problema: no hay sustituto barato que sirva: el HX711 da 10–80
+muestras por segundo y no ve el pico del golpe.
+Alternativa: se queda; en PCBA, el chip suelto [Verificar en
+jlcpcb.com/parts].
+Ahorro estimado: por verificar.
+
+────────────────────────────────────────────────────────
+ENSAMBLE:
+Diseño actual: ≈ 119 piezas mecánicas (94 de sujeción)
+               · Tiempo: ~245 min/pod
+Propuesta:     ≈ 94 piezas · Tiempo: ~105 min/pod
+Cambios recomendados: tornillos de hombro en guías y pernos de
+giro, quitar la tapa trasera de PETG, placas con barrenos de corte,
+unificar la tornillería y cables con conector (detalle abajo).
+
+────────────────────────────────────────────────────────
+COSTO UNITARIO ESTIMADO (con mejoras DFM):
+Solo ensamble y tornillería:     $1,334.36/pod (−11.8 %)
+Ensamble + sin ADXL375:          $938.76/pod (−38.0 %)
+
+────────────────────────────────────────────────────────
+TRADE-OFFS A EVALUAR:
+· Sin ADXL375 se pierde la aceleración en g que promete la landing
+  y una señal para separar golpes de toques (RD-03, F1 ≥ 0.90).
+  Decidir solo después de probar RD-03 con las celdas solas.
+· Los tornillos de hombro cuestan más por pieza y se consiguen
+  menos en México [Verificar]: se calcularon +$30 por pod.
+· El corte láser con barrenos puede costar más que el chorro de
+  agua [Verificar]; la tolerancia sirve para pasos, no para roscas.
+· Sin la tapa de PETG, la placa de pared de acero es la única tapa
+  trasera: se pierde el o-ring y hay que sellar de otra forma.
+
+COMPATIBILIDAD CON JLCPCB PCBA: ⚠️
+La PCB actual monta módulos en bases hembra (RR-01), que PCBA no
+coloca como módulos. Pasivos 1206 ✅ (pitch ≥ 0.8 mm). ESP32-WROOM,
+ADS1220 y ADXL375 como chips probablemente son Extended, no Basic
+[Verificar]. Recomendación: para 5–20 pods, PCB fabricada por
+JLCPCB (solo PCB) con los mismos módulos; PCBA cuando el diseño se
+congele para el lote de 100.
+════════════════════════════════════════════════════════</div>
+    <br>
+    <figure class="figura">
+        <svg viewBox="0 0 780 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Costo unitario por pod: actual 1,513, con mejoras de ensamble 1,334 y sin ADXL375 939 pesos">
+            <style>
+                .lb { font: 13px Arial, sans-serif; fill: #1b1f2a; }
+                .lbb { font: bold 13px Arial, sans-serif; fill: #032472; }
+                .lg { font: 12px Arial, sans-serif; fill: #4d5a78; }
+            </style>
+            <text class="lbb" x="10" y="22">Costo unitario por pod, lote de 100 (MXN)</text>
+            <text class="lb" x="10" y="70">Actual</text>
+            <rect x="250" y="52" width="300.0" height="28" fill="#0d48d2"/>
+            <rect x="550.0" y="52" width="94.7" height="28" fill="#a86400"/>
+            <rect x="644.7" y="52" width="59.2" height="28" fill="#9aa3b5"/>
+            <text class="lbb" x="710" y="71">$1,513</text>
+            <text class="lb" x="10" y="120">Ensamble y tornillería</text>
+            <rect x="250" y="102" width="307.5" height="28" fill="#0d48d2"/>
+            <rect x="557.5" y="102" width="40.6" height="28" fill="#a86400"/>
+            <rect x="598.1" y="102" width="52.2" height="28" fill="#9aa3b5"/>
+            <text class="lbb" x="656" y="121">$1,334</text>
+            <text class="lb" x="10" y="170">Ensamble + sin ADXL375</text>
+            <rect x="250" y="152" width="204.3" height="28" fill="#0d48d2"/>
+            <rect x="454.3" y="152" width="40.6" height="28" fill="#a86400"/>
+            <rect x="494.9" y="152" width="36.7" height="28" fill="#9aa3b5"/>
+            <text class="lbb" x="538" y="171">$939</text>
+            <rect x="250" y="208" width="14" height="14" fill="#0d48d2"/><text class="lg" x="270" y="220">Componentes</text>
+            <rect x="370" y="208" width="14" height="14" fill="#a86400"/><text class="lg" x="390" y="220">Ensamble</text>
+            <rect x="470" y="208" width="14" height="14" fill="#9aa3b5"/><text class="lg" x="490" y="220">Indirectos (15 %)</text>
+        </svg>
+        <figcaption>El ensamble pesa casi lo mismo que el ADXL375. Las dos palancas juntas bajan el costo 38 %. [Estimado]</figcaption>
+    </figure>
+    <div class="nota">
+        <p><i><b>Lo que esta revisión le dice al business case:</b> la semana 7 usa $1,000 de componentes por pod y una nómina que, repartida, da ≈ $60 por pod en el año 2. El ensamble actual cuesta ≈ $316 por pod: la nómina no alcanza para ensamblar 2,000 pods al año. Con las mejoras de ensamble baja a ≈ $135 por pod. Es el siguiente ajuste del modelo: medir el tiempo real de ensamble con el primer lote de 5 y, con ese dato, actualizar sueldos o volumen.</i></p>
+    </div>
+</div>
+
+    <!-- ===================== 7. DFA ===================== -->
+    <h2 id="SIETE">Ensamble (DFA)</h2>
+   <div class="command-block">
+    <h3>Paso 3: contar piezas y operaciones</h3>
+    <p>De las ≈ 119 piezas mecánicas del pod, <b>94 son de sujeción</b> (tornillos, tuercas, arandelas, separadores e insertos), en ≈ 20 referencias distintas. Ahí está el tiempo de ensamble y el costo de inventario.</p>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Subconjunto</th><th class="num">Piezas hoy</th><th>Cambio DFA</th><th class="num">Piezas después</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">Guías del plato (×4): tornillo M3 × 20, separador M3 × 14, arandela de hule y arandela plana</td><td class="num">16</td><td>Tornillo de hombro con la arandela de hule: el hombro hace de separador</td><td class="num">8</td></tr>
+            <tr><td class="material-tag">Pernos de giro (×4): tornillo M3 × 12, separador M3 × 4, arandela plana y de guardafango</td><td class="num">16</td><td>Tornillo de hombro con arandela de guardafango</td><td class="num">8</td></tr>
+            <tr><td class="material-tag">Tapa trasera de PETG: tapa, 4 tornillos planos y 4 insertos</td><td class="num">9</td><td>Se quita: la placa de pared de acero ya cierra el pod por detrás</td><td class="num">0</td></tr>
+            <tr><td class="material-tag">Topes (×4): tornillo M4 × 12 y contratuerca</td><td class="num">8</td><td>Se quedan: el ajuste a 0.2–0.3 mm protege las celdas</td><td class="num">8</td></tr>
+            <tr><td class="material-tag">Resto: placas, postes, carcasa, pad, celdas, PCB y sus tornillos</td><td class="num">70</td><td>Misma cantidad; tornillería unificada en M3 × 8 y M3 × 12 de botón</td><td class="num">70</td></tr>
+            <tr class="tot"><td>Total</td><td class="num">119</td><td>Referencias de tornillería: ≈ 20 → ≈ 12</td><td class="num">94</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <br>
+    <h4>Tiempo de ensamble por pod [Estimado]</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Operación</th><th class="num">Hoy (min)</th><th>Cambio</th><th class="num">Con DFA (min)</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">Barrenar y machuelar las 3 placas de acero</td><td class="num">60</td><td>Barrenos en el corte; tuercas en lugar de roscas</td><td class="num">15</td></tr>
+            <tr><td class="material-tag">Pegar soportes y celdas con epóxico</td><td class="num">15</td><td>Soporte impreso que centra la celda</td><td class="num">10</td></tr>
+            <tr><td class="material-tag">Esqueleto: postes, topes con galga, guías y plato</td><td class="num">30</td><td>Tornillos de hombro; jig de altura para los topes</td><td class="num">20</td></tr>
+            <tr><td class="material-tag">Soldar la PCB (pasivos 1206, bases y pines)</td><td class="num">45</td><td>PCB de JLCPCB; con PCBA en el lote de 100</td><td class="num">10</td></tr>
+            <tr><td class="material-tag">Cablear celdas, ADXL375, LED, batería y MT3608</td><td class="num">30</td><td>Cables con conector JST ya armados; MT3608 ajustado por lote</td><td class="num">15</td></tr>
+            <tr><td class="material-tag">Pad: EVA, vinipiel y aro tensor</td><td class="num">30</td><td>EVA y vinipiel cortadas con suaje por el proveedor</td><td class="num">15</td></tr>
+            <tr><td class="material-tag">Carcasa: insertos, bisel, difusor y cierre</td><td class="num">20</td><td>Sin tapa trasera</td><td class="num">10</td></tr>
+            <tr><td class="material-tag">Calibración y prueba</td><td class="num">15</td><td>Rutina automática en el firmware con una pesa conocida</td><td class="num">10</td></tr>
+            <tr class="tot"><td>Total</td><td class="num">245 (4.1 h)</td><td></td><td class="num">105 (1.75 h)</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p><b>Contra el PDS:</b> RR-01 pide ensamble ≤ 1.5 h por pod. Con las mejoras queda en 1.75 h: todavía arriba. Lo que falta sale del primer lote de 5, cuando se mida cada operación con cronómetro. <b>Snap-fit:</b> se descartó para el cuerpo y el bisel, porque el PETG recibe los golpes y un broche impreso se fatiga; la regla de la clase (2 partes con snap-fit) aplica mejor a la tapa de la batería si se vuelve a poner.</p>
+</div>
+
+    <!-- ===================== 8. ESCALA ===================== -->
+    <h2 id="OCHO">Escala económica</h2>
+   <div class="command-block">
+    <h3>Qué proceso conviene en cada volumen</h3>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Volumen</th><th>Cuándo en Lumetriq</th><th>PCB</th><th>Carcasa</th><th>Placas</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">1–3 pods</td><td>Hoy: prototipo de función y experiencia</td><td>Fenólica fresada en la monoFab, soldadura manual</td><td>PETG en el laboratorio</td><td>Chorro de agua + taladro de banco</td></tr>
+            <tr><td class="material-tag">5–20 pods</td><td>RR-03: 5 pods en la semana 13; piloto de 2–3 paquetes</td><td>JLCPCB, solo PCB, con los mismos módulos</td><td>2 impresoras: 12–15 h por pod, ≈ 3 días para 8 pods</td><td>Láser con barrenos y tuercas</td></tr>
+            <tr><td class="material-tag">20–100 pods</td><td>Año 1 del business case (1,200 pods)</td><td>JLCPCB + PCBA con chips</td><td>Impresión: 2 impresoras dan ≈ 1,000 pods al año; molde de inyección si se confirma la venta [Verificar cotización]</td><td>Láser por lote</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>Usar el ESP32 DevKit y los módulos estándar en esta etapa no es una limitación: es la decisión DFM correcta para 5–20 pods. El cambio a chips en PCBA solo vale la pena cuando el diseño deja de cambiar.</p>
+</div>
+
+    <!-- ===================== 9. ECONOMÍA CIRCULAR ===================== -->
+    <h2 id="NUEVE">Economía circular</h2>
+   <div class="command-block">
+    <h3>El pod frente a la Ley General de Economía Circular (DOF, 19 de enero de 2026)</h3>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Pregunta</th><th>Principio</th><th>Cómo está hoy</th><th>Cambio de diseño</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">¿Los componentes son accesibles para reparación?</td><td>Reparabilidad</td><td><span class="ok">Sí</span> en carcasa (tornillos e insertos) y pad (funda con aro tensor). <span class="mid">No</span> en la batería: la 18650 lleva pestañas soldadas</td><td>Portapilas para 18650 (+$15 por pod) para cambiar la celda sin soldar</td></tr>
+            <tr><td class="material-tag">¿Los módulos se reemplazan por separado?</td><td>Modular</td><td><span class="ok">Sí</span>: DevKit y ADS1220 en bases hembra; celdas con pines. <span class="mid">No</span>: ADXL375 con cables soldados y celdas pegadas con epóxico</td><td>Conector para el ADXL375; soporte impreso que sujeta la celda sin pegamento</td></tr>
+            <tr><td class="material-tag">¿Los materiales se identifican para reciclaje?</td><td>Ciclo de vida</td><td><span class="no">No</span>: ninguna pieza está marcada. La vinipiel es PVC, difícil de reciclar</td><td>Grabar "&gt;PETG&lt;" en cuerpo, bisel y aro al imprimir; marcar el acero; buscar una piel sin PVC para la v2</td></tr>
+            <tr><td class="material-tag">¿Se actualiza sin reemplazarse?</td><td>Atemporal</td><td><span class="no">No</span>: el firmware se carga por el USB de la DevKit, dentro del pod</td><td>Actualización OTA por BLE desde la app (el ESP32 la permite con dos particiones)</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <br>
+    <h4>Responsabilidad Extendida del Productor: qué haría Lumetriq</h4>
+    <ul>
+        <li><b>Devolución:</b> al final de su vida, el gimnasio regresa los pods y recibe descuento en un paquete nuevo.</li>
+        <li><b>Recuperación:</b> placas de acero (≈ 1.05 kg por pod), módulos y PCB se prueban y se reutilizan; la batería va a un centro de acopio de pilas.</li>
+        <li><b>Refacciones:</b> funda del pad, batería y difusor se venden sueltos; el pod no se reemplaza por una pieza de $5–10.</li>
+        <li><b>Cuándo aplica:</b> la REP se aplicará por acuerdos de SEMARNAT por sector; los productos electrónicos están entre los primeros. Diseñarlo hoy evita rediseñar después.</li>
+    </ul>
+</div>
+
+    <!-- ===================== 10. DEFENSA ===================== -->
+    <h2 id="DIEZ">Defensa del plan (4 minutos)</h2>
+   <div class="command-block">
+    <h3>Guion</h3>
+    <ol>
+        <li><b>El supuesto más riesgoso:</b> "El supuesto que necesitamos validar primero es que un dueño de gimnasio de box pague $6,000 por 4 pods con la app incluida. Si resulta falso, no hay negocio: el plan pide 300 paquetes el primer año y el aumento sobre el costo ya es de 11.6 %."</li>
+        <li><b>El prototipo:</b> "Vamos a construir un prototipo de negocio: la landing con el precio real y un formulario de pre-registro, de alta resolución en el mensaje y baja en el producto. La pregunta que responde es: ¿un dueño de gimnasio de box en Puebla deja sus datos para una demo después de ver el precio?"</li>
+        <li><b>La evidencia:</b> "Sabremos que funcionó cuando 3 de 10 dueños dejen sus datos y al menos 1 agende la demo en menos de 7 días, sin que se lo pidamos."</li>
+        <li><b>DFM:</b> "La revisión DFM nos dice que el componente de mayor costo es el módulo ADXL375: $344, el 34 % del BOM. Si lo quitamos y simplificamos el ensamble, el costo unitario baja de $1,513 a $939 por pod."</li>
+    </ol>
+    <h4>Preguntas del instructor, respondidas</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">¿Por qué ese supuesto y no que el pod aguante los golpes?</td><td>Si el pod no aguanta, se rediseña; si nadie paga, no hay producto que rediseñar. La prueba de 1,000 golpes sigue en el plan del prototipo de experiencia.</td></tr>
+            <tr><td class="material-tag">Si el dueño no deja sus datos, ¿qué cambian?</td><td>La oferta antes que el diseño: un paquete de prueba, pago en dos partes o renta por temporada. El pod no cambia por una objeción de precio.</td></tr>
+            <tr><td class="material-tag">¿Es de baja resolución porque la pregunta lo permite o por falta de tiempo?</td><td>Porque lo permite: el dueño decide con el precio y la promesa que ve en la landing. El pod real se le enseña en la demo, que es el paso siguiente.</td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+    <!-- ===================== TAREA ===================== -->
+    <h2 id="TAREA">Tarea: BOM actualizado</h2>
+   <div class="command-block">
+    <h3>Componentes por pod con las mejoras DFM (lote de 100)</h3>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Componente</th><th class="num">BOM semana 7</th><th class="num">Con DFM</th><th class="num">Con DFM, sin ADXL375</th><th>Cambio</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">ESP32 DevKit (WROOM-32)</td><td class="num">$82.00</td><td class="num">$82.00</td><td class="num">$82.00</td><td>—</td></tr>
+            <tr><td class="material-tag">Módulo ADXL375</td><td class="num">$344.00</td><td class="num">$344.00</td><td class="num">$0.00</td><td>Se quita si RD-03 pasa con las celdas solas</td></tr>
+            <tr><td class="material-tag">Módulo ADS1220</td><td class="num">$95.00</td><td class="num">$95.00</td><td class="num">$95.00</td><td>—</td></tr>
+            <tr><td class="material-tag">4 celdas de carga 50 kg</td><td class="num">$59.88</td><td class="num">$59.88</td><td class="num">$59.88</td><td>—</td></tr>
+            <tr><td class="material-tag">Energía (batería, TP4056, MT3608, interruptor, fusible)</td><td class="num">$60.86</td><td class="num">$75.86</td><td class="num">$75.86</td><td>+ portapilas 18650 ($15)</td></tr>
+            <tr><td class="material-tag">Arco de 18 LED</td><td class="num">$21.25</td><td class="num">$21.25</td><td class="num">$21.25</td><td>—</td></tr>
+            <tr><td class="material-tag">Pasivos, PCB, pines, conectores y cable</td><td class="num">$51.18</td><td class="num">$51.18</td><td class="num">$51.18</td><td>—</td></tr>
+            <tr><td class="material-tag">Placas de acero</td><td class="num">$110.00</td><td class="num">$110.00</td><td class="num">$110.00</td><td>Corte con barrenos [Verificar costo]</td></tr>
+            <tr><td class="material-tag">Separadores, insertos y tornillería</td><td class="num">$87.22</td><td class="num">$97.22</td><td class="num">$97.22</td><td>+ tornillos de hombro ($30), − tapa trasera ($20)</td></tr>
+            <tr><td class="material-tag">Carcasa PETG, pad y consumibles</td><td class="num">$88.61</td><td class="num">$88.61</td><td class="num">$88.61</td><td>—</td></tr>
+            <tr class="tot"><td>Componentes por pod</td><td class="num">$1,000.00</td><td class="num">$1,025.00</td><td class="num">$681.00</td><td></td></tr>
+            <tr class="tot"><td>Costo unitario (+ ensamble + 15 % indirectos)</td><td class="num">$1,513.08</td><td class="num">$1,334.36</td><td class="num">$938.76</td><td>Ensamble: 4.1 h → 1.75 h</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p><b>Decisión:</b> el BOM oficial sigue en <b>$1,000</b> hasta que el banco confirme RD-03 sin el ADXL375. Las mejoras de ensamble se aplican ya en el lote de 5 pods de la semana 13.</p>
+    <h4>Estado de la tarea</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Tarea</th><th>Entregable</th><th>Estado</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">Construir el primer prototipo según el plan (2 h)</td><td>Landing publicada con formulario y tarjetas A y B</td><td><span class="mid">En curso</span>: landing hecha; falta el formulario y publicarla</td></tr>
+            <tr><td class="material-tag">Probar con 3 usuarios del segmento (1 h)</td><td>Tabla de visitas llena</td><td><span class="mid">Pendiente</span> [Por llenar]</td></tr>
+            <tr><td class="material-tag">Aplicar las mejoras DFM y actualizar el BOM (1 h)</td><td>BOM y costo unitario nuevos</td><td><span class="ok">Hecho</span> (tabla de arriba)</td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+    <!-- ===================== SALIDA ===================== -->
+    <h2 id="SALIDA">Lo que el equipo debe poder responder al salir</h2>
+   <div class="command-block">
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead><tr><th>Pregunta</th><th>Respuesta</th></tr></thead>
+        <tbody>
+            <tr><td class="material-tag">¿Cuál es el supuesto más riesgoso y qué prototipo lo valida?</td><td>Que un dueño de gimnasio pague $6,000 por 4 pods. Lo valida un prototipo de negocio: la landing con precio real y formulario, enseñada a 10 dueños en Puebla.</td></tr>
+            <tr><td class="material-tag">¿Qué evidencia de comportamiento van a capturar?</td><td>Cuántos dueños dejan sus datos en 7 días sin que se lo pidamos, cuántos agendan la demo y si preguntan el precio antes que nosotros. Umbral: 3 de 10 y 1 demo.</td></tr>
+            <tr><td class="material-tag">¿Cuál es el componente de mayor costo y su alternativa DFM?</td><td>El módulo ADXL375 ($344, 34 % del BOM). Alternativa: detectar el impacto con las celdas a 2 kSPS. Con las mejoras de ensamble, el costo unitario baja de $1,513 a $939.</td></tr>
+            <tr><td class="material-tag">¿Cuántas partes tiene la carcasa y cómo se reducen?</td><td>5 piezas impresas (cuerpo, bisel, tapa, aro tensor y difusor) dentro de ≈ 119 piezas mecánicas. Se quita la tapa trasera y los tornillos de hombro dejan las 32 piezas de guías y pernos en 16: quedan ≈ 94. El snap-fit se descartó en las piezas que reciben golpes.</td></tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+
+    <h4>Fuentes consultadas</h4>
+    <ul style="font-size:0.9rem;">
+        <li>Instrucciones del curso: <a href="https://aristarco.github.io/Proyectos4/semana8/">Semana 8 — Prototipado y diseño para manufactura</a></li>
+        <li>Ulrich, K. T., Eppinger, S. D., y Yang, M. C. (2026). <i>Product Design and Development</i> (7.ª ed.), cap. 13: Diseño para manufactura.</li>
+        <li>IDEO U. <i>Business Design</i>: proceso de prototipado en tres pasos.</li>
+        <li>Cámara de Diputados (2026). Ley General de Economía Circular, DOF del 19 de enero de 2026, artículos 1–4 (citada en la página del curso).</li>
+        <li>Boothroyd, Dewhurst y Knight (2010). <i>Product Design for Manufacture and Assembly</i> (3.ª ed.).</li>
+        <li>Documentos del proyecto: BOM y business case de la semana 7, PDS v1.2 de la semana 5, placas v2.13, costos de la opción B y medición del arco de LED (1 de noviembre de 2026).</li>
+    </ul>
+
+<h2 id="Learning">Reflexión sobre aprendizajes</h2>
+        <div>
+           <p>
+            Esta semana entendí que el prototipo más urgente de Lumetriq no es el pod. Al revisar el blueprint, los bloques con más incertidumbre eran de negocio: nunca hablamos con el dueño del gimnasio, que es quien paga, y no sabemos si alguien da $6,000 por 4 pods. Construir el pod perfecto antes de saberlo sería repetir el error que describe la clase: llegar al final con algo pulido que nadie probó. Por eso el primer prototipo es la landing con el precio real y un formulario, y la evidencia no es si les gusta, sino si dejan sus datos. También me di cuenta de que ya habíamos prototipado sin llamarlo así: medir el arco de LED respondió una pregunta concreta y cambió el diseño de la batería. La revisión DFM fue la que más me sorprendió. Pensaba que el costo estaba en los componentes, pero de las 119 piezas mecánicas del pod, 94 son tornillos, tuercas, arandelas y separadores, y el ensamble estimado de 4 horas cuesta casi lo mismo que el acelerómetro. Eso también muestra un hueco en el business case: la nómina no alcanza para ensamblar 2,000 pods al año con este diseño. Por último, la ley de economía circular me hizo ver que el pod se puede abrir, pero la batería soldada, los materiales sin marcar y el firmware que solo se carga por dentro lo hacen un producto para tirar. Son cambios baratos si se hacen ahora.
+           </p>
+    </div>
+
+                    </div>
+                </div>
+        </section>
+
+     <!--FIN CONTENIDO-->
+
+    </main>
+
+    <footer>
+      <p> 2026 &#60;kamil-gallardo&#62;  </p>
+    </footer>
+
+    <script>
+        const links = document.querySelectorAll('.menu-link');
+
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                links.forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+    </script>
+
+  </body>
+</html>
