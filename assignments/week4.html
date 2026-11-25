@@ -6,6 +6,20 @@
     <title>SEMANA 4 - Kamil Gallardo Toledo </title>
     <link rel="stylesheet" href="../style.css">
      <link rel="stylesheet" href="H_DEIDAD.css">
+    <style>
+        /* Solo para esta página: figuras, tablas anchas y prompt */
+        .figura { text-align: center; margin: 20px 0; }
+        .figura svg { width: 100%; height: auto; }
+        .figura figcaption { font-size: 0.9rem; color: #5a5a5a; margin-top: 8px; text-align: left; }
+        .tabla-scroll { overflow-x: auto; }
+        .nota { background-color: #f9f9f9; padding: 15px; border-left: 5px solid #ccc; margin-bottom: 15px; }
+        .frase { font-size: 1.1rem; font-weight: 600; color: #032472; background: rgba(13, 72, 210, 0.06);
+                 border-radius: 12px; padding: 16px 20px; margin: 16px 0; }
+        .prompt-v2 { background: #1b1f2a; color: #e8ecf5; font-family: Consolas, Menlo, monospace; font-size: 0.88rem;
+                     line-height: 1.5; padding: 16px 18px; border-radius: 10px; white-space: pre-wrap; text-align: left; }
+        .no  { color: #b10a0a; font-weight: 700; }
+        .ok  { color: #0b7a3b; font-weight: 700; }
+    </style>
   </head>
 
  <body class="d-flex flex-column h-100" style="background-color:#fffffe">
@@ -38,6 +52,8 @@
                     <a href="#TRES" class="menu-link">Piramide de Bain</a>
                     <a href="#CUATRO" class="menu-link">TAM/SAM/SOM</a>
                     <a href="#CINCO" class="menu-link">Análisis competitivo y Blue Ocean</a>
+                    <a href="#SEIS" class="menu-link">Concepto con IA: ¿es rudo?</a>
+                    <a href="#Learning" class="menu-link">Reflexión</a>
                                        
                 </aside>
 
@@ -430,152 +446,134 @@
      <h2 id="CUATRO">TAM/SAM/SOM</h2>
    <div class="command-block">
     <p><code>DIMENSIONAMIENTO DE MERCADO: Lumetriq</code></p>
+    <div class="nota">
+        <p><i><b>Actualizado el 25 de noviembre de 2026</b> para que coincida con el business case de la semana 7. La oferta pasó de los paquetes Starter (3 pods) y Studio (6 pods) con mensualidad a <b>un solo paquete de 4 pods con la suscripción incluida en el precio</b>. Es el pago único que la propia semana 4 recomendó en "Implicación para precio". Por eso el mercado se mide en <b>paquetes</b> y no solo en gimnasios.</i></p>
+    </div>
+    <br>
+
+    <h4>Oferta que se dimensiona</h4>
+    <table class="material-table">
+        <thead>
+            <tr><th>Concepto</th><th>Valor (año 1)</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">Paquete Lumetriq (4 pods + suscripción)</td><td>$6,000 con IVA · <b>$5,172.41 sin IVA</b></td></tr>
+            <tr><td class="material-tag">Precio por pod</td><td>$1,500 con IVA = $1,250 de hardware + $250 de suscripción ($1,000 ÷ 4), que paga el servidor en la nube</td></tr>
+            <tr><td class="material-tag">Paquetes por establecimiento</td><td><b>3 en promedio</b>: 12 pods, un circuito de 12 estaciones para una clase grupal</td></tr>
+            <tr><td class="material-tag">Compra por establecimiento</td><td>$18,000 con IVA · $15,517 sin IVA</td></tr>
+        </tbody>
+    </table>
     <br>
 
     <h4>TAM — Mercado Total Direccionable</h4>
-    <p><b>Universo de partida:</b> 30,242 establecimientos privados de acondicionamiento físico en México. Es un escenario provisional que debe validarse extrayendo del DENUE los establecimientos de la clase SCIAN 713943. El DENUE 05/2026 reporta 6,138,075 establecimientos totales y permite filtrarlos por actividad, ubicación y tamaño.</p>
-    
+    <p><b>Universo de partida:</b> 30,242 establecimientos privados de acondicionamiento físico en México (DENUE 05/2026, clase SCIAN 713943). El DENUE 05/2026 reporta 6,138,075 establecimientos en total y permite filtrarlos por actividad, ubicación y tamaño.</p>
+
     <table class="material-table">
         <thead>
             <tr>
-                <th>Filtro Aplicado</th>
-                <th>Establecimientos Resultantes</th>
-                <th>Fuente / Justificación</th>
+                <th>Filtro aplicado</th>
+                <th>Establecimientos resultantes</th>
+                <th>Justificación</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="material-tag">Entrenamiento presencial</td>
+                <td class="material-tag">Entrenamiento presencial (60 %)</td>
                 <td>18,145</td>
                 <td>Supuesto de primer principio; no existe un porcentaje público específico.</td>
             </tr>
             <tr>
-                <td class="material-tag">Afinidad con HIIT, funcional, CrossFit, combate, atletismo</td>
+                <td class="material-tag">Afinidad con HIIT, funcional, CrossFit, combate y atletismo (45 %)</td>
                 <td>8,165</td>
                 <td>Supuesto de primer principio.</td>
             </tr>
             <tr>
-                <td class="material-tag">Utilidad del sistema en clases grupales/sesiones</td>
+                <td class="material-tag">Utilidad del sistema en clases grupales o sesiones (60 %)</td>
                 <td>4,899</td>
                 <td>Supuesto de primer principio.</td>
             </tr>
             <tr>
-                <td class="material-tag">Disposición de pago (HW MXN 4,490–7,990 + SW B2B)</td>
-                <td>1,715</td>
-                <td>Hipótesis de disposición de pago; requiere validación mediante entrevistas, pilotos y preventas.</td>
+                <td class="material-tag">Disposición de pago por un paquete de $6,000 sin mensualidad (60 %)</td>
+                <td>2,939</td>
+                <td>Sube frente a la primera versión (35 %) porque ya no hay suscripción mensual, la barrera que señalaron las entrevistas y el análisis competitivo.</td>
             </tr>
         </tbody>
     </table>
-    
-    <p><b>Universo final TAM:</b> 1,715 establecimientos compradores potenciales</p>
-    
-    <p><b>Supuestos de producto:</b></p>
-    <ul>
-        <li><code style="display:inline;">⦿ Distribución:</code> 70% compra Lumetriq Studio (6 disp. por MXN 7,990) y 30% compra Lumetriq Starter (3 disp. por MXN 4,490).</li>
-        <li><code style="display:inline;">⦿ Precio promedio ponderado de hardware:</code> MXN 6,940.</li>
-        <li><code style="display:inline;">⦿ Suscripción para gimnasio Studio Pro:</code> MXN 899 mensuales o MXN 10,788 anuales.</li>
-        <li><code style="display:inline;">⦿ Ticket promedio del primer año:</code> MXN 17,728 por establecimiento.</li>
-    </ul>
-    
-    <p><b>Valor anual TAM:</b> MXN 30,407,520 durante el primer año</p>
-    <ul>
-        <li><code style="display:inline;">⦿ Hardware inicial:</code> 1,715 × MXN 6,940 = MXN 11,902,100.</li>
-        <li><code style="display:inline;">⦿ Suscripción anual (Recurrente):</code> 1,715 × MXN 10,788 = MXN 18,505,420.</li>
-    </ul>
+
+    <p><b>Universo final TAM:</b> 2,939 establecimientos compradores potenciales × 3 paquetes = <b>8,817 paquetes</b></p>
+    <p><b>Valor TAM:</b> 8,817 × $5,172.41 = <b>$45.6 millones sin IVA</b> (compra inicial de todo el mercado)</p>
     <br>
 
     <h4>SAM — Mercado Alcanzable</h4>
-    <p><i>Filtros aplicados al TAM:</i></p>
     <table class="material-table">
         <thead>
             <tr>
-                <th>Filtro Aplicado</th>
-                <th>Establecimientos Resultantes</th>
+                <th>Filtro aplicado</th>
+                <th>Establecimientos resultantes</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="material-tag">Geografía inicial (CDMX, Edomex, GDL, MTY, PUE)</td>
-                <td>943</td>
+                <td class="material-tag">Geografía inicial: CDMX, Edomex, Guadalajara, Monterrey y Puebla (55 %)</td>
+                <td>1,616</td>
             </tr>
             <tr>
-                <td class="material-tag">Operación grupal recurrente y capacidad de compra</td>
-                <td>472</td>
-            </tr>
-            <tr>
-                <td class="material-tag">Accesibilidad comercial (venta directa, redes, coaches, alianzas)</td>
-                <td>330</td>
-            </tr>
-            <tr>
-                <td class="material-tag">Capacidad de pago (Paquete prom. MXN 6,940 + suscripción)</td>
-                <td>198</td>
+                <td class="material-tag">Accesibilidad comercial: venta directa, redes, coaches y alianzas (70 %)</td>
+                <td>1,131</td>
             </tr>
         </tbody>
     </table>
-    
-    <p><b>Universo final SAM:</b> 198 establecimientos</p>
-    <p><b>Valor anual SAM:</b> MXN 3,510,144 durante el primer año</p>
-    <ul>
-        <li><code style="display:inline;">⦿ Hardware inicial:</code> 198 × MXN 6,940 = MXN 1,374,120.</li>
-        <li><code style="display:inline;">⦿ Suscripción anual (Recurrente):</code> 198 × MXN 10,788 = MXN 2,136,024.</li>
-    </ul>
-    <p><i>Nota: El SAM excluye gimnasios públicos, cadenas con procesos corporativos, centros sin clases grupales, usuarios domésticos, atletas individuales y establecimientos que solo aceptarían una app gratuita.</i></p>
+
+    <p><b>Universo final SAM:</b> 1,131 establecimientos × 3 paquetes = <b>3,393 paquetes</b></p>
+    <p><b>Valor SAM:</b> 3,393 × $5,172.41 = <b>$17.6 millones sin IVA</b></p>
+    <p><i>Nota: el SAM excluye gimnasios públicos, cadenas con procesos corporativos, centros sin clases grupales, usuarios domésticos y atletas individuales. Los filtros de operación grupal y capacidad de pago de la primera versión quedaron dentro del TAM, para no contarlos dos veces.</i></p>
     <br>
 
     <h4>SOM — Mercado Obtenible (Años 1–2)</h4>
-    <p><b>Meta:</b> 45 gimnasios o estudios pagadores (22.7% del SAM)</p>
-    
+    <p><b>Meta:</b> <b>800 paquetes</b> en dos años (300 en el año 1 y 500 en el año 2), ≈ <b>267 gimnasios o estudios</b>. Es el <b>23.6 % del SAM</b>, en línea con el 22.7 % de la primera versión.</p>
+
     <p><b>Lógica de Go-To-Market:</b></p>
     <ul>
-        <li><code style="display:inline;">⦿ Canal específico:</code> Demostraciones presenciales en clases funcionales/HIIT; prospección por IG, WA y alianzas con coaches/distribuidores.</li>
-        <li><code style="display:inline;">⦿ Geografía piloto:</code> CDMX y Edomex (Año 1); GDL y Monterrey (Año 2); Puebla mediante prospección digital.</li>
-        <li><code style="display:inline;">⦿ Capacidad del equipo:</code> 2 personas en ventas/demos, 8–10 demos calificadas por vendedor a la semana, conversión objetivo de 5–8%.</li>
-        <li><code style="display:inline;">⦿ Oferta comercial:</code> Lumetriq Studio (6 dispositivos) a MXN 7,990, con acceso de prueba a la app y renovación a MXN 899/mes.</li>
-        <li><code style="display:inline;">⦿ Trayectoria:</code> 15 clientes (Año 1) y 30 clientes nuevos (Año 2) para alcanzar los 45 clientes acumulados.</li>
+        <li><code style="display:inline;">⦿ Canal específico:</code> demostraciones presenciales en clases funcionales, HIIT y de box; prospección por IG y WhatsApp, y alianzas con coaches y distribuidores.</li>
+        <li><code style="display:inline;">⦿ Geografía piloto:</code> CDMX, Edomex y Puebla en el año 1; Guadalajara y Monterrey en el año 2.</li>
+        <li><code style="display:inline;">⦿ Capacidad del equipo:</code> en el año 1 venden los 3 integrantes (100 establecimientos). Con una conversión del 8 % hacen falta ≈ 1,250 demostraciones al año: 8 por persona a la semana. Desde el año 2 se suma un empleado para ventas y soporte, y en el año 4 un segundo.</li>
+        <li><code style="display:inline;">⦿ Oferta comercial:</code> paquete de 4 pods a $6,000 con IVA, con la suscripción incluida; el gimnasio típico compra 3 paquetes.</li>
+        <li><code style="display:inline;">⦿ Años 3–5:</code> el plan llega a 3,700 paquetes en 5 años (42 % del TAM). Para lograrlo hay que vender fuera de las 5 ciudades y que los clientes vuelvan a comprar paquetes para ampliar o reponer pods.</li>
     </ul>
-    
-    <p><b>Valor anual SOM:</b> MXN 797,760 de ingresos del primer año para 45 clientes</p>
+
+    <p><b>Valor SOM:</b> <b>$4.35 millones sin IVA</b> en los años 1 y 2</p>
     <ul>
-        <li><code style="display:inline;">⦿ Hardware inicial:</code> 45 × MXN 6,940 = MXN 312,300.</li>
-        <li><code style="display:inline;">⦿ Suscripción anual (Recurrente):</code> 45 × MXN 10,788 = MXN 485,460.</li>
+        <li><code style="display:inline;">⦿ Año 1:</code> 300 × $5,172.41 = $1,551,724.</li>
+        <li><code style="display:inline;">⦿ Año 2:</code> 500 × $5,603.45 = $2,801,724 (el precio sube a $6,500 con IVA).</li>
     </ul>
-    <p><i>Nota: Si los clientes se adquieren gradualmente, el ingreso real del año 2 sería aprox. MXN 693,660, considerando renovaciones, nuevas suscripciones y hardware de los clientes nuevos.</i></p>
     <br>
 
     <h4>SEÑAL DE VIABILIDAD</h4>
-    <p><b>SOM × precio anual = MXN 797,760 de ingresos brutos de primera compra</b></p>
-    <p><code style="display:inline;">⦿ ¿Cubre costos operativos básicos de una startup de 4 personas?</code><br> <b>Marginal</b> — El precio revisado mejora el modelo, pero 45 clientes todavía probablemente no cubren cuatro salarios, desarrollo de app, inventario, ventas, soporte, garantía y logística.</p>
-    
-    <p><code style="display:inline;">⦿ Recomendación Estratégica:</code><br> Para una operación más sólida, Lumetriq debería alcanzar aprox. 75–100 sedes, aumentar el plan B2B a MXN 1,199–1,499 mensuales, vender paquetes de 12 dispositivos o agregar instalación, capacitación y contenido premium.</p>
-    
-    <p><code style="display:inline;">⦿ Precios Hipotéticos Recomendados:</code></p>
+    <p><b>SOM de 800 paquetes = $4.35 millones de ventas sin IVA en 2 años</b></p>
+    <p><code style="display:inline;">⦿ ¿Cubre los costos operativos?</code><br> <b>Sí, pero con poco margen.</b> El equipo no cobra sueldo (recibe acciones) y el empleado entra hasta el año 2, así que la utilidad neta es positiva desde el año 1: $112,647 en el año 1 y $172,147 en el año 2. El aumento sobre el costo unitario es de 11.6 % en el año 1 y 9.6 % en el año 2, cuando entra el primer sueldo. Si los componentes suben 10 %, la utilidad del año 1 cae a $28,647.</p>
+
+    <p><code style="display:inline;">⦿ Recomendación estratégica:</code><br> Cuidar el costo de componentes ($1,000 por pod) y cerrar ventas de 3 paquetes por gimnasio. Los precios suben cada año ($6,500 en el año 2 y $8,500 en el año 5), y con ellos el aumento sobre el costo llega a 24 % en el año 5. El inversionista recibe 214 % de lo que invierte en 5 años.</p>
+
+    <p><code style="display:inline;">⦿ Precios del plan:</code></p>
     <table class="material-table">
         <thead>
             <tr>
-                <th>Producto / Servicio</th>
-                <th>Precio Estimado (MXN)</th>
+                <th>Producto</th>
+                <th>Precio (MXN, con IVA)</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="material-tag">Lumetriq Starter (3 dispositivos)</td>
-                <td>$4,490</td>
+                <td class="material-tag">Paquete Lumetriq: 4 pods + suscripción ($1,000)</td>
+                <td>$6,000 (año 1) → $8,500 (año 5)</td>
             </tr>
             <tr>
-                <td class="material-tag">Lumetriq Studio (6 dispositivos)</td>
-                <td>$7,990</td>
+                <td class="material-tag">Precio por pod</td>
+                <td>$1,500 = $1,250 de hardware + $250 de suscripción</td>
             </tr>
             <tr>
-                <td class="material-tag">App Individual Pro</td>
-                <td>$149 / mes (o $1,290 anual)</td>
-            </tr>
-            <tr>
-                <td class="material-tag">App Gimnasio Studio Pro</td>
-                <td>$899 / mes (o $8,990 anual)</td>
-            </tr>
-            <tr>
-                <td class="material-tag"><b>Ticket Promedio 1er Año (Gimnasio)</b></td>
-                <td><b>~ $17,728</b></td>
+                <td class="material-tag"><b>Compra promedio por gimnasio (3 paquetes)</b></td>
+                <td><b>$18,000</b></td>
             </tr>
         </tbody>
     </table>
@@ -587,12 +585,12 @@
         <li><code style="display:inline;">⦿ BlazePod:</code> Starter Kit y Bundles (2024–2026). Referencia de paquetes de dispositivos, accesorios y precios internacionales.</li>
         <li><code style="display:inline;">⦿ BlazePod / Perform Better:</code> Membresía de la aplicación (2026). Referencia de planes gratuitos y Pro.</li>
         <li><code style="display:inline;">⦿ FITLIGHT:</code> FITLIGHT System (2025–2026). Referencia de sistema profesional y aplicación sin suscripción.</li>
-        <li><code style="display:inline;">⦿ Banco de México:</code> Tipo de cambio FIX, 24 de septiembre de 2026. Utilizado para convertir referencias internacionales a pesos mexicanos.</li>
+        <li><code style="display:inline;">⦿ Business case de Lumetriq (semana 7):</code> precios, paquetes vendidos por año y utilidad neta.</li>
     </ul>
 </div>
 
 
-    
+
 <h2  id="CINCO">Análisis competitivo y Blue Ocean</h2>
 <!--PARTE 1-->
 <div class="command-block">
@@ -785,6 +783,117 @@
     <p><i>Nota: Atributo 4 eliminado → 0 para Lumetriq. Atributos 5 y 8 creados → 0 para todos los competidores; atributo 8 se puntuó 1, no 0, para BlazePod porque su producto sí menciona explícitamente "compete against others" dentro de una sesión, aunque no un historial social persistente entre sesiones como el de Hevy — se documenta la diferencia en vez de forzar la regla ciegamente.</i></p>
     <br>
 
+    
+    <h4>Lienzo estratégico</h4>
+    <p>La tabla anterior, graficada. Cada línea es la curva de valor de una opción; donde la línea azul se separa de las demás está la ventaja de Lumetriq.</p>
+    <figure class="figura">
+<svg viewBox="0 0 1000 585" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lienzo estratégico de Lumetriq contra BlazePod, FITLIGHT y el circuito manual en 8 atributos">
+<style>.ax{font:12px Arial,sans-serif;fill:#1b1f2a}.axb{font:bold 12px Arial,sans-serif;fill:#1b1f2a}.bl{font:bold 11px Arial,sans-serif;letter-spacing:.5px}.vl{font:bold 13px Arial,sans-serif;fill:#0d48d2}.cl{font:bold 11.5px Arial,sans-serif}.lg{font:12.5px Arial,sans-serif;fill:#1b1f2a}</style>
+<rect x="305.8" y="52" width="107.9" height="408" rx="6" fill="#e3ecff"/>
+<text class="bl" x="359.7" y="70" text-anchor="middle" fill="#032472">INCREMENTAR</text>
+<rect x="417.6" y="52" width="107.9" height="408" rx="6" fill="#fde2e2"/>
+<text class="bl" x="471.6" y="70" text-anchor="middle" fill="#b10a0a">ELIMINAR</text>
+<rect x="529.5" y="52" width="107.9" height="408" rx="6" fill="#dcf2e2"/>
+<text class="bl" x="583.4" y="70" text-anchor="middle" fill="#0b6b34">CREAR</text>
+<rect x="641.4" y="52" width="107.9" height="408" rx="6" fill="#e3ecff"/>
+<text class="bl" x="695.3" y="70" text-anchor="middle" fill="#032472">INCREMENTAR</text>
+<rect x="753.2" y="52" width="107.9" height="408" rx="6" fill="#fff1d6"/>
+<text class="bl" x="807.2" y="70" text-anchor="middle" fill="#8a5a00">REDUCIR</text>
+<rect x="865.1" y="52" width="107.9" height="408" rx="6" fill="#dcf2e2"/>
+<text class="bl" x="919.1" y="70" text-anchor="middle" fill="#0b6b34">CREAR</text>
+<line x1="80" y1="460.0" x2="975" y2="460.0" stroke="#cfd5e0" stroke-width="1"/>
+<text class="ax" x="70" y="464.0" text-anchor="end">0</text>
+<line x1="80" y1="393.0" x2="975" y2="393.0" stroke="#cfd5e0" stroke-width="1"/>
+<text class="ax" x="70" y="397.0" text-anchor="end">1</text>
+<line x1="80" y1="326.0" x2="975" y2="326.0" stroke="#cfd5e0" stroke-width="1"/>
+<text class="ax" x="70" y="330.0" text-anchor="end">2</text>
+<line x1="80" y1="259.0" x2="975" y2="259.0" stroke="#cfd5e0" stroke-width="1"/>
+<text class="ax" x="70" y="263.0" text-anchor="end">3</text>
+<line x1="80" y1="192.0" x2="975" y2="192.0" stroke="#cfd5e0" stroke-width="1"/>
+<text class="ax" x="70" y="196.0" text-anchor="end">4</text>
+<line x1="80" y1="125.0" x2="975" y2="125.0" stroke="#cfd5e0" stroke-width="1"/>
+<text class="ax" x="70" y="129.0" text-anchor="end">5</text>
+<text class="axb" transform="translate(28,292) rotate(-90)" text-anchor="middle">Nivel de oferta (0 = no lo ofrece · 5 = muy alto)</text>
+<text class="axb" x="135.9" y="482" text-anchor="middle">1. Precio de</text>
+<text class="ax" x="135.9" y="498" text-anchor="middle">entrada accesible</text>
+<text class="axb" x="247.8" y="482" text-anchor="middle">2. Costo</text>
+<text class="ax" x="247.8" y="498" text-anchor="middle">recurrente bajo</text>
+<text class="axb" x="359.7" y="482" text-anchor="middle">3. Velocidad de</text>
+<text class="ax" x="359.7" y="498" text-anchor="middle">configuración</text>
+<text class="axb" x="471.6" y="482" text-anchor="middle">4. Analítica</text>
+<text class="ax" x="471.6" y="498" text-anchor="middle">avanzada</text>
+<text class="axb" x="583.4" y="482" text-anchor="middle">5. Medición de</text>
+<text class="ax" x="583.4" y="498" text-anchor="middle">impacto</text>
+<text class="axb" x="695.3" y="482" text-anchor="middle">6. Localización</text>
+<text class="ax" x="695.3" y="498" text-anchor="middle">para México</text>
+<text class="axb" x="807.2" y="482" text-anchor="middle">7. Kit inicial</text>
+<text class="ax" x="807.2" y="498" text-anchor="middle">pequeño y ampliable</text>
+<text class="axb" x="919.1" y="482" text-anchor="middle">8. Progreso social</text>
+<text class="ax" x="919.1" y="498" text-anchor="middle">persistente</text>
+<polyline points="135.9,125.0 247.8,125.0 359.7,125.0 471.6,393.0 583.4,460.0 695.3,125.0 807.2,125.0 919.1,460.0" fill="none" stroke="#7a7a7a" stroke-width="2.2" stroke-dasharray="6 5" stroke-linejoin="round"/>
+<rect x="130.4" y="119.5" width="11.0" height="11.0" fill="#7a7a7a"/>
+<rect x="242.3" y="119.5" width="11.0" height="11.0" fill="#7a7a7a"/>
+<rect x="354.2" y="119.5" width="11.0" height="11.0" fill="#7a7a7a"/>
+<rect x="466.1" y="387.5" width="11.0" height="11.0" fill="#7a7a7a"/>
+<rect x="577.9" y="454.5" width="11.0" height="11.0" fill="#7a7a7a"/>
+<rect x="689.8" y="119.5" width="11.0" height="11.0" fill="#7a7a7a"/>
+<rect x="801.7" y="119.5" width="11.0" height="11.0" fill="#7a7a7a"/>
+<rect x="913.6" y="454.5" width="11.0" height="11.0" fill="#7a7a7a"/>
+<polyline points="135.9,397.0 247.8,129.0 359.7,330.0 471.6,129.0 583.4,464.0 695.3,397.0 807.2,330.0 919.1,464.0" fill="none" stroke="#c62828" stroke-width="2.2" stroke-dasharray="2 4" stroke-linejoin="round"/>
+<path d="M135.9 390.5 L142.4 402.5 L129.4 402.5 Z" fill="#c62828"/>
+<path d="M247.8 122.5 L254.3 134.5 L241.3 134.5 Z" fill="#c62828"/>
+<path d="M359.7 323.5 L366.2 335.5 L353.2 335.5 Z" fill="#c62828"/>
+<path d="M471.6 122.5 L478.1 134.5 L465.1 134.5 Z" fill="#c62828"/>
+<path d="M583.4 457.5 L589.9 469.5 L576.9 469.5 Z" fill="#c62828"/>
+<path d="M695.3 390.5 L701.8 402.5 L688.8 402.5 Z" fill="#c62828"/>
+<path d="M807.2 323.5 L813.7 335.5 L800.7 335.5 Z" fill="#c62828"/>
+<path d="M919.1 457.5 L925.6 469.5 L912.6 469.5 Z" fill="#c62828"/>
+<polyline points="135.9,322.0 247.8,322.0 359.7,322.0 471.6,188.0 583.4,456.0 695.3,389.0 807.2,322.0 919.1,389.0" fill="none" stroke="#e8833a" stroke-width="2.2" stroke-dasharray="10 4" stroke-linejoin="round"/>
+<path d="M135.9 315.5 L142.4 322.0 L135.9 328.5 L129.4 322.0 Z" fill="#e8833a"/>
+<path d="M247.8 315.5 L254.3 322.0 L247.8 328.5 L241.3 322.0 Z" fill="#e8833a"/>
+<path d="M359.7 315.5 L366.2 322.0 L359.7 328.5 L353.2 322.0 Z" fill="#e8833a"/>
+<path d="M471.6 181.5 L478.1 188.0 L471.6 194.5 L465.1 188.0 Z" fill="#e8833a"/>
+<path d="M583.4 449.5 L589.9 456.0 L583.4 462.5 L576.9 456.0 Z" fill="#e8833a"/>
+<path d="M695.3 382.5 L701.8 389.0 L695.3 395.5 L688.8 389.0 Z" fill="#e8833a"/>
+<path d="M807.2 315.5 L813.7 322.0 L807.2 328.5 L800.7 322.0 Z" fill="#e8833a"/>
+<path d="M919.1 382.5 L925.6 389.0 L919.1 395.5 L912.6 389.0 Z" fill="#e8833a"/>
+<polyline points="135.9,192.0 247.8,192.0 359.7,192.0 471.6,460.0 583.4,192.0 695.3,192.0 807.2,192.0 919.1,192.0" fill="none" stroke="#0d48d2" stroke-width="4.5" stroke-linejoin="round"/>
+<circle cx="135.9" cy="192.0" r="7.0" fill="#0d48d2" stroke="#fff" stroke-width="2"/>
+<circle cx="247.8" cy="192.0" r="7.0" fill="#0d48d2" stroke="#fff" stroke-width="2"/>
+<circle cx="359.7" cy="192.0" r="7.0" fill="#0d48d2" stroke="#fff" stroke-width="2"/>
+<circle cx="471.6" cy="460.0" r="7.0" fill="#0d48d2" stroke="#fff" stroke-width="2"/>
+<circle cx="583.4" cy="192.0" r="7.0" fill="#0d48d2" stroke="#fff" stroke-width="2"/>
+<circle cx="695.3" cy="192.0" r="7.0" fill="#0d48d2" stroke="#fff" stroke-width="2"/>
+<circle cx="807.2" cy="192.0" r="7.0" fill="#0d48d2" stroke="#fff" stroke-width="2"/>
+<circle cx="919.1" cy="192.0" r="7.0" fill="#0d48d2" stroke="#fff" stroke-width="2"/>
+<text class="vl" x="135.9" y="178.0" text-anchor="middle">4</text>
+<text class="vl" x="247.8" y="178.0" text-anchor="middle">4</text>
+<text class="vl" x="359.7" y="178.0" text-anchor="middle">4</text>
+<text class="vl" x="471.6" y="446.0" text-anchor="middle">0</text>
+<text class="vl" x="583.4" y="178.0" text-anchor="middle">4</text>
+<text class="vl" x="695.3" y="178.0" text-anchor="middle">4</text>
+<text class="vl" x="807.2" y="178.0" text-anchor="middle">4</text>
+<text class="vl" x="919.1" y="178.0" text-anchor="middle">4</text>
+<text class="cl" x="471.6" y="92" text-anchor="middle" fill="#b10a0a">Lumetriq baja a 0</text>
+<text class="cl" x="583.4" y="92" text-anchor="middle" fill="#0b6b34">solo Lumetriq</text>
+<text class="cl" x="919.1" y="92" text-anchor="middle" fill="#0b6b34">casi solo Lumetriq</text>
+<line x1="95" y1="560" x2="133" y2="560" stroke="#0d48d2" stroke-width="4.5"/>
+<circle cx="114.0" cy="560.0" r="6.5" fill="#0d48d2" stroke="#fff" stroke-width="2"/>
+<text class="lg" x="141" y="564" font-weight="bold">Lumetriq</text>
+<line x1="245" y1="560" x2="283" y2="560" stroke="#e8833a" stroke-width="2.2" stroke-dasharray="10 4"/>
+<path d="M264.0 554.0 L270.0 560.0 L264.0 566.0 L258.0 560.0 Z" fill="#e8833a"/>
+<text class="lg" x="291" y="564">BlazePod</text>
+<line x1="395" y1="560" x2="433" y2="560" stroke="#c62828" stroke-width="2.2" stroke-dasharray="2 4"/>
+<path d="M414.0 554.0 L420.0 565.0 L408.0 565.0 Z" fill="#c62828"/>
+<text class="lg" x="441" y="564">FITLIGHT</text>
+<line x1="540" y1="560" x2="578" y2="560" stroke="#7a7a7a" stroke-width="2.2" stroke-dasharray="6 5"/>
+<rect x="554.0" y="555.0" width="10" height="10" fill="#7a7a7a"/>
+<text class="lg" x="586" y="564">Circuito manual (conos y silbato)</text>
+</svg>
+        <figcaption><b>Cómo leerlo.</b> Las columnas de color son las cuatro acciones: <b>eliminar</b> (4), <b>reducir</b> (7), <b>incrementar</b> (3 y 6) y <b>crear</b> (5 y 8). Lumetriq se separa de BlazePod y FITLIGHT justo ahí: baja a 0 en analítica avanzada y es el único que sube en medición de impacto y progreso social. En precio, configuración, localización y tamaño del kit, su curva se acerca a la del circuito manual, el competidor más peligroso. En los atributos 1, 2 y 7 la escala mide qué tan favorable es para el gimnasio (5 = más barato o más fácil de empezar). El atributo 5 es el que la semana 5 convirtió en requisito medible: fuerza de cada golpe con error ≤ ±15 % (RF-03), con celdas de carga bajo un plato flotante.</figcaption>
+    </figure>
+    <br>
+
     <h4>Lectura del Lienzo</h4>
     <p>La curva de Lumetriq es diferente a la de los competidores en:</p>
     <ul>
@@ -821,7 +930,7 @@
 
     <h4>Evaluación IDEO</h4>
     <p><code style="display:inline;">⦿ Insightful ✅:</code> Ningún competidor directo (BlazePod, FITLIGHT) combina estímulo impredecible + progreso social persistente a precio de entrada accesible; el hueco azul ya lo dejó claro.</p>
-    <p><code style="display:inline;">⦿ Unique ⚠️:</code> La ventaja real (sensores multimodales de fuerza/movimiento) es difícil de replicar, pero el precio de 1,332 MXN/unidad en paquetes de 3 y 6 aún no está validado con el comprador real (dueño de estudio boutique/HIIT), así que la unicidad de "accesible" es hipótesis, no hecho confirmado.</p>
+    <p><code style="display:inline;">⦿ Unique ⚠️:</code> La ventaja real (sensores multimodales de fuerza/movimiento) es difícil de replicar, pero el precio de $1,500 por pod (paquete de 4 con suscripción incluida) aún no está validado con el comprador real (dueño de estudio boutique/HIIT), así que la unicidad de "accesible" es hipótesis, no hecho confirmado.</p>
     <p><code style="display:inline;">⦿ Targeted ✅:</code> El segmento tiene las 4 capas bien definidas (quién, qué hace hoy, qué valora, cuánto paga), lo suficientemente preciso para hablarle directo sin sonar genérico.</p>
     <br>
 
@@ -859,7 +968,7 @@
         <tbody>
             <tr>
                 <td class="material-tag">Oferta del producto<br><i>(Qué venden)</i></td>
-                <td>"Dispositivos táctiles con sensores de contacto, fuerza y acelerómetro, sincronizados por app vía luces y sonido, con métricas de tiempo de reacción y leaderboard, vendidos en paquetes de 3 y 6 unidades a 1,332 MXN por unidad."</td>
+                <td>"Dispositivos táctiles con sensores de contacto, fuerza y acelerómetro, sincronizados por app vía luces y sonido, con métricas de tiempo de reacción y leaderboard, vendidos en paquetes de 4 pods a $6,000 con la suscripción incluida ($1,500 por pod)."</td>
             </tr>
             <tr>
                 <td class="material-tag">Propuesta de valor<br><i>(Por qué lo compran)</i></td>
@@ -869,9 +978,132 @@
     </table>
     <p><b>La diferencia en una línea:</b> La oferta describe sensores, precio y paquetes <i>desde el punto de vista del fabricante</i>; la propuesta describe el enganche y la repetición del hábito <i>desde el punto de vista del coach y sus alumnos</i> — pasa de "qué trae la caja" a "por qué van a querer volver a usarlo".</p>
 </div>
+    
+<h2 id="SEIS">Concepto generado con IA: ¿refleja un aparato rudo?</h2>
+<div class="command-block">
+    <h3>Respuesta corta: no</h3>
+    <p>Las imágenes que obtuvimos con Imagen 3 (Gemini) se ven bien, pero muestran un <b>producto de consumo</b>, parecido a una bocina inteligente. No se ven como equipo de gimnasio que recibe golpes de un boxeador. El problema empezó en nuestro prompt, no en la IA. Le pedimos esto:</p>
+    <ul>
+        <li><code style="display:inline;">⦿</code> <i>"soft, biomorphic pebble-like dome"</i>: una piedra suave y redondeada.</li>
+        <li><code style="display:inline;">⦿</code> <i>"transitions seamlessly without visible joints into a smooth, glossy hard plastic outer shell"</i>: plástico brillante y sin juntas.</li>
+        <li><code style="display:inline;">⦿</code> <i>"two-prong quick-release mount… similar to action camera accessories"</i>: el soporte de una cámara de acción.</li>
+        <li><code style="display:inline;">⦿</code> <i>"exposed concentric copper metal contact rings"</i>: contactos de cobre a la vista.</li>
+    </ul>
+    <p>Ninguna palabra del prompt hablaba de carga, de guantes, de anclaje ni de resistencia. La IA dibujó con exactitud lo que le pedimos, y lo que pedimos no aguanta un golpe.</p>
+    <p class="frase">"The AI casually draws things that would never survive a punch." Una imagen bonita no valida la ingeniería; lo que define que el pod es rudo son los requisitos de la semana 5.</p>
+
+    <figure class="figura">
+<svg viewBox="0 0 2816 1536" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tríptico generado con IA con 8 puntos marcados que no resistirían un golpe">
+<image href="PRIMERA_PROPUESTA_DE_IMAGEN_SEGUN_PROMPT.jpg" x="0" y="0" width="2816" height="1536"/>
+<line x1="95" y1="640" x2="205" y2="790" stroke="#ffffff" stroke-width="12"/>
+<line x1="95" y1="640" x2="205" y2="790" stroke="#d32f2f" stroke-width="6"/>
+<circle cx="205" cy="790" r="12" fill="#d32f2f" stroke="#fff" stroke-width="4"/>
+<circle cx="95" cy="640" r="50" fill="#d32f2f" stroke="#fff" stroke-width="7"/>
+<text x="95" y="659" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="56" fill="#fff">1</text>
+<line x1="330" y1="1215" x2="430" y2="1045" stroke="#ffffff" stroke-width="12"/>
+<line x1="330" y1="1215" x2="430" y2="1045" stroke="#d32f2f" stroke-width="6"/>
+<circle cx="430" cy="1045" r="12" fill="#d32f2f" stroke="#fff" stroke-width="4"/>
+<circle cx="330" cy="1215" r="50" fill="#d32f2f" stroke="#fff" stroke-width="7"/>
+<text x="330" y="1234" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="56" fill="#fff">2</text>
+<line x1="790" y1="560" x2="660" y2="700" stroke="#ffffff" stroke-width="12"/>
+<line x1="790" y1="560" x2="660" y2="700" stroke="#d32f2f" stroke-width="6"/>
+<circle cx="660" cy="700" r="12" fill="#d32f2f" stroke="#fff" stroke-width="4"/>
+<circle cx="790" cy="560" r="50" fill="#d32f2f" stroke="#fff" stroke-width="7"/>
+<text x="790" y="579" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="56" fill="#fff">3</text>
+<line x1="1150" y1="1010" x2="1300" y2="885" stroke="#ffffff" stroke-width="12"/>
+<line x1="1150" y1="1010" x2="1300" y2="885" stroke="#d32f2f" stroke-width="6"/>
+<circle cx="1300" cy="885" r="12" fill="#d32f2f" stroke="#fff" stroke-width="4"/>
+<circle cx="1150" cy="1010" r="50" fill="#d32f2f" stroke="#fff" stroke-width="7"/>
+<text x="1150" y="1029" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="56" fill="#fff">4</text>
+<line x1="1800" y1="1020" x2="1668" y2="920" stroke="#ffffff" stroke-width="12"/>
+<line x1="1800" y1="1020" x2="1668" y2="920" stroke="#d32f2f" stroke-width="6"/>
+<circle cx="1668" cy="920" r="12" fill="#d32f2f" stroke="#fff" stroke-width="4"/>
+<circle cx="1800" cy="1020" r="50" fill="#d32f2f" stroke="#fff" stroke-width="7"/>
+<text x="1800" y="1039" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="56" fill="#fff">5</text>
+<line x1="1409" y1="1250" x2="1409" y2="1110" stroke="#ffffff" stroke-width="12"/>
+<line x1="1409" y1="1250" x2="1409" y2="1110" stroke="#d32f2f" stroke-width="6"/>
+<circle cx="1409" cy="1110" r="12" fill="#d32f2f" stroke="#fff" stroke-width="4"/>
+<circle cx="1409" cy="1250" r="50" fill="#d32f2f" stroke="#fff" stroke-width="7"/>
+<text x="1409" y="1269" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="56" fill="#fff">6</text>
+<line x1="2600" y1="470" x2="2440" y2="560" stroke="#ffffff" stroke-width="12"/>
+<line x1="2600" y1="470" x2="2440" y2="560" stroke="#d32f2f" stroke-width="6"/>
+<circle cx="2440" cy="560" r="12" fill="#d32f2f" stroke="#fff" stroke-width="4"/>
+<circle cx="2600" cy="470" r="50" fill="#d32f2f" stroke="#fff" stroke-width="7"/>
+<text x="2600" y="489" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="56" fill="#fff">7</text>
+<line x1="1990" y1="1090" x2="2110" y2="1005" stroke="#ffffff" stroke-width="12"/>
+<line x1="1990" y1="1090" x2="2110" y2="1005" stroke="#d32f2f" stroke-width="6"/>
+<circle cx="2110" cy="1005" r="12" fill="#d32f2f" stroke="#fff" stroke-width="4"/>
+<circle cx="1990" cy="1090" r="50" fill="#d32f2f" stroke="#fff" stroke-width="7"/>
+<text x="1990" y="1109" text-anchor="middle" font-family="Arial" font-weight="bold" font-size="56" fill="#fff">8</text>
+</svg>
+        <figcaption>Tríptico generado con Imagen 3 a partir de nuestro primer prompt. Los números marcan lo que no sobreviviría un golpe; la tabla explica cada uno.</figcaption>
+    </figure>
+
+    <h4>Qué falla y qué pide la semana 5</h4>
+    <div class="tabla-scroll">
+    <table class="material-table">
+        <thead>
+            <tr><th>#</th><th>Lo que dibujó la IA</th><th>Por qué no sobrevive un golpe</th><th>Requisito de la semana 5 que incumple</th><th>Cómo lo resuelve el diseño</th></tr>
+        </thead>
+        <tbody>
+            <tr><td class="material-tag">1</td><td>Soporte pequeño en un costado (Reflejo)</td><td>Un golpe frontal de ≈ 1,500 N a ≈ 8 cm del soporte hace una palanca de ≈ 120 N·m. Con dos tornillos separados ≈ 2.5 cm, el de arriba jala con ≈ 4,800 N <b>[Estimado]</b>, más de lo que aguanta un taquete: el pod gira o se arranca del muro.</td><td>RD-02: 10,000 golpes de ≈ 1,500 N y 3,500 N estáticos sin daño. RI-04: fijo al muro sin girar ni aflojarse.</td><td>Placa de pared de acero casi del diámetro del pod (Ø 146 mm), unida a 4 postes M3. El golpe empuja el pod contra el muro, sin palanca.</td></tr>
+            <tr><td class="material-tag">2</td><td>Tira de luz delgada en el borde, en la zona de golpe (Reflejo)</td><td>Un guante que cae fuera del centro pega en la tira. Un difusor delgado se raja y la luz deja de verse.</td><td>RD-04: el estímulo debe verse a 3 m. Eso no exige que la luz esté donde se golpea.</td><td>Arco de 18 LED detrás de un difusor de PETG, en el labio de la carcasa y fuera del pad de Ø 120 mm.</td></tr>
+            <tr><td class="material-tag">3</td><td>Cúpula lisa y brillante, sin espesor que amortigüe (Reflejo y Golpe fijo)</td><td>Una cara convexa desvía el guante: hay golpes de refilón y el mismo golpe da lecturas distintas. El plástico brillante se raya y se agrieta, y no se ve qué absorbe el impacto.</td><td>RF-03: fuerza de cada golpe con error ≤ ±15 % y repetible. RD-02.</td><td>Pad plano de vinipiel sobre EVA (≈ 17 mm), como una manopla, montado sobre el plato flotante con las celdas de carga.</td></tr>
+            <tr><td class="material-tag">4</td><td>Aro de luz verde alrededor del pad (Golpe fijo)</td><td>Es justo el borde que reciben los golpes mal colocados. Además, deja una ranura donde se atoran sudor y dedos.</td><td>RD-02 y RD-04.</td><td>Con un pad de Ø 120 mm, un puño mal colocado todavía cae en el pad y no en la luz.</td></tr>
+            <tr><td class="material-tag">5</td><td>Ranura abierta en el costado (los tres conceptos)</td><td>Entran sudor y polvo a la electrónica. Además, una ranura en una pared delgada concentra esfuerzos: ahí empieza la grieta.</td><td>RD-02. Carcasa de PETG con pared de 2.5–3 mm (semana 5, D.9).</td><td>Carcasa cerrada. La única abertura es el puerto USB-C de carga (RI-04).</td></tr>
+            <tr><td class="material-tag">6</td><td>Pod suelto sobre el piso (Golpe fijo)</td><td>Nada lo sujeta: con el golpe se desliza o rebota. La fuerza medida cambia según dónde quede.</td><td>RF-03: el mismo golpe debe dar el mismo resultado según el montaje (diferencia ≤ 10 %).</td><td>El pod se ancla con su placa de acero. Por eso el concepto final es de pared (Reflejo Fijo).</td></tr>
+            <tr><td class="material-tag">7</td><td>Anillos de cobre expuestos en la cara superior (Cadena)</td><td>Son contactos eléctricos en la cara que se golpea: reciben sudor y golpes, y pueden hacer corto.</td><td>Contradicción C4 de la semana 5: contactos energizados en la superficie de golpe.</td><td>Se eliminó el apilamiento; el pod se carga por USB-C (RI-04).</td></tr>
+            <tr><td class="material-tag">8</td><td>Torre de tres pods apilados (Cadena)</td><td>Sin traba entre módulos, un golpe la derriba. Las luces quedan en las juntas, que es lo primero que pega al caer.</td><td>Semana 5, cambio 5: el apilamiento pasó a opcional por ser el subsistema con más riesgo.</td><td>Cada pod trabaja solo y fijo al muro.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <br>
+
+    <h4>Qué hace que un objeto se vea rudo</h4>
+    <ul>
+        <li><code style="display:inline;">⦿ Forma con masa:</code> un cilindro achatado y pesado (Ø 160 × 75 mm, ≤ 1.6 kg), no una cúpula.</li>
+        <li><code style="display:inline;">⦿ Materiales mate y texturizados:</code> vinipiel cosida y plástico mate con marcas de uso, no brillo.</li>
+        <li><code style="display:inline;">⦿ Tornillería visible:</code> comunica que el pod está anclado y que se puede desarmar (RNF-06 de la semana 5).</li>
+        <li><code style="display:inline;">⦿ Lo frágil, protegido:</code> la luz y el puerto quedan lejos de la zona de golpe.</li>
+        <li><code style="display:inline;">⦿ Escala humana:</code> un guante en la imagen muestra el tamaño y para qué sirve.</li>
+        <li><code style="display:inline;">⦿ Referencias de gimnasio:</code> soportes de costal, racks y manoplas, no bocinas ni accesorios de cámara.</li>
+    </ul>
+    <br>
+
+    <h4>Prompt corregido (v2)</h4>
+    <p>Este prompt traduce los requisitos de la semana 5 a lenguaje visual. Se escribe en inglés porque así lo interpreta mejor el generador de imágenes.</p>
+    <div class="prompt-v2">Photorealistic product photo of a rugged smart boxing reaction pod bolted flat to a bare concrete gym wall, at the height of a boxer's head. A red 16 oz boxing glove is hitting the center of the pad, slight motion blur, for scale.
+
+Shape: a squat, heavy cylinder 160 mm in diameter and 75 mm deep. Not a dome, not a pebble.
+Striking pad: 120 mm diameter, flat, black stitched vinyl leather over dense foam about 17 mm thick, like a boxing focus mitt. The pad sits inside a raised protective lip of the housing.
+Housing: thick-walled matte charcoal polymer with a sandblasted texture, light scuffs and chalk marks from daily use.
+Mounting: the pod sits flush against the wall on a steel back plate almost its full diameter, with visible bolt heads, so it is obviously anchored. No side bracket, no quick-release clip.
+Light: a 120-degree arc of cyan LEDs recessed behind a thick frosted window in the housing lip, set back from the pad, glowing brightly.
+Ports: one USB-C charging port with a rubber cover on the side. No open slots, no vents, no exposed metal contacts.
+Style: industrial gym equipment, like heavy-bag mounts and squat-rack hardware. Even, realistic gym lighting.
+
+Avoid: glossy plastic, biomorphic or pebble shapes, seamless shells, thin light strips on the striking edge, copper contacts, stacked units, small side brackets.</div>
+    <br>
+
+    <h4>Cómo evaluar el siguiente render</h4>
+    <ol>
+        <li><b>¿Dónde pega un guante mal colocado?</b> Debe caer en el pad o en el labio, nunca en la luz.</li>
+        <li><b>¿Por dónde viaja la fuerza hasta el muro?</b> Debe verse un camino directo: pad, cuerpo, placa y tornillos.</li>
+        <li><b>¿Qué se rompería primero?</b> Si la respuesta es "la luz" o "el soporte", el render no sirve.</li>
+        <li><b>¿Se entiende el tamaño?</b> Debe haber un guante o una mano en la imagen.</li>
+    </ol>
+    <p><b>Uso correcto de la imagen:</b> el render sirve para comunicar la intención del producto. No sirve para decidir el diseño. La decisión se toma con los requisitos y su verificación (RD-02: péndulo con inspección cada 1,000 golpes).</p>
+</div>
+
     <h2 id="Learning">Reflexión sobre aprendizajes</h2>
         <div>
-            
+           <p>
+            Esta semana entendí que validar no es lo mismo que preguntar si la idea gusta. Las cuatro entrevistas mostraron interés en que el entrenamiento sea divertido, pero ninguna fue con la persona que paga, y la frase del administrador, "es gratis", me hizo ver que hoy nadie paga por medir su tiempo de reacción. El problema real es otro: que el entrenamiento se repita, se le dé seguimiento y motive. Por eso la propuesta de valor dejó de ser "medir con precisión" y pasó a ser "un reto que los alumnos quieren repetir".
+<br><br>
+Con el TAM, SAM y SOM aprendí a dejar claro de dónde sale cada número. Casi todos los filtros son supuestos, y el resultado (800 paquetes en dos años, ≈ 267 gimnasios) da utilidad desde el año 1 solo porque el equipo no cobra sueldo; el margen es delgado. El análisis competitivo me enseñó que el rival más peligroso no es BlazePod, sino los conos y el silbato que el entrenador ya usa gratis. Al graficar el lienzo del océano azul, la ventaja se ve de un vistazo, cosa que la tabla sola no lograba: lo único que ningún competidor hace es medir el impacto, no solo el tiempo. En la semana 5 esa idea se volvió un requisito medible (RF-03) y una decisión de diseño: celdas de carga bajo un plato flotante.
+<br><br>
+También aprendí a desconfiar de lo que la IA hace ver bien. Las imágenes del concepto son atractivas, pero describen una bocina inteligente y no un aparato que recibe golpes, porque la IA dibujó exactamente lo que le pedí en el prompt. Un producto rudo no se logra con adjetivos, sino con requisitos que se pueden comprobar, como resistir 10,000 golpes de ≈ 1,500 N (RD-02) y fijarse al muro sin palanca. Claude y Perplexity me ayudaron a estructurar el análisis, pero cada cifra y cada imagen las tuve que contrastar con las fuentes, con las entrevistas y con lo que el pod tiene que aguantar.
+           </p>
     </div>
 
                                                            
@@ -890,7 +1122,6 @@
     </footer>
 
      <!-- Bootstrap core JS-->
-    <script> AOS.init(); </script>
     <!-- Core theme JS-->
      <script>
 
