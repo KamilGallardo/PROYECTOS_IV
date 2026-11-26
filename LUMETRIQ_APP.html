@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMETRIQ · App</title>
+<meta name="description" content="App de LUMETRIQ: manda combos al pod por MQTT, mide reacción y fuerza, y compite en el ranking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#07090d; --bg2:#0c1017; --card:#121722; --card2:#182031; --line:#232c3d;
+  --txt:#f3f5f9; --sub:#8b95a8; --dim:#5b6476;
+  --acc:#ffc404; --acc2:#ff8a00;           /* ámbar de LUMETRIQ */
+  --x:#3d7bff; --o:#ff3b4e; --s:#a04dff; --c:#22e1ff;   /* colores del arco: X azul, O rojo, S morado */
+  --ok:#3ddc84; --bad:#ff4d5e;
+  --oro:#ffd447; --plata:#c9d3e3; --bronce:#e0924f;
+  --r:22px;
+  --mono:'JetBrains Mono',Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:'Space Grotesk',system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg); color:var(--txt); min-height:100vh;
+  background-image:
+    radial-gradient(900px 500px at 85% -10%, rgba(255,196,4,.10), transparent 60%),
+    radial-gradient(700px 500px at -10% 30%, rgba(61,123,255,.08), transparent 60%),
+    radial-gradient(700px 600px at 110% 90%, rgba(160,77,255,.07), transparent 60%);
+  background-attachment:fixed;
+}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1120px;margin:0 auto;padding:18px 16px 60px}
+
+/* ---------- Header ---------- */
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.18em;font-size:20px}
+.logo .dot{width:14px;height:14px;border-radius:50%;background:var(--acc);box-shadow:0 0 14px var(--acc),0 0 34px rgba(255,196,4,.5);animation:latido 2.4s ease-in-out infinite}
+.logo small{font-size:11px;letter-spacing:.12em;color:var(--sub);font-weight:500;margin-left:4px}
+@keyframes latido{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.8);opacity:.7}}
+.pills{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:99px;background:var(--card);border:1px solid var(--line);font-size:12px;color:var(--sub)}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--dim)}
+.pill.on i{background:var(--ok);box-shadow:0 0 8px var(--ok)}
+.pill.off i{background:var(--bad)}
+.pill.warn i{background:var(--acc)}
+.demo-btn{background:transparent;border:1px dashed var(--line);color:var(--sub);padding:7px 12px;border-radius:99px;font-size:12px}
+.demo-btn.on{border-color:var(--acc);color:var(--acc);background:rgba(255,196,4,.08)}
+
+/* ---------- Jugador ---------- */
+.player{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:linear-gradient(135deg,var(--card),var(--bg2));border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;margin-bottom:14px}
+.avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#111;background:var(--acc);flex-shrink:0}
+.player .who{flex:1;min-width:160px}
+.player .who b{display:block;font-size:16px}
+.player .who span{font-size:12px;color:var(--sub)}
+.player select,.player input{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:9px 10px;font-family:inherit;font-size:14px;min-width:0}
+.player input{width:150px}
+.btn-sm{background:var(--card2);color:var(--txt);border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:13px;font-weight:600}
+.btn-sm:hover{border-color:var(--acc)}
+
+/* ---------- Tabs ---------- */
+.tabs{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:5px;margin-bottom:16px;overflow-x:auto}
+.tab{flex:1;background:none;border:0;color:var(--sub);padding:10px 12px;border-radius:99px;font-weight:600;font-size:14px;white-space:nowrap;transition:.25s}
+.tab.active{background:var(--acc);color:#111;box-shadow:0 6px 20px rgba(255,196,4,.25)}
+.view{display:none}
+.view.active{display:block;animation:entra .35s ease}
+@keyframes entra{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ---------- Tarjetas ---------- */
+.grid2{display:grid;grid-template-columns:1.05fr 1fr;gap:16px}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.kicker{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin:0 0 6px}
+h2{font-size:22px;margin:0 0 14px;font-weight:700}
+h3{font-size:16px;margin:0 0 10px}
+.muted{color:var(--sub);font-size:13px}
+
+/* ---------- Pod ---------- */
+.pod-box{position:relative;display:flex;flex-direction:column;align-items:center}
+.pod-svg{width:100%;max-width:300px;height:auto;display:block}
+.pod-state{font-family:var(--mono);font-size:13px;color:var(--sub);text-align:center;min-height:20px;margin-top:4px}
+.pod-state b{color:var(--txt)}
+.steps{display:flex;gap:6px;justify-content:center;margin:10px 0 2px;flex-wrap:wrap}
+.step{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:13px;background:var(--bg);border:1px solid var(--line);color:var(--dim);transition:.2s}
+.step.X{color:var(--x)} .step.O{color:var(--o)} .step.S{color:var(--s)}
+.step.now{transform:scale(1.15);border-color:currentColor;box-shadow:0 0 14px currentColor}
+.step.hit{background:currentColor}
+.step.hit::after{content:"✓";color:#fff}
+.step.hit{font-size:0}
+.step.hit::after{font-size:14px}
+.step.miss{border-color:var(--bad);color:var(--bad)}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.stat{background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:12px 10px;text-align:center}
+.stat .lbl{font-size:11px;color:var(--sub);text-transform:uppercase;letter-spacing:.08em}
+.stat .val{font-family:var(--mono);font-size:30px;font-weight:700;line-height:1.15;margin-top:4px;transition:color .4s}
+.stat .unit{font-size:11px;color:var(--dim)}
+.stat.big{background:linear-gradient(140deg,var(--acc),var(--acc2));border:0;color:#111}
+.stat.big .lbl,.stat.big .unit{color:rgba(0,0,0,.6)}
+.flash{color:var(--acc)!important}
+.stat.big .flash{color:#fff!important}
+
+.rival{margin-top:12px;padding:12px 14px;border-radius:16px;background:rgba(255,196,4,.07);border:1px solid rgba(255,196,4,.25);font-size:14px;display:flex;gap:10px;align-items:center}
+.rival .ico{font-size:22px}
+.rival b{color:var(--acc)}
+
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.btn{border:0;border-radius:16px;padding:15px;font-weight:700;font-size:16px;letter-spacing:.02em;transition:transform .1s, box-shadow .2s}
+.btn:active{transform:scale(.98)}
+.btn-go{background:var(--acc);color:#111;box-shadow:0 8px 26px rgba(255,196,4,.28)}
+.btn-stop{background:var(--card2);color:var(--txt);border:1px solid var(--line)}
+.btn-go:disabled{opacity:.45;box-shadow:none;cursor:not-allowed}
+.modes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.chip{background:var(--bg2);border:1px solid var(--line);color:var(--sub);border-radius:99px;padding:7px 12px;font-size:13px;font-weight:600}
+.chip.active{border-color:var(--acc);color:var(--acc);background:rgba(255,196,4,.08)}
+.sel-label{font-size:14px;color:var(--sub);margin-bottom:10px}
+.sel-label b{color:var(--txt)}
+
+.feed{max-height:300px;overflow:auto;margin-top:6px}
+.feed-item{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:13px}
+.feed-item:last-child{border:0}
+.badge{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:12px;color:#fff;flex-shrink:0}
+.feed-item .t{flex:1}
+.feed-item .n{font-family:var(--mono);font-weight:700}
+.feed-item .p{font-family:var(--mono);color:var(--acc);min-width:64px;text-align:right}
+
+/* ---------- Combos ---------- */
+.builder{border:1px dashed rgba(255,196,4,.5);background:rgba(255,196,4,.03)}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.slot{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;font-size:12px;color:var(--dim);min-height:44px;display:flex;align-items:center;justify-content:center;gap:3px}
+.slot.filled{border-color:var(--acc);color:var(--txt)}
+.combo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:12px}
+.combo{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:13px;transition:.2s;text-align:left;color:var(--txt)}
+.combo:hover{border-color:#3a4560;transform:translateY(-2px)}
+.combo.selected{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc),0 10px 30px rgba(255,196,4,.12)}
+.combo .letters{display:flex;gap:4px}
+.L{width:24px;height:24px;border-radius:7px;display:inline-grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:12px;color:#fff}
+.L.X{background:var(--x);box-shadow:0 0 10px rgba(61,123,255,.5)}
+.L.O{background:var(--o);box-shadow:0 0 10px rgba(255,59,78,.5)}
+.L.S{background:var(--s);box-shadow:0 0 10px rgba(160,77,255,.5)}
+.L.V{background:#2fd66f;box-shadow:0 0 10px rgba(47,214,111,.5)}
+.L.A{background:#ffc404;color:#111;box-shadow:0 0 10px rgba(255,196,4,.5)}
+.L.C{background:var(--c);color:#06232a;box-shadow:0 0 10px rgba(34,225,255,.5)}
+.L.W{background:#fff;color:#111;box-shadow:0 0 10px rgba(255,255,255,.4)}
+
+/* ---------- Modos (como en la landing) ---------- */
+.modes-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:900px){.modes-grid{grid-template-columns:1fr}}
+.mcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:12px}
+.mcard h3{font-size:21px;margin:0}
+.mcard p{margin:0;color:var(--sub);font-size:14px;line-height:1.5}
+.dots{height:96px;display:flex;align-items:center;justify-content:center;gap:16px;position:relative}
+.dots i{width:46px;height:46px;border-radius:50%;background:#262d3b;display:block;flex-shrink:0}
+.dots i.c{background:var(--c);box-shadow:0 0 22px rgba(34,225,255,.45)}
+.dots i.r{background:var(--o);box-shadow:0 0 22px rgba(255,59,78,.4)}
+.dots i.w{background:#fff;box-shadow:0 0 22px rgba(255,255,255,.3)}
+.dots i.cd{background:#1f7f8f}
+.dots i.dash{background:transparent;border:2px dashed var(--c)}
+.dots svg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.dots.anim i.c{animation:salta 2.4s infinite}
+@keyframes salta{0%,30%{opacity:1}31%,100%{opacity:.25;background:#262d3b;box-shadow:none}}
+.mcfg{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:auto}
+.mcfg label{font-size:12px;color:var(--sub);display:flex;align-items:center;gap:6px}
+.mcfg select,.mcfg input,.cfg-grid select,.cfg-grid input{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:10px;padding:7px 8px;font-family:inherit;font-size:13px}
+.mcard .btn{padding:12px;font-size:15px}
+.mcard.wide{grid-column:1/-1;border:1px dashed rgba(34,225,255,.45);background:linear-gradient(135deg,var(--card),#141c26)}
+.wide-in{display:grid;grid-template-columns:240px 1fr;gap:20px;align-items:start}
+@media (max-width:760px){.wide-in{grid-template-columns:1fr}}
+.cfg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-top:6px}
+.cfg-grid .f{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--sub)}
+.cfg-grid input[type=range]{padding:0}
+.pick{display:flex;gap:6px;flex-wrap:wrap}
+.pick button{background:var(--bg);border:1px solid var(--line);color:var(--sub);border-radius:10px;padding:6px 10px;font-size:13px;font-weight:600}
+.pick button.on{border-color:var(--acc);color:var(--txt);background:rgba(255,196,4,.08)}
+.pick button.col{width:30px;height:30px;padding:0;border-radius:50%;border:2px solid transparent}
+.pick button.col.on{border-color:#fff;box-shadow:0 0 12px currentColor}
+.saved{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.saved .it{display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:13px}
+.saved .it b{flex:1}
+.vs-list{display:flex;flex-wrap:wrap;gap:6px}
+.vs-list span{display:flex;align-items:center;gap:6px;background:var(--bg2);border:1px solid var(--line);border-radius:99px;padding:4px 10px 4px 4px;font-size:12px}
+.vs-list span i{width:18px;height:18px;border-radius:50%;display:block}
+
+/* tira de pods durante un modo de clase */
+.pod-strip{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:4px 0 8px}
+.pod-strip .pp{display:flex;flex-direction:column;align-items:center;gap:4px;font-family:var(--mono);font-size:11px;color:var(--sub)}
+.pod-strip .pp i{width:40px;height:40px;border-radius:50%;background:#1b2230;border:2px solid #2c374c;display:block;transition:.15s}
+.result-box{margin-top:12px;padding:14px;border-radius:16px;background:linear-gradient(120deg,rgba(255,196,4,.12),rgba(34,225,255,.05));border:1px solid rgba(255,196,4,.35)}
+.result-box h3{margin:0 0 8px}
+.result-box .rr{display:grid;grid-template-columns:30px 26px 1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}
+.result-box .rr:last-child{border:0}
+.result-box .rr i{width:22px;height:22px;border-radius:50%;display:block}
+.combo .info{flex:1}
+.combo .name{font-weight:600;font-size:14px}
+.combo .rec{font-size:11px;color:var(--sub);margin-top:3px;font-family:var(--mono)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--sub);margin-top:4px}
+.legend span{display:flex;align-items:center;gap:6px}
+
+/* ---------- Ranking ---------- */
+.rank-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.rank-head h2{font-size:30px;margin:0;line-height:1.05}
+.rank-head h2 em{font-style:normal;background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.seg{display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px;flex-wrap:wrap}
+.seg button{background:none;border:0;color:var(--sub);padding:8px 12px;border-radius:10px;font-weight:600;font-size:13px}
+.seg button.active{background:var(--card2);color:var(--txt);box-shadow:inset 0 0 0 1px var(--acc)}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+
+.podium{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:10px;align-items:end;margin:48px 0 18px}
+.pd{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.pd .ava{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:22px;color:#111;position:relative;margin-bottom:8px}
+.pd.p1 .ava{width:86px;height:86px;font-size:28px;background:var(--oro);box-shadow:0 0 0 4px rgba(255,212,71,.25),0 0 40px rgba(255,212,71,.55);animation:brillo 2.2s ease-in-out infinite}
+.pd.p2 .ava{background:var(--plata);box-shadow:0 0 0 3px rgba(201,211,227,.2),0 0 24px rgba(201,211,227,.35)}
+.pd.p3 .ava{background:var(--bronce);box-shadow:0 0 0 3px rgba(224,146,79,.2),0 0 24px rgba(224,146,79,.35)}
+@keyframes brillo{0%,100%{box-shadow:0 0 0 4px rgba(255,212,71,.25),0 0 30px rgba(255,212,71,.45)}50%{box-shadow:0 0 0 7px rgba(255,212,71,.18),0 0 60px rgba(255,212,71,.75)}}
+.pd .crown{position:absolute;top:-30px;left:50%;transform:translateX(-50%);font-size:28px;animation:flota 2.2s ease-in-out infinite}
+@keyframes flota{0%,100%{transform:translate(-50%,0)}50%{transform:translate(-50%,-5px)}}
+.pd .nm{font-weight:700;font-size:15px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pd .sc{font-family:var(--mono);font-weight:700;font-size:18px;margin-top:2px}
+.pd.p1 .sc{color:var(--oro);font-size:22px}
+.pd .base{width:100%;border-radius:16px 16px 6px 6px;margin-top:10px;display:grid;place-items:center;font-family:var(--mono);font-weight:700;font-size:28px;color:rgba(0,0,0,.55)}
+.pd.p1 .base{height:120px;background:linear-gradient(180deg,var(--oro),#c79a12)}
+.pd.p2 .base{height:86px;background:linear-gradient(180deg,var(--plata),#8d99ad)}
+.pd.p3 .base{height:64px;background:linear-gradient(180deg,var(--bronce),#9c5a26)}
+.pd.empty .ava{background:var(--card2)!important;box-shadow:none!important;animation:none;color:var(--dim)}
+.pd.empty .base{opacity:.25}
+
+.rlist{display:flex;flex-direction:column;gap:6px}
+.row{display:grid;grid-template-columns:40px 38px 1fr auto auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;animation:entra .4s ease both}
+.row .pos{font-family:var(--mono);font-weight:700;color:var(--sub);text-align:center}
+.row .av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;color:#111;font-size:13px}
+.row .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .nm small{display:block;font-weight:400;font-size:11px;color:var(--sub)}
+.row .sc{font-family:var(--mono);font-weight:700}
+.row .gap{font-family:var(--mono);font-size:11px;color:var(--dim);min-width:70px;text-align:right}
+.row.me{border-color:var(--acc);background:linear-gradient(90deg,rgba(255,196,4,.12),var(--card) 60%)}
+.row.me .pos{color:var(--acc)}
+.tag-demo{font-size:10px;color:var(--dim);border:1px solid var(--line);border-radius:6px;padding:0 4px;margin-left:6px}
+
+.mycard{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;margin-top:16px;background:linear-gradient(120deg,rgba(255,196,4,.14),rgba(255,138,0,.06));border:1px solid rgba(255,196,4,.35);border-radius:var(--r);padding:16px}
+.mycard .bigpos{font-family:var(--mono);font-size:40px;font-weight:700;color:var(--acc);line-height:1}
+.mycard .bigpos small{font-size:14px;color:var(--sub)}
+.mycard p{margin:2px 0;font-size:14px}
+@media (max-width:560px){.mycard{grid-template-columns:auto 1fr}.mycard .btn{grid-column:1/-1}.row{grid-template-columns:32px 34px 1fr auto}.row .gap{display:none}.rank-head h2{font-size:24px}}
+
+.share{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--sub)}
+.switch{position:relative;width:38px;height:22px;background:var(--card2);border:1px solid var(--line);border-radius:99px;flex-shrink:0}
+.switch::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--dim);transition:.2s}
+.switch.on{background:rgba(255,196,4,.25);border-color:var(--acc)}
+.switch.on::after{left:18px;background:var(--acc)}
+
+/* ---------- Historial ---------- */
+.chart-box{height:230px}
+.hist-item{display:flex;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}
+.hist-item:last-child{border:0}
+.hist-item b{font-size:14px}
+.hist-item .r{text-align:right;font-family:var(--mono)}
+.hist-item .r .a{color:var(--acc);font-weight:700;font-size:15px}
+.empty-msg{color:var(--dim);font-size:13px;text-align:center;padding:18px}
+
+/* ---------- Récord / toasts ---------- */
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(30px);background:var(--card2);border:1px solid var(--line);color:var(--txt);padding:12px 16px;border-radius:14px;font-size:14px;opacity:0;pointer-events:none;transition:.3s;z-index:50;max-width:calc(100% - 32px)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.record{position:fixed;inset:0;display:grid;place-items:center;z-index:60;pointer-events:none;opacity:0;transition:opacity .3s}
+.record.show{opacity:1}
+.record .box{text-align:center;padding:26px 30px;border-radius:26px;background:rgba(7,9,13,.88);border:1px solid var(--acc);box-shadow:0 0 80px rgba(255,196,4,.35);transform:scale(.8);transition:transform .4s cubic-bezier(.2,1.6,.4,1)}
+.record.show .box{transform:scale(1)}
+.record .k{font-family:var(--mono);letter-spacing:.2em;color:var(--acc);font-size:12px}
+.record .t{font-size:34px;font-weight:700;margin:6px 0}
+.record .d{color:var(--sub)}
+canvas#confeti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:55}
+footer{margin-top:30px;text-align:center;font-size:12px;color:var(--dim)}
+footer code{font-family:var(--mono);color:var(--sub)}
+</style>
+</head>
+<body>
+<canvas id="confeti"></canvas>
+<div class="wrap">
+
+  <header>
+    <div class="logo"><span class="dot"></span>LUMETRIQ<small>APP</small></div>
+    <div class="pills">
+      <div class="pill" id="pillBroker"><i></i><span>Broker…</span></div>
+      <div class="pill" id="pillPod"><i></i><span>Pod sin señal</span></div>
+      <button class="demo-btn" id="demoBtn" onclick="toggleDemo()">Modo demo</button>
+    </div>
+  </header>
+
+  <div class="player">
+    <div class="avatar" id="meAva">?</div>
+    <div class="who"><b id="meName">Elige quién golpea</b><span id="meSub">Cada resultado se guarda con su nombre</span></div>
+    <select id="playerSel" onchange="setPlayer(this.value)"></select>
+    <input id="newPlayer" maxlength="16" placeholder="Nuevo jugador" onkeydown="if(event.key==='Enter')addPlayer()">
+    <button class="btn-sm" onclick="addPlayer()">Agregar</button>
+  </div>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="entrenar" onclick="tab('entrenar')">Entrenar</button>
+    <button class="tab" data-tab="modos" onclick="tab('modos')">Modos</button>
+    <button class="tab" data-tab="combos" onclick="tab('combos')">Combos</button>
+    <button class="tab" data-tab="ranking" onclick="tab('ranking')">🏆 Ranking</button>
+    <button class="tab" data-tab="historial" onclick="tab('historial')">Historial</button>
+  </nav>
+
+  <!-- ================= ENTRENAR ================= -->
+  <section class="view active" id="v-entrenar">
+    <div class="grid2">
+      <div class="card">
+        <p class="kicker">En vivo</p>
+        <h2>Golpea cuando se encienda</h2>
+        <div class="modes">
+          <button class="chip active" data-mode="COMBO" onclick="setMode('COMBO')">Combo</button>
+          <button class="chip" data-mode="SIMON" onclick="setMode('SIMON')">Simón</button>
+          <button class="chip" data-mode="LIBRE" onclick="setMode('LIBRE')">Fuerza libre</button>
+        </div>
+        <div class="sel-label" id="selLabel">Elige un combo en la pestaña <b>Combos</b>.</div>
+        <div class="pod-box">
+          <svg class="pod-svg" viewBox="0 0 300 260" id="podSvg" aria-label="Pod LUMETRIQ">
+            <defs>
+              <filter id="glow" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <radialGradient id="pad" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#232b3b"/><stop offset="1" stop-color="#0f141d"/></radialGradient>
+            </defs>
+            <circle cx="150" cy="140" r="112" fill="#0b0f16" stroke="#232c3d" stroke-width="2"/>
+            <circle cx="150" cy="140" r="84" fill="url(#pad)" stroke="#2c374c" stroke-width="1.5" id="padCircle"/>
+            <g id="leds"></g>
+            <text x="150" y="134" text-anchor="middle" fill="#8b95a8" font-family="JetBrains Mono" font-size="12" letter-spacing="3">LUMETRIQ</text>
+            <text x="150" y="162" text-anchor="middle" fill="#f3f5f9" font-family="JetBrains Mono" font-size="22" font-weight="700" id="padText">—</text>
+          </svg>
+          <div class="pod-strip" id="podStrip" style="display:none"></div>
+          <div class="steps" id="steps"></div>
+          <div class="pod-state" id="podState">Esperando…</div>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="lbl">Reacción</div><div class="val" id="vRt">—</div><div class="unit">ms</div></div>
+          <div class="stat"><div class="lbl">Fuerza</div><div class="val" id="vF">—</div><div class="unit">N</div></div>
+          <div class="stat big"><div class="lbl">Puntos</div><div class="val" id="vPts">0</div><div class="unit">esta ronda</div></div>
+        </div>
+        <div class="rival" id="rival" style="display:none"></div>
+        <div class="result-box" id="roundResult" style="display:none"></div>
+        <div class="controls">
+          <button class="btn btn-go" id="btnGo" onclick="start()">▶ Iniciar</button>
+          <button class="btn btn-stop" onclick="stop()">■ Parar y guardar</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="kicker">Golpe por golpe</p>
+        <h3>Esta ronda</h3>
+        <div class="feed" id="feed"><div class="empty-msg">Aquí aparece cada golpe: color, reacción, fuerza y puntos.</div></div>
+        <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+          <button class="btn-sm" onclick="sendCmd('TARA')" title="Pon el pod en cero (no lo toques 2 s)">Tara del pod</button>
+          <button class="btn-sm" onclick="sendCmd('PING')">Revisar pod</button>
+          <label class="muted" style="display:flex;align-items:center;gap:8px">Brillo
+            <input type="range" min="10" max="255" value="150" onchange="sendCmd('BRILLO '+this.value)"></label>
+        </div>
+        <p class="muted" style="margin-top:14px;line-height:1.5">
+          <b style="color:var(--txt)">Cómo se puntúa:</b> cada golpe da <span style="font-family:var(--mono)">1000 − reacción (ms)</span> más
+          <span style="font-family:var(--mono)">fuerza (N) ÷ 3</span> (máx. 500). Un paso sin golpe vale 0 y golpear antes de tiempo resta 100.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= MODOS ================= -->
+  <section class="view" id="v-modos">
+    <p class="kicker">Modos de clase</p>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <h2 style="margin:0">Elige cómo se juega hoy</h2>
+      <div class="muted" id="podsInfo">Pods: —</div>
+    </div>
+    <div class="modes-grid">
+      <div class="mcard">
+        <div class="dots anim"><svg viewBox="0 0 300 96"><path d="M118 20 Q150 -2 182 20" fill="none" stroke="#5b6476" stroke-width="3" stroke-dasharray="7 7"/></svg><i></i><i class="c"></i><i></i><i></i></div>
+        <h3>Sigue la luz</h3>
+        <p>Se enciende un pod al azar; al golpearlo se enciende el siguiente. Reacción y fuerza en cada golpe.</p>
+        <div class="mcfg">
+          <label>Golpes <select id="luzN"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
+          <label>Tiempo <select id="luzT"><option value="1500">1.5 s</option><option value="2000" selected>2 s</option><option value="3000">3 s</option></select></label>
+        </div>
+        <button class="btn btn-go" onclick="playLuz()">▶ Jugar</button>
+      </div>
+      <div class="mcard">
+        <div class="dots"><i class="c"></i><i class="r"></i><i class="w"></i><i></i></div>
+        <h3>Todos contra todos</h3>
+        <p>Cada alumno tiene su color en el circuito y el ranking se arma al terminar la ronda.</p>
+        <div class="f" style="font-size:12px;color:var(--sub)">¿Quiénes juegan? (toca para elegir, 2 a 7)</div>
+        <div class="pick" id="vsPick"></div>
+        <div class="vs-list" id="vsList"></div>
+        <div class="mcfg">
+          <label>Golpes por alumno <select id="vsN"><option>3</option><option selected>5</option><option>8</option><option>10</option></select></label>
+        </div>
+        <button class="btn btn-go" onclick="playTodos()">▶ Jugar</button>
+      </div>
+      <div class="mcard">
+        <div class="dots"><svg viewBox="0 0 300 96"><path d="M52 70 Q150 110 248 70" fill="none" stroke="#5b6476" stroke-width="3" stroke-dasharray="7 7"/></svg><i class="c"></i><i></i><i></i><i class="cd"></i></div>
+        <h3>Cambio de dirección</h3>
+        <p>Pods en extremos opuestos para trabajar desplazamiento, guardia y salida.</p>
+        <div class="mcfg">
+          <label>Golpes <select id="dirN"><option>10</option><option selected>16</option><option>24</option></select></label>
+          <label>Tiempo <select id="dirT"><option value="2000">2 s</option><option value="3000" selected>3 s</option><option value="4000">4 s</option></select></label>
+        </div>
+        <button class="btn btn-go" onclick="playDireccion()">▶ Jugar</button>
+      </div>
+      <div class="mcard wide">
+        <div class="wide-in">
+          <div>
+            <div class="dots" style="justify-content:flex-start"><i class="c"></i><i class="dash"></i><i class="w"></i><i class="dash"></i></div>
+            <h3>Crea tus propios modos</h3>
+            <p style="margin-top:8px">Cuántos pods usar, en qué orden se encienden, de qué color, cuánto tiempo hay para golpear y cuántas rondas. Se guardan como rutina para repetirlas en cada clase.</p>
+            <div class="saved" id="savedList"></div>
+          </div>
+          <div>
+            <div class="cfg-grid">
+              <div class="f">Nombre<input id="cNombre" maxlength="24" placeholder="Ej. Calentamiento martes"></div>
+              <div class="f">Cuántos pods<div class="pick" id="cPods"></div></div>
+              <div class="f">Orden<div class="pick" id="cOrden">
+                <button data-v="azar" class="on">Al azar</button><button data-v="seq">En orden</button><button data-v="ida">Ida y vuelta</button></div></div>
+              <div class="f">Colores<div class="pick" id="cCols"></div></div>
+              <div class="f">Tiempo para golpear
+                <div class="pick" id="cTmodo"><button data-v="fijo" class="on">Fijo</button><button data-v="azar">🎲 Al azar</button></div>
+                <div id="cTfijo"><b id="cTv">2.0 s</b><input type="range" id="cT" min="500" max="5000" step="100" value="2000" style="width:100%" oninput="$('cTv').textContent=(this.value/1000).toFixed(1)+' s'"></div>
+                <div id="cTazar" style="display:none">Entre <b id="cTminV">0.8 s</b> y <b id="cTmaxV">2.5 s</b> (cambia en cada golpe)
+                  <input type="range" id="cTmin" min="300" max="5000" step="100" value="800" style="width:100%" oninput="ajustaAzar('min')">
+                  <input type="range" id="cTmax" min="300" max="5000" step="100" value="2500" style="width:100%" oninput="ajustaAzar('max')"></div>
+              </div>
+              <div class="f">Espera antes de cada luz<select id="cEsp">
+                <option value="0,250">Inmediata</option><option value="300,1200" selected>🎲 Al azar 0.3–1.2 s</option><option value="500,3000">🎲 Al azar 0.5–3 s</option></select></div>
+              <div class="f">Golpes por ronda<input type="number" id="cN" min="1" max="60" value="12"></div>
+              <div class="f">Rondas<input type="number" id="cR" min="1" max="20" value="3"></div>
+              <div class="f">Descanso entre rondas (s)<input type="number" id="cD" min="0" max="180" value="20"></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+              <button class="btn-sm" onclick="saveCustom()">💾 Guardar rutina</button>
+              <button class="btn btn-go" style="flex:1;padding:11px;font-size:15px" onclick="playCustom(readCustom())">▶ Probar ahora</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COMBOS ================= -->
+  <section class="view" id="v-combos">
+    <div class="card builder">
+      <p class="kicker">Circuito personalizado</p>
+      <h3>Junta hasta 3 combos y juégalos seguidos</h3>
+      <button class="btn-sm" id="buildBtn" onclick="toggleBuilder()">➕ Crear circuito</button>
+      <div class="slots" id="slots"></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn-sm" onclick="clearCircuit()">Limpiar</button>
+        <button class="btn btn-go" id="loadCircuit" style="flex:1;padding:10px;font-size:14px;display:none" onclick="loadCircuit()">Cargar circuito</button>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;flex-wrap:wrap;gap:8px">
+      <h3 style="margin:0">Elige tu rutina</h3>
+      <div class="legend"><span><i class="L X">X</i>izquierda · azul</span><span><i class="L O">O</i>centro · rojo</span><span><i class="L S">S</i>derecha · morado</span></div>
+    </div>
+    <div class="combo-grid" id="comboGrid"></div>
+  </section>
+
+  <!-- ================= RANKING ================= -->
+  <section class="view" id="v-ranking">
+    <div class="rank-head">
+      <div><p class="kicker" id="rankKicker">Ranking</p><h2>¿Quién manda en <em>el pod</em>?</h2></div>
+      <div class="share" title="Comparte el ranking entre todos los teléfonos conectados al mismo tópico">
+        <div class="switch" id="shareSw" onclick="toggleShare()"></div><span>Ranking compartido por MQTT</span>
+      </div>
+    </div>
+    <div class="filters">
+      <div class="seg" id="segCat">
+        <button data-c="pts" class="active" onclick="setCat('pts')">Puntos</button>
+        <button data-c="rt" onclick="setCat('rt')">⚡ Reacción</button>
+        <button data-c="f" onclick="setCat('f')">💥 Fuerza</button>
+        <button data-c="simon" onclick="setCat('simon')">🧠 Simón</button>
+      </div>
+      <div class="seg" id="segPer">
+        <button data-p="hoy" onclick="setPer('hoy')">Hoy</button>
+        <button data-p="semana" class="active" onclick="setPer('semana')">Semana</button>
+        <button data-p="todo" onclick="setPer('todo')">Siempre</button>
+      </div>
+    </div>
+    <div class="podium" id="podium"></div>
+    <div class="rlist" id="rlist"></div>
+    <div class="mycard" id="mycard" style="display:none"></div>
+  </section>
+
+  <!-- ================= HISTORIAL ================= -->
+  <section class="view" id="v-historial">
+    <div class="grid2">
+      <div class="card">
+        <p class="kicker">Progreso</p>
+        <h3 id="histTitle">Reacción promedio por sesión</h3>
+        <div class="chart-box"><canvas id="chart"></canvas></div>
+        <p class="muted">Línea ámbar: reacción (ms, abajo es mejor). Barras: fuerza máxima (N).</p>
+      </div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+          <h3 style="margin:0">Sesiones</h3>
+          <div style="display:flex;gap:6px">
+            <button class="btn-sm" onclick="exportCsv()">Exportar CSV</button>
+            <button class="btn-sm" onclick="clearMine()">Borrar las mías</button>
+          </div>
+        </div>
+        <div id="histList" style="max-height:380px;overflow:auto;margin-top:8px"></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>LUMETRIQ · Proyecto académico, 2026 · MQTT <code id="ftTopic"></code></footer>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="record" id="record"><div class="box"><div class="k">NUEVO RÉCORD</div><div class="t" id="recT"></div><div class="d" id="recD"></div></div></div>
+
+<script>
+/* =====================================================================
+   CONFIGURACIÓN (igual que el firmware lumetriq_mqtt.ino)
+   ===================================================================== */
+const MQTT_HOST = "broker.emqx.io";
+const MQTT_PORT = 8084;                       // WebSocket seguro (wss)
+const BASE      = "KAMILOVSKY/lumetriq";      // MQTT_BASE en el firmware
+const T = { cmd:BASE+"/cmd", inicio:BASE+"/inicio", luz:BASE+"/luz", golpe:BASE+"/golpe",
+            fin:BASE+"/fin", estado:BASE+"/estado", ranking:BASE+"/ranking" };
+const TIEMPO_MAX_MS = 3000;                   // SIMON_TIEMPO_MAX_MS en simon_luces.h
+const COLORES = { AZUL:"#3d7bff", ROJO:"#ff3b4e", MORADO:"#a04dff", VERDE:"#3ddc84", AMARILLO:"#ffc404", CIAN:"#22e1ff", BLANCO:"#ffffff" };
+// Letras que entiende el pod (simon_luces.h): X O S de los combos y V A C W para los modos de clase
+const LETRA_COLOR = { X:"AZUL", O:"ROJO", S:"MORADO", V:"VERDE", A:"AMARILLO", C:"CIAN", W:"BLANCO" };
+const LETRAS_CLASE = ["C","O","W","V","A","S","X"];   // orden en que se reparten a los alumnos
+const COMBOS = [
+  ["XOS","Izquierda · Centro · Derecha"], ["XSO","Izquierda · Derecha · Centro"], ["SOX","Derecha · Centro · Izquierda"],
+  ["SXS","Derecha · Izquierda · Derecha"], ["OSX","Centro · Derecha · Izquierda"], ["OSO","Centro · Derecha · Centro"],
+  ["XSX","Izquierda · Derecha · Izquierda"], ["SOS","Derecha · Centro · Derecha"], ["OXO","Centro · Izquierda · Centro"],
+  ["XOSXOS","Doble barrido"], ["OOXXSS","Pares"], ["XSOXSOXSO","Resistencia ×3"]
+];
+const AVA_COL = ["#ffc404","#3d7bff","#ff3b4e","#a04dff","#3ddc84","#ff8a00","#2ec8e6","#ff6fb5"];
+
+/* =====================================================================
+   ESTADO
+   ===================================================================== */
+const LS = { rec:"lumetriq_registros", players:"lumetriq_jugadores", me:"lumetriq_yo", share:"lumetriq_compartir" };
+function lsGet(k, d){ try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch(e){ return d; } }
+function lsSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+
+let records = lsGet(LS.rec, []);
+let players = lsGet(LS.players, []);
+let me = lsGet(LS.me, "");
+let shareOn = lsGet(LS.share, true);
+let demo = false;
+let mode = "COMBO";
+let queue = [], qIdx = 0, routineName = "";
+let builder = false, circuit = [];
+let cat = "pts", per = "semana";
+let sess = null;            // ronda en curso que esta pantalla está siguiendo
+let run = null;             // lo que se guarda al terminar (combo, circuito, simón o libre)
+let lastPodMsg = 0, podOnline = false;
+let chart = null;
+
+/* =====================================================================
+   UTILIDADES
+   ===================================================================== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const punto = n => esc(n) + (String(n).endsWith('.') ? '' : '.');
+const ini = n => (n||"?").trim().split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase();
+const colFor = n => { let h=0; for (const c of (n||"")) h=(h*31+c.charCodeAt(0))>>>0; return AVA_COL[h%AVA_COL.length]; };
+const pts = (rt, f, fallo) => fallo ? 0 : Math.max(0, Math.round(1000 - rt)) + Math.min(500, Math.round((f||0)/3));
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),2600); }
+function flash(id){ const e=$(id); e.classList.add("flash"); setTimeout(()=>e.classList.remove("flash"),600); }
+function cleanName(s){ return (s||"").replace(/[^\p{L}\p{N} _-]/gu,"").trim().slice(0,16); }
+function tagName(s){ return cleanName(s).normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^A-Za-z0-9 _-]/g,"").slice(0,16); }
+
+/* =====================================================================
+   JUGADORES
+   ===================================================================== */
+function renderPlayers(){
+  const sel = $("playerSel");
+  sel.innerHTML = `<option value="">— jugador —</option>` + players.map(p=>`<option ${p===me?"selected":""} value="${esc(p)}">${esc(p)}</option>`).join("");
+  $("meName").textContent = me || "Elige quién golpea";
+  $("meAva").textContent = me ? ini(me) : "?";
+  $("meAva").style.background = me ? colFor(me) : "var(--card2)";
+  const mine = records.filter(r=>r.jugador===me);
+  $("meSub").textContent = me ? (mine.length ? `${mine.length} ${mine.length===1?"sesión":"sesiones"} · mejor reacción ${Math.min(...mine.filter(r=>r.reac>0).map(r=>r.reac).concat([Infinity]))===Infinity?"—":Math.min(...mine.filter(r=>r.reac>0).map(r=>r.reac))+" ms"}` : "Sin sesiones todavía: ¡a estrenar el ranking!") : "Cada resultado se guarda con su nombre";
+}
+function addPlayer(){
+  const n = cleanName($("newPlayer").value);
+  if (!n) return toast("Escribe un nombre (letras y números)");
+  if (!players.includes(n)) players.push(n);
+  lsSet(LS.players, players); $("newPlayer").value = ""; setPlayer(n);
+}
+function setPlayer(n){ me = n; lsSet(LS.me, me); renderPlayers(); if (!orq) renderRival(); renderRanking(); renderHistory(); renderModes(); }
+
+/* =====================================================================
+   PESTAÑAS Y MODOS
+   ===================================================================== */
+function tab(name){
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active", b.dataset.tab===name));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active", v.id==="v-"+name));
+  if (name==="ranking") renderRanking();
+  if (name==="historial") renderHistory();
+}
+function setMode(m){
+  mode = m;
+  document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active", c.dataset.mode===m));
+  updateSelLabel(); renderRival();
+}
+function updateSelLabel(){
+  const l = $("selLabel");
+  if (mode==="SIMON") l.innerHTML = "Simón: mira la secuencia y golpea cada color. Cada ronda suma uno.";
+  else if (mode==="LIBRE") l.innerHTML = "Fuerza libre: pega lo más fuerte que puedas. Cuenta tu golpe máximo.";
+  else if (!queue.length) l.innerHTML = "Elige un combo en la pestaña <b>Combos</b>.";
+  else l.innerHTML = `Rutina: <b>${esc(routineName)}</b> ` + queue.map(c=>lettersHtml(c)).join(" <span class='muted'>+</span> ");
+  drawSteps(mode==="COMBO" && queue.length ? queue[0] : "");
+}
+const lettersHtml = c => `<span class="letters" style="display:inline-flex;gap:3px;vertical-align:middle">${[...c].map(x=>`<i class="L ${x}">${x}</i>`).join("")}</span>`;
+
+/* =====================================================================
+   COMBOS Y CIRCUITO
+   ===================================================================== */
+function renderCombos(){
+  $("comboGrid").innerHTML = COMBOS.map(([c,n])=>{
+    const best = bestFor(r=>r.modo==="COMBO" && r.combo===c && r.reac>0, (a,b)=>a.reac-b.reac);
+    return `<button class="combo ${queue.length===1&&queue[0]===c&&mode==="COMBO"?"selected":""}" onclick="pickCombo('${c}')">
+      <div class="info"><div class="name">${esc(n)}</div>
+      <div class="rec">${best ? `🏆 ${esc(best.jugador)} · ${best.reac} ms` : "Sin récord: sé el primero"}</div></div>
+      <div class="letters">${[...c].map(x=>`<i class="L ${x}">${x}</i>`).join("")}</div></button>`;
+  }).join("");
+}
+function bestFor(filter, cmp){ const l = visibleRecords().filter(filter).sort(cmp); return l[0]; }
+function pickCombo(c){
+  if (builder){
+    if (circuit.length>=3) return toast("Máximo 3 combos por circuito");
+    circuit.push(c); renderSlots(); return;
+  }
+  queue=[c]; routineName = (COMBOS.find(x=>x[0]===c)||[c,c])[1]; setMode("COMBO"); renderCombos();
+  setTimeout(()=>tab("entrenar"),200);
+}
+function toggleBuilder(){
+  builder=!builder; $("buildBtn").textContent = builder ? "Toca combos abajo… (listo)" : "➕ Crear circuito";
+  $("buildBtn").style.borderColor = builder ? "var(--acc)" : "";
+}
+function renderSlots(){
+  $("slots").innerHTML = [0,1,2].map(i=>circuit[i] ? `<div class="slot filled">${[...circuit[i]].map(x=>`<i class="L ${x}">${x}</i>`).join("")}</div>` : `<div class="slot">Espacio ${i+1}</div>`).join("");
+  $("loadCircuit").style.display = circuit.length ? "block" : "none";
+}
+function clearCircuit(){ circuit=[]; renderSlots(); }
+function loadCircuit(){
+  if (!circuit.length) return;
+  queue=[...circuit]; routineName=`Circuito ${queue.join("+")}`;
+  builder=true; toggleBuilder(); setMode("COMBO"); renderCombos(); tab("entrenar");
+}
+
+/* =====================================================================
+   MQTT
+   ===================================================================== */
+let client = null, connected = false;
+function setPill(id, cls, txt){ const p=$(id); p.className="pill "+cls; p.querySelector("span").textContent=txt; }
+function connect(){
+  if (typeof Paho === "undefined"){ setPill("pillBroker","off","Sin librería MQTT"); return; }
+  client = new Paho.MQTT.Client(MQTT_HOST, MQTT_PORT, "lumetriq_web_" + Math.random().toString(16).slice(2,8));
+  client.onConnectionLost = r => { connected=false; setPill("pillBroker","off","Broker desconectado"); if (r.errorCode!==0) setTimeout(connect, 3000); };
+  client.onMessageArrived = m => { try { onMsg(m.destinationName, m.payloadString); } catch(e){ console.warn("Mensaje raro", m.destinationName, e); } };
+  setPill("pillBroker","warn","Conectando…");
+  client.connect({ useSSL:true, timeout:6, keepAliveInterval:30,
+    onSuccess:()=>{ connected=true; setPill("pillBroker","on","Broker conectado"); client.subscribe(BASE+"/#"); sendCmd("PING", true); },
+    onFailure:e=>{ connected=false; setPill("pillBroker","off","Sin broker"); console.error(e.errorMessage); setTimeout(connect, 4000); } });
+}
+function publish(topic, payload, retained=false){
+  if (!connected) return false;
+  const m = new Paho.MQTT.Message(payload); m.destinationName = topic; m.retained = retained; m.qos = 0;
+  client.send(m); return true;
+}
+function sendCmd(c, quiet, pod){
+  if (demo){ simCmd(c, pod); return true; }
+  if (!publish(pod ? `${BASE}/${pod}/cmd` : T.cmd, c)){ if(!quiet) toast("Sin conexión al broker. Prueba el modo demo."); return false; }
+  return true;
+}
+function onMsg(topic, txt){
+  if (topic === T.ranking){ mergeShared(txt); return; }
+  if (topic === T.cmd || topic.endsWith("/cmd")) return;
+  let d; try { d = JSON.parse(txt); } catch(e){ return; }
+  if (d.pod) seenPod(d.pod, topic !== T.estado || !!d.online);
+  if (topic === T.estado){ podStatus(d); return; }
+  lastPodMsg = Date.now(); podStatus({online:1, _keep:true});
+  if (orq && orqMsg(topic, d)) return;
+  if (topic === T.inicio) onInicio(d);
+  else if (topic === T.luz) onLuz(d);
+  else if (topic === T.golpe) onGolpe(d);
+  else if (topic === T.fin) onFin(d);
+}
+function podStatus(d){
+  if (!d._keep) lastPodMsg = Date.now();
+  const n = podList(true).length;
+  podOnline = n > 0;
+  if (d._keep && $("pillPod").classList.contains("on")) return;
+  setPill("pillPod", podOnline ? "on" : "off", podOnline ? (n>1 ? `${n} pods en línea` : `Pod ${podList(true)[0]} en línea${d.rssi?` · ${d.rssi} dBm`:""}`) : "Pod apagado");
+}
+setInterval(()=>{ if (!demo && podOnline && Date.now()-lastPodMsg > 25000) { podOnline=false; setPill("pillPod","warn","Pod sin señal"); } }, 5000);
+
+/* =====================================================================
+   RONDA EN VIVO
+   ===================================================================== */
+function start(){
+  if (orq) return toast("Hay un modo de clase en curso: páralo primero");
+  $("roundResult").style.display = "none"; $("podStrip").style.display = "none";
+  if (!me) { toast("Primero elige o agrega al jugador"); $("newPlayer").focus(); return; }
+  if (mode==="COMBO" && !queue.length){ toast("Elige un combo en la pestaña Combos"); tab("combos"); return; }
+  const tag = tagName(me);
+  run = { modo:mode, jugador:me, tag, combos:[], pasos:[], adelantados:0, nivel:0, t0:Date.now(), routine: mode==="COMBO"?routineName:mode };
+  qIdx = 0; clearFeed();
+  $("vPts").textContent = "0"; $("vRt").textContent="—"; $("vF").textContent="—";
+  if (mode==="COMBO") sendCmd(queue[0]+"@"+tag);
+  else if (mode==="SIMON") sendCmd("SIMON@"+tag);
+  else {
+    sendCmd("PARAR"); setPodText("¡PEGA!"); $("podState").innerHTML="Fuerza libre: <b>pega cuando quieras</b>";
+    if (demo) for (let i=1;i<=5;i++) simAt(i*1300, ()=>simEmit(T.golpe, { modo:"LIBRE", n:i, fuerza_N:Math.round(400+Math.random()*1200), acel_g:30, impulso_Ns:2.1, sat:0 }));
+  }
+}
+function stop(){
+  if (orq){ stopOrq(); return; }
+  sendCmd("PARAR");
+  lightLeds(null);
+  finishRun("Parado");
+}
+function onInicio(d){
+  if (run && d.tag && d.tag !== run.tag) return;   // es de otra persona
+  sess = { sesion:d.sesion, modo:d.modo, combo:d.combo, de:d.de, pasos:[] };
+  if (d.modo==="COMBO") drawSteps(d.combo);
+  else drawSteps("·".repeat(d.de));
+  $("podState").innerHTML = d.modo==="SIMON" ? `Simón · <b>${d.de} colores</b> · mira la secuencia…` : `Combo <b>${esc(d.combo)}</b> · espera la luz…`;
+  setPodText(d.modo==="SIMON" ? "MIRA" : "LISTO");
+  if (d.modo==="SIMON" && demo) simonPreview(d);
+}
+function onLuz(d){
+  if (!sess || d.sesion!==sess.sesion) return;
+  lightLeds(COLORES[d.color] || "#fff");
+  setPodText("¡YA!");
+  markStep(d.paso-1, "now", d.color);
+  $("podState").innerHTML = `Golpe <b>${d.paso}/${d.de}</b> · ${esc(d.color)}`;
+}
+function onGolpe(d){
+  if (d.modo==="LIBRE"){
+    if (!run || run.modo!=="LIBRE") { showLive(null, d.fuerza_N); return; }
+    run.pasos.push({ rt:0, f:d.fuerza_N, fallo:false, color:"BLANCO", letra:"·" });
+    addFeed("·", "BLANCO", `Golpe libre #${run.pasos.length}`, `${d.fuerza_N} N`, Math.min(500, Math.round(d.fuerza_N/3)));
+    showLive(null, d.fuerza_N); updateRunPts();
+    lightLeds("#ffffff"); setTimeout(()=>lightLeds(null), 180);
+    return;
+  }
+  if (!sess || d.sesion!==sess.sesion) return;
+  if (run && d.tag && d.tag!==run.tag) return;
+  const p = pts(d.reaccion_ms, d.fuerza_N, d.fallo);
+  const paso = { rt:d.reaccion_ms, f:d.fuerza_N, fallo:!!d.fallo, color:d.color, letra:d.letra, pts:p };
+  sess.pasos.push(paso);
+  if (run) run.pasos.push(paso);
+  markStep(d.paso-1, d.fallo ? "miss" : "hit", d.color);
+  lightLeds(d.fallo ? COLORES.ROJO : "#ffffff"); setTimeout(()=>lightLeds(null), d.fallo?300:120);
+  setPodText(d.fallo ? "TARDE" : d.reaccion_ms+"");
+  addFeed(d.letra, d.color, d.fallo ? `${d.color} · sin golpe` : `${d.color}`, d.fallo ? "—" : `${d.reaccion_ms} ms · ${d.fuerza_N} N`, p);
+  if (!d.fallo) showLive(d.reaccion_ms, d.fuerza_N);
+  updateRunPts();
+}
+function onFin(d){
+  if (!sess || d.sesion!==sess.sesion) return;
+  if (run && d.tag && d.tag!==run.tag) return;
+  sess = null;
+  if (!run) return;
+  run.adelantados += d.adelantados||0;
+  if (d.modo==="SIMON"){
+    if (d.completo){ run.nivel = Math.max(run.nivel, d.nivel); $("podState").innerHTML=`🌈 ¡Nivel ${d.nivel} superado! Viene uno más…`; setPodText("NIVEL "+d.nivel); }
+    else { run.nivel = Math.max(run.nivel, d.nivel); $("podState").innerHTML=`Se acabó: llegaste al <b>nivel ${run.nivel}</b>`; finishRun("Simón"); sendCmd("PARAR"); }
+    return;
+  }
+  run.combos.push(d.combo);
+  qIdx++;
+  if (qIdx < queue.length){
+    $("podState").innerHTML = `✓ ${esc(d.combo)} listo · siguiente: <b>${esc(queue[qIdx])}</b>`;
+    setTimeout(()=>{ if (run) sendCmd(queue[qIdx]+"@"+run.tag); }, 1200);
+  } else {
+    $("podState").innerHTML = `🎉 ${queue.length>1?"¡Circuito completo!":"¡Combo completo!"}`;
+    setPodText("✓");
+    finishRun("Completo");
+  }
+}
+function updateRunPts(){
+  if (!run) return;
+  const total = run.pasos.reduce((a,p)=>a+(p.pts ?? Math.min(500,Math.round(p.f/3))),0) - 100*run.adelantados;
+  $("vPts").textContent = Math.max(0,total); flash("vPts");
+}
+function showLive(rt, f){
+  if (rt!=null){ $("vRt").textContent = rt; flash("vRt"); }
+  if (f!=null){ $("vF").textContent = Math.round(f); flash("vF"); }
+}
+
+/* Guarda la ronda como registro del jugador */
+function finishRun(motivo){
+  if (!run) return;
+  const r = run; run = null;
+  const hits = r.pasos.filter(p=>!p.fallo);
+  if (!hits.length && r.nivel===0) { toast("Ronda sin golpes: no se guardó"); return; }
+  const rts = hits.filter(p=>p.rt>0).map(p=>p.rt);
+  const rec = {
+    id: Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+    ts: Date.now(), jugador: r.jugador, modo: r.modo,
+    combo: r.modo==="COMBO" ? (r.combos.length ? r.combos.join("+") : queue.join("+")) : r.modo,
+    rutina: r.routine,
+    reac: rts.length ? Math.round(rts.reduce((a,b)=>a+b,0)/rts.length) : 0,
+    mejor: rts.length ? Math.min(...rts) : 0,
+    fmax: hits.length ? Math.round(Math.max(...hits.map(p=>p.f))) : 0,
+    fprom: hits.length ? Math.round(hits.reduce((a,p)=>a+p.f,0)/hits.length) : 0,
+    golpes: hits.length, fallos: r.pasos.length-hits.length, adelantados: r.adelantados,
+    nivel: r.nivel, demo: demo || undefined
+  };
+  rec.pts = Math.max(0, r.pasos.reduce((a,p)=>a+(p.pts ?? Math.min(500,Math.round(p.f/3))),0) - 100*r.adelantados);
+  const before = rankOf(rec.jugador);
+  const prevBest = personalBest(rec);
+  records.unshift(rec);
+  if (records.length > 400) records.length = 400;
+  lsSet(LS.rec, records);
+  publishShared();
+  const after = rankOf(rec.jugador);
+  celebrate(rec, prevBest, before, after);
+  renderPlayers(); renderCombos(); renderRival(); renderRanking(); renderHistory();
+}
+function personalBest(rec){
+  const mine = visibleRecords().filter(r=>r.jugador===rec.jugador);
+  return {
+    rt: Math.min(...mine.filter(r=>r.reac>0).map(r=>r.reac), Infinity),
+    f: Math.max(...mine.map(r=>r.fmax), 0),
+    pts: Math.max(...mine.map(r=>r.pts), 0),
+    nivel: Math.max(...mine.map(r=>r.nivel||0), 0)
+  };
+}
+function celebrate(rec, pb, before, after){
+  let titulo = null, det = "";
+  if (rec.modo==="SIMON" && rec.nivel > pb.nivel) { titulo = `Nivel ${rec.nivel}`; det = "Tu mejor Simón"; }
+  else if (rec.reac>0 && rec.reac < pb.rt) { titulo = `${rec.reac} ms`; det = pb.rt===Infinity ? "Tu primera marca" : `Antes: ${pb.rt} ms`; }
+  else if (rec.fmax > pb.f && rec.fmax>0) { titulo = `${rec.fmax} N`; det = "Tu golpe más fuerte"; }
+  else if (rec.pts > pb.pts) { titulo = `${rec.pts} pts`; det = "Tu mejor puntaje"; }
+  if (after.pos && before.pos && after.pos < before.pos) det += ` · ¡subiste al #${after.pos}!`;
+  else if (after.pos===1) det += " · eres el #1";
+  if (titulo){
+    $("recT").textContent = titulo; $("recD").textContent = det;
+    $("record").classList.add("show"); confeti(); setTimeout(()=>$("record").classList.remove("show"), 2600);
+  } else toast(`Guardado: ${rec.pts} pts · ${rec.reac||"—"} ms · ${rec.fmax} N`);
+}
+
+/* =====================================================================
+   POD DIBUJADO
+   ===================================================================== */
+const LED_N = 8;
+function buildLeds(){
+  const g = $("leds"); let h = "";
+  for (let i=0;i<LED_N;i++){
+    const a = (200 + i*(140/(LED_N-1))) * Math.PI/180;   // arco superior
+    const x = 150 + 98*Math.cos(a), y = 140 + 98*Math.sin(a);
+    h += `<circle class="led" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="8" fill="#1b2230" stroke="#2c374c"/>`;
+  }
+  g.innerHTML = h;
+}
+function lightLeds(color){
+  document.querySelectorAll("#leds .led").forEach(c=>{
+    c.setAttribute("fill", color || "#1b2230");
+    c.setAttribute("filter", color ? "url(#glow)" : "");
+  });
+  $("padCircle").setAttribute("stroke", color || "#2c374c");
+}
+function setPodText(t){ $("padText").textContent = t; }
+function drawSteps(combo){
+  $("steps").innerHTML = [...(combo||"")].map((c,i)=>`<div class="step ${"XOS".includes(c)?c:""}" id="st${i}">${c}</div>`).join("");
+}
+function markStep(i, cls, color){
+  const s = $("st"+i); if (!s) return;
+  if (cls==="now") document.querySelectorAll(".step.now").forEach(e=>e.classList.remove("now"));
+  s.classList.remove("now"); s.classList.add(cls);
+  if (color && !s.className.match(/\b[XOS]\b/)) s.style.color = COLORES[color];
+}
+function clearFeed(){ $("feed").innerHTML = ""; }
+function addFeed(letra, color, titulo, num, p){
+  const f = $("feed"); if (f.querySelector(".empty-msg")) f.innerHTML = "";
+  f.insertAdjacentHTML("afterbegin", `<div class="feed-item"><div class="badge" style="background:${COLORES[color]||"#555"};color:${color==="BLANCO"?"#111":"#fff"}">${esc(letra)}</div>
+    <div class="t">${esc(titulo)}</div><div class="n">${esc(num)}</div><div class="p">+${p}</div></div>`);
+}
+
+/* =====================================================================
+   RIVAL: a quién tienes que ganarle
+   ===================================================================== */
+function renderRival(){
+  const box = $("rival");
+  if (!me){ box.style.display="none"; return; }
+  const key = mode==="SIMON" ? "simon" : mode==="LIBRE" ? "f" : "pts";
+  const list = leaderboard(key, "semana");
+  const i = list.findIndex(r=>r.jugador===me);
+  let html;
+  if (!list.length) html = `<span class="ico">🏁</span><span>Nadie ha jugado esta semana. <b>Tu marca será la que todos tengan que romper.</b></span>`;
+  else if (i===0) html = `<span class="ico">👑</span><span>Eres el <b>#1</b> de la semana en ${CAT[key].nombre}. ${list[1]?`${esc(list[1].jugador)} está a <b>${CAT[key].gap(list[0],list[1])}</b>. No te confíes.`:"Defiende la corona."}</span>`;
+  else if (i>0) html = `<span class="ico">🎯</span><span>Vas <b>#${i+1}</b>. Te faltan <b>${CAT[key].gap(list[i-1],list[i])}</b> para pasar a ${punto(list[i-1].jugador)}</span>`;
+  else html = `<span class="ico">🥊</span><span>El #1 es <b>${esc(list[0].jugador)}</b> con ${CAT[key].fmt(list[0])}. ¿Te animas?</span>`;
+  box.innerHTML = html; box.style.display = "flex";
+}
+
+/* =====================================================================
+   RANKING
+   ===================================================================== */
+const CAT = {
+  pts:   { nombre:"Puntos",   kicker:"Mejor ronda · puntos",          val:r=>r.pts,   better:(a,b)=>b.pts-a.pts,     ok:r=>r.modo!=="LIBRE"&&r.pts>0,
+           fmt:r=>`${r.pts.toLocaleString("es-MX")} pts`, gap:(a,b)=>`${(a.pts-b.pts+1).toLocaleString("es-MX")} pts` },
+  rt:    { nombre:"Reacción", kicker:"Reacción promedio · menos es mejor", val:r=>r.reac, better:(a,b)=>a.reac-b.reac, ok:r=>r.reac>0&&r.golpes>=3,
+           fmt:r=>`${r.reac} ms`, gap:(a,b)=>`${b.reac-a.reac+1} ms` },
+  f:     { nombre:"Fuerza",   kicker:"Golpe más fuerte",               val:r=>r.fmax,  better:(a,b)=>b.fmax-a.fmax,   ok:r=>r.fmax>0,
+           fmt:r=>`${r.fmax} N`, gap:(a,b)=>`${a.fmax-b.fmax+1} N` },
+  simon: { nombre:"Simón",    kicker:"Nivel más alto de Simón",        val:r=>r.nivel, better:(a,b)=>b.nivel-a.nivel || a.reac-b.reac, ok:r=>r.modo==="SIMON"&&r.nivel>0,
+           fmt:r=>`Nivel ${r.nivel}`, gap:(a,b)=>`${a.nivel-b.nivel+1} nivel${a.nivel-b.nivel+1>1?"es":""}` }
+};
+function visibleRecords(){ return records.filter(r=> demo ? true : !r.demo); }
+function inPeriod(r, p){
+  if (p==="todo") return true;
+  const d = new Date(); d.setHours(0,0,0,0);
+  if (p==="semana"){ const wd=(d.getDay()+6)%7; d.setDate(d.getDate()-wd); }
+  return r.ts >= d.getTime();
+}
+// Mejor registro de cada jugador en la categoría
+function leaderboard(key, p){
+  const c = CAT[key], best = {};
+  visibleRecords().filter(r=>c.ok(r) && inPeriod(r,p)).forEach(r=>{
+    const b = best[r.jugador];
+    if (!b || c.better(r,b) < 0) best[r.jugador] = r;
+  });
+  return Object.values(best).sort(c.better);
+}
+function rankOf(j){ const l = leaderboard(cat, per); const i=l.findIndex(r=>r.jugador===j); return { pos: i>=0?i+1:0 }; }
+function setCat(c){ cat=c; document.querySelectorAll("#segCat button").forEach(b=>b.classList.toggle("active",b.dataset.c===c)); renderRanking(); }
+function setPer(p){ per=p; document.querySelectorAll("#segPer button").forEach(b=>b.classList.toggle("active",b.dataset.p===p)); renderRanking(); }
+function renderRanking(){
+  const c = CAT[cat], list = leaderboard(cat, per);
+  $("rankKicker").textContent = `${c.kicker} · ${({hoy:"hoy",semana:"esta semana",todo:"histórico"})[per]}`;
+  const order = [1,0,2];  // plata, oro, bronce
+  $("podium").innerHTML = order.map(i=>{
+    const r = list[i], cls = "p"+(i+1);
+    if (!r) return `<div class="pd ${cls} empty"><div class="ava">?</div><div class="nm" style="color:var(--dim)">Libre</div><div class="sc" style="color:var(--dim)">—</div><div class="base">${i+1}</div></div>`;
+    return `<div class="pd ${cls}"><div class="ava" style="${i>0?"":""}">${i===0?'<span class="crown">👑</span>':""}${esc(ini(r.jugador))}</div>
+      <div class="nm">${esc(r.jugador)}${r.demo?'<span class="tag-demo">demo</span>':""}</div><div class="sc">${c.fmt(r)}</div><div class="base">${i+1}</div></div>`;
+  }).join("");
+  const rest = list.slice(3);
+  $("rlist").innerHTML = rest.length ? rest.map((r,k)=>{
+    const pos = k+4, prev = list[pos-2];
+    return `<div class="row ${r.jugador===me?"me":""}" style="animation-delay:${k*40}ms"><div class="pos">#${pos}</div>
+      <div class="av" style="background:${colFor(r.jugador)}">${esc(ini(r.jugador))}</div>
+      <div class="nm">${esc(r.jugador)}${r.demo?'<span class="tag-demo">demo</span>':""}<small>${esc(r.combo)} · ${new Date(r.ts).toLocaleDateString("es-MX",{day:"numeric",month:"short"})}</small></div>
+      <div class="sc">${c.fmt(r)}</div><div class="gap">−${c.gap(prev,r)}</div></div>`;
+  }).join("") : (list.length ? "" : `<div class="empty-msg">Todavía no hay marcas ${per==="hoy"?"hoy":per==="semana"?"esta semana":""}. La primera que pongas queda en el trono 👑</div>`);
+
+  const mc = $("mycard"), i = list.findIndex(r=>r.jugador===me);
+  if (!me){ mc.style.display="none"; return; }
+  mc.style.display = "grid";
+  if (i<0) mc.innerHTML = `<div class="bigpos">—</div><div><p><b>${esc(me)}</b>, todavía no apareces aquí.</p><p class="muted">Haz una ronda y entra al ranking.</p></div><button class="btn btn-go" onclick="challenge()">Jugar ahora</button>`;
+  else if (i===0) mc.innerHTML = `<div class="bigpos">#1</div><div><p><b>${esc(me)}</b>, tienes la corona con ${c.fmt(list[0])}.</p><p class="muted">${list[1]?`${esc(list[1].jugador)} está a ${c.gap(list[0],list[1])}.`:"Nadie te sigue todavía."}</p></div><button class="btn btn-go" onclick="challenge()">Subir la marca</button>`;
+  else mc.innerHTML = `<div class="bigpos">#${i+1}<small>/${list.length}</small></div><div><p>Te faltan <b style="color:var(--acc)">${c.gap(list[i-1],list[i])}</b> para pasar a <b>${punto(list[i-1].jugador)}</b></p><p class="muted">El #1 es ${esc(list[0].jugador)} con ${c.fmt(list[0])}.</p></div><button class="btn btn-go" onclick="challenge()">Retar al #${i}</button>`;
+}
+// Carga la misma rutina con la que el rival hizo su marca
+function challenge(){
+  const list = leaderboard(cat, per), i = list.findIndex(r=>r.jugador===me);
+  const target = i>0 ? list[i-1] : list[0];
+  if (cat==="simon") setMode("SIMON");
+  else if (cat==="f") setMode("LIBRE");
+  else if (target && target.modo==="COMBO"){ queue = target.combo.split("+"); routineName = target.rutina || target.combo; setMode("COMBO"); }
+  else if (!queue.length){ queue=["XOS"]; routineName=COMBOS[0][1]; setMode("COMBO"); }
+  renderCombos(); tab("entrenar");
+  if (target && target.jugador!==me) toast(`Objetivo: ${CAT[cat].fmt(target)} de ${target.jugador}`);
+}
+
+/* Ranking compartido: mensaje retenido en BASE/ranking con los últimos registros */
+function toggleShare(){ shareOn=!shareOn; lsSet(LS.share, shareOn); $("shareSw").classList.toggle("on",shareOn); if (shareOn) publishShared(); }
+function publishShared(){
+  if (!shareOn || demo || !connected) return;
+  const top = records.filter(r=>!r.demo).slice(0,150);
+  publish(T.ranking, JSON.stringify({ v:1, records:top }), true);
+}
+function mergeShared(txt){
+  if (!shareOn) return;
+  let d; try { d = JSON.parse(txt); } catch(e){ return; }
+  if (!d || !Array.isArray(d.records)) return;
+  const ids = new Set(records.map(r=>r.id)), remoteIds = new Set();
+  let nuevos = 0;
+  d.records.forEach(r=>{
+    if (!r || typeof r.id!=="string" || typeof r.jugador!=="string") return;
+    remoteIds.add(r.id);
+    if (ids.has(r.id)) return;
+    const j = cleanName(r.jugador); if (!j) return;
+    records.push({ id:r.id.slice(0,24), ts:+r.ts||0, jugador:j, modo:["COMBO","SIMON","LIBRE"].includes(r.modo)?r.modo:"COMBO",
+      combo:String(r.combo||"").replace(/[^XOS+A-Z]/g,"").slice(0,40), rutina:cleanName(r.rutina)||"", reac:+r.reac||0, mejor:+r.mejor||0,
+      fmax:+r.fmax||0, fprom:+r.fprom||0, golpes:+r.golpes||0, fallos:+r.fallos||0, adelantados:+r.adelantados||0, nivel:+r.nivel||0, pts:+r.pts||0 });
+    nuevos++;
+  });
+  if (nuevos){
+    records.sort((a,b)=>b.ts-a.ts); lsSet(LS.rec, records);
+    records.forEach(r=>{ if(!r.demo && !players.includes(r.jugador)) players.push(r.jugador); }); lsSet(LS.players, players);
+    renderPlayers(); renderCombos(); renderRival(); renderRanking(); renderHistory();
+  }
+  // Si yo tengo registros que el retenido no tiene, lo vuelvo a publicar con todo junto
+  if (records.some(r=>!r.demo && !remoteIds.has(r.id) && records.indexOf(r)<150)) setTimeout(publishShared, 500 + Math.random()*1500);
+}
+
+
+/* =====================================================================
+   PODS CONECTADOS (cada pod manda su estado cada 10 s)
+   ===================================================================== */
+const pods = {};    // id → última vez que se supo de él
+function seenPod(id, online){
+  id = String(id).replace(/[^A-Za-z0-9_-]/g,"").slice(0,8); if (!id) return;
+  if (online) pods[id] = Date.now(); else delete pods[id];
+  renderPodsUI();
+}
+// Pods en línea (vistos en los últimos 30 s). Si no hay ninguno, se asume P1
+function podList(soloVivos){
+  const l = Object.keys(pods).filter(k=>Date.now()-pods[k] < 30000).sort();
+  return l.length || soloVivos ? l : ["P1"];
+}
+function renderPodsUI(){
+  const l = podList(true);
+  if ($("podsInfo")) $("podsInfo").innerHTML = l.length ? `Pods en línea: <b style="color:var(--txt)">${l.map(esc).join(" · ")}</b>` : "Ningún pod en línea (se usa P1)";
+  if ($("cPods") && !$("cPods").dataset.touched && $("cPods").dataset.n !== String(l.length)){
+    // número de pods para el modo del coach
+    $("cPods").innerHTML = [1,2,3,4].map(n=>`<button data-v="${n}" class="${n===Math.min(4,Math.max(1,l.length||1))?"on":""}">${n}</button>`).join("");
+    $("cPods").dataset.n = String(l.length);
+  }
+}
+setInterval(renderPodsUI, 10000);
+
+/* =====================================================================
+   MODOS DE CLASE: la web dirige, el pod enciende y mide.
+   Cada golpe es un "combo" de UNA letra que se manda al pod que toca
+   (tópico BASE/<pod>/cmd). El pod regresa inicio → luz → golpe → fin.
+   ===================================================================== */
+let orq = null;
+const MODO_NOMBRE = { LUZ:"Sigue la luz", TODOS:"Todos contra todos", DIRECCION:"Cambio de dirección", CUSTOM:"Modo del coach" };
+let vsSel = [];
+
+function pickSetup(id, multi){
+  $(id).addEventListener("click", e=>{
+    const b = e.target.closest("button"); if (!b) return;
+    $(id).dataset.touched = "1";
+    if (multi) b.classList.toggle("on");
+    else { $(id).querySelectorAll("button").forEach(x=>x.classList.remove("on")); b.classList.add("on"); }
+  });
+}
+function renderModes(){
+  // Todos contra todos: elegir alumnos
+  vsSel = vsSel.filter(n=>players.includes(n));
+  $("vsPick").innerHTML = players.length ? players.map(n=>`<button class="${vsSel.includes(n)?"on":""}" onclick="toggleVs('${esc(n).replace(/'/g,"&#39;")}')">${esc(n)}</button>`).join("")
+    : `<span class="muted">Agrega a los alumnos arriba (Nuevo jugador).</span>`;
+  $("vsList").innerHTML = vsSel.map((n,i)=>`<span><i style="background:${COLORES[LETRA_COLOR[LETRAS_CLASE[i]]]}"></i>${esc(n)}</span>`).join("");
+  // Rutinas guardadas
+  const rs = lsGet("lumetriq_rutinas", []);
+  $("savedList").innerHTML = rs.length ? rs.map((r,i)=>`<div class="it"><span class="letters" style="display:inline-flex;gap:3px">${r.cols.map(l=>`<i class="L ${l}" style="width:16px;height:16px;font-size:0"></i>`).join("")}</span>
+     <div style="flex:1;min-width:0"><b>${esc(r.nombre)}</b><div class="muted" style="font-size:11px">${r.pods} pod${r.pods>1?"s":""} · ${r.n}×${r.rondas} · ${r.tiempoAzar?`🎲 ${(r.tMin/1000).toFixed(1)}–${(r.tMax/1000).toFixed(1)} s`:`${((r.tiempo||2000)/1000).toFixed(1)} s`}</div></div>
+     <button class="btn-sm" onclick="playCustom(lsGet('lumetriq_rutinas',[])[${i}])">▶</button><button class="btn-sm" onclick="delCustom(${i})">✕</button></div>`).join("")
+    : `<div class="muted" style="margin-top:4px">Aún no hay rutinas guardadas.</div>`;
+}
+function toggleVs(n){
+  if (vsSel.includes(n)) vsSel = vsSel.filter(x=>x!==n);
+  else if (vsSel.length < LETRAS_CLASE.length) vsSel.push(n);
+  else toast("Máximo 7 alumnos (un color cada uno)");
+  renderModes();
+}
+// Mantiene min ≤ max en el tiempo al azar
+function ajustaAzar(cual){
+  let a = +$("cTmin").value, b = +$("cTmax").value;
+  if (a > b){ if (cual==="min") $("cTmax").value = b = a; else $("cTmin").value = a = b; }
+  $("cTminV").textContent = (a/1000).toFixed(1)+" s"; $("cTmaxV").textContent = (b/1000).toFixed(1)+" s";
+}
+function setupCustomForm(){
+  $("cTmodo").addEventListener("click", ()=>setTimeout(()=>{
+    const azar = $("cTmodo").querySelector("button.on")?.dataset.v === "azar";
+    $("cTfijo").style.display = azar ? "none" : ""; $("cTazar").style.display = azar ? "" : "none";
+  }));
+  pickSetup("cTmodo", false);
+  $("cCols").innerHTML = Object.entries(LETRA_COLOR).map(([l,c])=>`<button class="col ${["C","W"].includes(l)?"on":""}" data-v="${l}" title="${c}" style="background:${COLORES[c]};color:${COLORES[c]}"></button>`).join("");
+  pickSetup("cCols", true); pickSetup("cOrden", false); pickSetup("cPods", false);
+}
+function readCustom(){
+  const val = id => $(id).querySelector("button.on")?.dataset.v;
+  const cols = [...$("cCols").querySelectorAll("button.on")].map(b=>b.dataset.v);
+  return { nombre: cleanName($("cNombre").value) || "Mi rutina", pods: +val("cPods") || 1, orden: val("cOrden") || "azar",
+           cols: cols.length ? cols : ["C"], tiempo: +$("cT").value,
+           tiempoAzar: val("cTmodo")==="azar", tMin: +$("cTmin").value, tMax: +$("cTmax").value,
+           espera: $("cEsp").value.split(",").map(Number), n: Math.max(1, Math.min(60, +$("cN").value||12)),
+           rondas: Math.max(1, Math.min(20, +$("cR").value||1)), descanso: Math.max(0, Math.min(180, +$("cD").value||0)) };
+}
+function saveCustom(){
+  const r = readCustom(), rs = lsGet("lumetriq_rutinas", []);
+  const i = rs.findIndex(x=>x.nombre===r.nombre); if (i>=0) rs[i]=r; else rs.unshift(r);
+  lsSet("lumetriq_rutinas", rs.slice(0,30)); renderModes(); toast(`Rutina "${r.nombre}" guardada`);
+}
+function delCustom(i){ const rs = lsGet("lumetriq_rutinas", []); rs.splice(i,1); lsSet("lumetriq_rutinas", rs); renderModes(); }
+
+const rnd = a => a[Math.floor(Math.random()*a.length)];
+// Elige pods sin repetir el mismo dos veces seguidas (si hay más de uno)
+function seqPods(list, n, orden){
+  const out = [];
+  for (let i=0;i<n;i++){
+    if (orden==="seq") out.push(list[i % list.length]);
+    else if (orden==="ida"){ const per = Math.max(1, 2*list.length-2); const k = i % per; out.push(list[k < list.length ? k : per-k]); }
+    else { let p; do { p = rnd(list); } while (list.length>1 && p===out[i-1]); out.push(p); }
+  }
+  return out;
+}
+function needMe(){ if (!me){ toast("Primero elige o agrega al jugador"); $("newPlayer").focus(); return false; } return true; }
+
+function playLuz(){
+  if (!needMe()) return;
+  const n = +$("luzN").value, pl = podList();
+  startOrq({ modo:"LUZ", nombre:"Sigue la luz", tiempo:+$("luzT").value, espera:[0,250], rondas:1, descanso:0, pods:pl,
+             build:()=>seqPods(pl, n, "azar").map(p=>({ pod:p, letra:"C", jugador:me })) });
+}
+function playDireccion(){
+  if (!needMe()) return;
+  const n = +$("dirN").value, pl = podList();
+  const ext = pl.length > 1 ? [pl[0], pl[pl.length-1]] : [pl[0]];
+  if (ext.length===1) toast("Con un pod se juega en el mismo. Pon dos pods en extremos opuestos.");
+  startOrq({ modo:"DIRECCION", nombre:"Cambio de dirección", tiempo:+$("dirT").value, espera:[400,900], rondas:1, descanso:0, pods:ext,
+             build:()=>Array.from({length:n},(_,i)=>({ pod:ext[i%ext.length], letra: i%2 ? "W" : "C", jugador:me })) });
+}
+function playTodos(){
+  if (vsSel.length < 2) return toast("Elige al menos 2 alumnos");
+  const n = +$("vsN").value, pl = podList();
+  const quien = vsSel.map((j,i)=>({ jugador:j, letra:LETRAS_CLASE[i] }));
+  startOrq({ modo:"TODOS", nombre:"Todos contra todos", tiempo:2500, espera:[500,1500], rondas:1, descanso:0, pods:pl, quien,
+             build:()=>{
+               // cada alumno sale n veces, en orden revuelto, sin el mismo dos veces seguidas si se puede
+               let bolsa = quien.flatMap(q=>Array(n).fill(q)), out = [];
+               while (bolsa.length){
+                 let k = Math.floor(Math.random()*bolsa.length), tries = 0;
+                 while (out.length && bolsa[k].jugador===out[out.length-1].jugador && tries++ < 10) k = Math.floor(Math.random()*bolsa.length);
+                 out.push(bolsa.splice(k,1)[0]);
+               }
+               const ps = seqPods(pl, out.length, "azar");
+               return out.map((q,i)=>({ pod:ps[i], letra:q.letra, jugador:q.jugador }));
+             } });
+}
+function playCustom(r){
+  if (!r || !needMe()) return;
+  let pl = podList();
+  if (pl.length < r.pods){
+    if (demo) pl = DEMO_PODS.slice(0, r.pods);
+    else toast(`La rutina pide ${r.pods} pods y hay ${pl.length} en línea: se usan los que hay`);
+  }
+  pl = pl.slice(0, r.pods);
+  const tiempo = r.tiempoAzar ? [Math.min(r.tMin,r.tMax), Math.max(r.tMin,r.tMax)] : (r.tiempo || 2000);
+  startOrq({ modo:"CUSTOM", nombre:r.nombre, tiempo, espera: r.espera || [300,1200], rondas:r.rondas, descanso:r.descanso, pods:pl,
+             build:()=>{ const ps = seqPods(pl, r.n, r.orden); return ps.map((p,i)=>({ pod:p, letra: r.orden==="azar" ? rnd(r.cols) : r.cols[i % r.cols.length], jugador:me })); } });
+}
+
+function startOrq(cfg){
+  if (orq) return toast("Ya hay un modo en curso");
+  if (run){ sendCmd("PARAR"); run = null; }
+  orq = Object.assign({ ronda:0, i:0, res:[], steps:cfg.build(), espera:cfg.espera, wait:null, t:null }, cfg);
+  // tiempo: un número (fijo) o [min, max] (al azar: el pod sortea el límite de cada color)
+  orq.tMin = Array.isArray(cfg.tiempo) ? cfg.tiempo[0] : cfg.tiempo;
+  orq.tMax = Array.isArray(cfg.tiempo) ? cfg.tiempo[1] : cfg.tiempo;
+  sess = null;
+  $("roundResult").style.display = "none";
+  clearFeed(); $("vPts").textContent = "0"; $("vRt").textContent = "—"; $("vF").textContent = "—";
+  $("selLabel").innerHTML = `Modo: <b>${esc(cfg.nombre)}</b> · ${orq.steps.length} golpes${cfg.rondas>1?` × ${cfg.rondas} rondas`:""} · ${cfg.pods.map(esc).join(", ")}`;
+  orq.pods.forEach(p=>{ sendCmd("PARAR", true, p); sendCmd(orq.tMin===orq.tMax ? `TIEMPO ${orq.tMax}` : `TIEMPO ${orq.tMin} ${orq.tMax}`, true, p); sendCmd(`ESPERA ${cfg.espera[0]} ${cfg.espera[1]}`, true, p); });
+  drawPodStrip(); drawSteps(orq.steps.map(s=>s.letra).join(""));
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+  tab("entrenar");
+  if (cfg.modo==="TODOS") renderRivalVs();
+  $("podState").innerHTML = "Prepárate…"; setPodText("LISTO");
+  orq.t = setTimeout(orqNext, 1500);
+}
+function drawPodStrip(active, color){
+  const st = $("podStrip");
+  if (!orq){ st.style.display = "none"; return; }
+  st.style.display = "flex";
+  st.innerHTML = orq.pods.map(p=>`<div class="pp"><i style="${p===active?`background:${color};border-color:${color};box-shadow:0 0 18px ${color}`:""}"></i>${esc(p)}</div>`).join("");
+}
+function renderRivalVs(){
+  const box = $("rival");
+  box.style.display = "flex";
+  box.innerHTML = `<span class="ico">🎨</span><span>Cada quien golpea <b>solo su color</b>: ${orq.quien.map(q=>`<span style="color:${COLORES[LETRA_COLOR[q.letra]]};font-weight:700">${esc(q.jugador)}</span>`).join(" · ")}</span>`;
+}
+function orqNext(){
+  if (!orq) return;
+  clearTimeout(orq.t);
+  if (orq.i >= orq.steps.length){
+    orq.ronda++;
+    if (orq.ronda < orq.rondas){
+      // descanso entre rondas
+      let left = orq.descanso; orq.i = 0; orq.steps = orq.build();
+      drawSteps(orq.steps.map(s=>s.letra).join("")); lightLeds(null); drawPodStrip();
+      const tick = () => {
+        if (!orq) return;
+        if (left <= 0){ orqNext(); return; }
+        $("podState").innerHTML = `Ronda ${orq.ronda}/${orq.rondas} lista · descanso <b>${left} s</b>`; setPodText(left+"");
+        left--; orq.t = setTimeout(tick, 1000);
+      };
+      tick(); return;
+    }
+    finishOrq(); return;
+  }
+  const st = orq.steps[orq.i];
+  orq.wait = { pod:st.pod, step:st, sesion:null, golpe:false };
+  const tg = tagName(st.jugador);
+  sendCmd(`${st.letra}@${tg}`, false, st.pod);
+  const col = LETRA_COLOR[st.letra];
+  $("podState").innerHTML = `${orq.rondas>1?`Ronda ${orq.ronda+1}/${orq.rondas} · `:""}Golpe <b>${orq.i+1}/${orq.steps.length}</b> · pod ${esc(st.pod)}${orq.modo==="TODOS"?` · turno de <b style="color:${COLORES[col]}">${esc(st.jugador)}</b>`:""}`;
+  // seguro: si el pod no contesta, se cuenta como fallo y se sigue
+  orq.t = setTimeout(()=>{ if (!orq) return; orqResult({ reaccion_ms:orq.tMax, fuerza_N:0, fallo:1, color:col }, st); orq.i++; orqNext(); },
+                     orq.tMax + orq.espera[1] + 4000);
+}
+function orqMsg(topic, d){
+  const w = orq.wait;
+  if (!w || d.pod !== w.pod || d.modo==="LIBRE") return !!w && d.pod===w.pod;
+  if (topic===T.inicio){ w.sesion = d.sesion; return true; }
+  if (w.sesion!=null && d.sesion!==w.sesion) return true;
+  if (topic===T.luz){
+    const c = COLORES[d.color] || "#fff";
+    lightLeds(c); drawPodStrip(w.pod, c); setPodText(orq.modo==="TODOS" ? ini(w.step.jugador) : "¡YA!");
+    markStep(orq.i, "now", d.color);
+    if (d.limite_ms){ w.limite = d.limite_ms;
+      if (orq.tMin !== orq.tMax) $("podState").innerHTML += ` · ⏱ <b>${(d.limite_ms/1000).toFixed(1)} s</b>`; }
+  } else if (topic===T.golpe){
+    w.golpe = true; orqResult(d, w.step);
+  } else if (topic===T.fin){
+    if (!w.golpe) orqResult({ reaccion_ms:w.limite || orq.tMax, fuerza_N:0, fallo:1, color:LETRA_COLOR[w.step.letra] }, w.step);
+    clearTimeout(orq.t); orq.wait = null; orq.i++;
+    orq.t = setTimeout(orqNext, orq.modo==="DIRECCION" ? 150 : 60);
+  }
+  return true;
+}
+function orqResult(d, st){
+  const fallo = !!d.fallo, p = pts(d.reaccion_ms, d.fuerza_N, fallo);
+  orq.res.push({ jugador:st.jugador, pod:st.pod, rt:d.reaccion_ms, f:d.fuerza_N, fallo, pts:p });
+  markStep(orq.i, fallo ? "miss" : "hit", d.color);
+  lightLeds(fallo ? COLORES.ROJO : null); drawPodStrip(); setTimeout(()=>{ if (orq && !orq.wait) lightLeds(null); }, 250);
+  setPodText(fallo ? "TARDE" : d.reaccion_ms+"");
+  const who = orq.modo==="TODOS" ? `${st.jugador} · ` : "";
+  addFeed(st.letra, LETRA_COLOR[st.letra], `${who}${st.pod}${fallo?" · sin golpe":""}`, fallo ? "—" : `${d.reaccion_ms} ms · ${Math.round(d.fuerza_N)} N`, p);
+  if (!fallo) showLive(d.reaccion_ms, d.fuerza_N);
+  const mine = orq.modo==="TODOS" ? orq.res : orq.res.filter(r=>r.jugador===me);
+  $("vPts").textContent = mine.reduce((a,r)=>a+r.pts,0); flash("vPts");
+}
+function stopOrq(silencioso){
+  if (!orq) return;
+  orq.pods.forEach(p=>sendCmd("PARAR", true, p));
+  finishOrq(silencioso);
+}
+function finishOrq(silencioso){
+  const o = orq; orq = null;
+  clearTimeout(o.t); lightLeds(null); drawPodStrip();
+  $("podStrip").style.display = "none";
+  // Restablece el tiempo de arranque del pod para los combos
+  o.pods.forEach(p=>{ sendCmd("TIEMPO "+TIEMPO_MAX_MS, true, p); sendCmd("ESPERA 500 1500", true, p); });
+  document.querySelectorAll(".chip").forEach(c=>c.classList.toggle("active", c.dataset.mode===mode));
+  updateSelLabel(); renderRival();
+  if (silencioso || !o.res.length){ $("podState").innerHTML = "Modo detenido"; return; }
+  // Un registro por jugador
+  const by = {};
+  o.res.forEach(r=>{ (by[r.jugador] = by[r.jugador] || []).push(r); });
+  const nuevos = Object.entries(by).map(([j, rs])=>{
+    const hits = rs.filter(r=>!r.fallo), rts = hits.map(r=>r.rt);
+    return { id: Date.now().toString(36)+Math.random().toString(36).slice(2,6), ts:Date.now(), jugador:j,
+      modo:o.modo, combo:o.modo, rutina:o.nombre,
+      reac: rts.length ? Math.round(rts.reduce((a,b)=>a+b,0)/rts.length) : 0, mejor: rts.length ? Math.min(...rts) : 0,
+      fmax: hits.length ? Math.round(Math.max(...hits.map(r=>r.f))) : 0, fprom: hits.length ? Math.round(hits.reduce((a,r)=>a+r.f,0)/hits.length) : 0,
+      golpes:hits.length, fallos:rs.length-hits.length, adelantados:0, nivel:0, pts:rs.reduce((a,r)=>a+r.pts,0), demo: demo || undefined };
+  }).filter(r=>r.golpes>0);
+  if (!nuevos.length){ $("podState").innerHTML = "Sin golpes: no se guardó"; return; }
+  const yo = nuevos.find(r=>r.jugador===me);
+  const pb = yo ? personalBest(yo) : null, before = yo ? rankOf(me) : null;
+  records.unshift(...nuevos); if (records.length > 400) records.length = 400;
+  lsSet(LS.rec, records); publishShared();
+  $("podState").innerHTML = `🎉 ${esc(o.nombre)} terminado`; setPodText("✓");
+  if (o.modo==="TODOS"){
+    // Ranking de la ronda: gana quien más puntos hizo
+    const tabla = nuevos.sort((a,b)=>b.pts-a.pts);
+    const medal = ["🥇","🥈","🥉"];
+    $("roundResult").innerHTML = `<h3>🏁 Resultado de la ronda</h3>` + tabla.map((r,i)=>{
+      const q = o.quien.find(x=>x.jugador===r.jugador);
+      return `<div class="rr"><b>${medal[i]||"#"+(i+1)}</b><i style="background:${COLORES[LETRA_COLOR[q?q.letra:"W"]]}"></i>
+        <span><b>${esc(r.jugador)}</b> <span class="muted">${r.reac} ms · ${r.fmax} N${r.fallos?` · ${r.fallos} sin golpe`:""}</span></span><span style="font-family:var(--mono);font-weight:700;color:var(--acc)">${r.pts.toLocaleString("es-MX")}</span></div>`;
+    }).join("");
+    $("roundResult").style.display = "block";
+    $("recT").textContent = tabla[0].jugador; $("recD").textContent = `gana Todos contra todos con ${tabla[0].pts.toLocaleString("es-MX")} pts`;
+    $("record").querySelector(".k").textContent = "GANADOR DE LA RONDA";
+    $("record").classList.add("show"); confeti(); setTimeout(()=>{ $("record").classList.remove("show"); $("record").querySelector(".k").textContent = "NUEVO RÉCORD"; }, 2800);
+  } else if (yo) celebrate(yo, pb, before, rankOf(me));
+  renderAll();
+}
+
+/* =====================================================================
+   HISTORIAL
+   ===================================================================== */
+function renderHistory(){
+  const mine = visibleRecords().filter(r=>!me || r.jugador===me);
+  $("histTitle").textContent = me ? `Progreso de ${me}` : "Progreso de todos";
+  $("histList").innerHTML = mine.length ? mine.slice(0,60).map(r=>`<div class="hist-item"><div><b>${esc(r.rutina||r.combo)}</b>${r.demo?'<span class="tag-demo">demo</span>':""}<div class="muted">${new Date(r.ts).toLocaleString("es-MX",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})} · ${esc(r.jugador)} · ${r.golpes} golpes${r.fallos?` · ${r.fallos} fallos`:""}${r.nivel?` · nivel ${r.nivel}`:""}</div></div>
+    <div class="r"><div class="a">${r.pts.toLocaleString("es-MX")} pts</div><div class="muted">${r.reac?r.reac+" ms · ":""}${r.fmax} N</div></div></div>`).join("")
+    : `<div class="empty-msg">Sin sesiones todavía. Inicia una ronda y aparece aquí.</div>`;
+  const data = [...mine].reverse().slice(-30);
+  if (typeof Chart === "undefined") return;
+  const labels = data.map(r=>new Date(r.ts).toLocaleDateString("es-MX",{day:"numeric",month:"short"}));
+  const ds = [
+    { type:"line", label:"Reacción (ms)", data:data.map(r=>r.reac||null), borderColor:"#ffc404", backgroundColor:"rgba(255,196,4,.12)", fill:true, tension:.35, pointBackgroundColor:"#fff", pointRadius:3, yAxisID:"y", spanGaps:true },
+    { type:"bar", label:"Fuerza máx. (N)", data:data.map(r=>r.fmax||null), backgroundColor:"rgba(160,77,255,.35)", borderRadius:6, yAxisID:"y2" }
+  ];
+  if (chart){ chart.data.labels = labels; chart.data.datasets.forEach((d,i)=>d.data = ds[i].data); chart.update(); return; }
+  chart = new Chart($("chart"), { data:{ labels, datasets:ds }, options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{ labels:{ color:"#8b95a8", boxWidth:12, font:{family:"Space Grotesk"} } } },
+    scales:{ x:{ grid:{display:false}, ticks:{color:"#5b6476"} },
+             y:{ position:"left", grid:{color:"#1c2433"}, ticks:{color:"#8b95a8"}, title:{display:true,text:"ms",color:"#5b6476"} },
+             y2:{ position:"right", grid:{display:false}, ticks:{color:"#8b95a8"}, title:{display:true,text:"N",color:"#5b6476"} } } } });
+}
+function exportCsv(){
+  const rows = [["fecha","jugador","modo","rutina","puntos","reaccion_ms","mejor_ms","fuerza_max_N","fuerza_prom_N","golpes","fallos","adelantados","nivel"]]
+    .concat(visibleRecords().map(r=>[new Date(r.ts).toISOString(),r.jugador,r.modo,r.rutina||r.combo,r.pts,r.reac,r.mejor,r.fmax,r.fprom,r.golpes,r.fallos,r.adelantados,r.nivel]));
+  const blob = new Blob([rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n")], {type:"text/csv"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "lumetriq_sesiones.csv"; a.click();
+}
+function clearMine(){
+  if (!me) return toast("Elige primero al jugador");
+  records = records.filter(r=>r.jugador!==me); lsSet(LS.rec, records);
+  toast(`Se borraron las sesiones de ${me} en este teléfono`);
+  renderAll();
+}
+
+/* =====================================================================
+   MODO DEMO: simula el pod sin hardware (mismos mensajes que el firmware)
+   ===================================================================== */
+let sim = { sesion:0, timers:[], simonLargo:4, tiempo:TIEMPO_MAX_MS, tMin:TIEMPO_MAX_MS, espMin:500, espMax:1500 };
+function simClear(){ sim.timers.forEach(clearTimeout); sim.timers=[]; }
+function simAt(ms, fn){ sim.timers.push(setTimeout(fn, ms)); }
+function simEmit(topic, obj){ onMsg(topic, JSON.stringify(Object.assign({pod:"P1"}, obj))); }
+const DEMO_PODS = ["P1","P2","P3","P4"];
+function simCmd(c, pod){
+  const [cmdRaw, tag=""] = c.split("@"); const cmd = cmdRaw.trim().toUpperCase();
+  if (cmd==="PARAR"){ simClear(); return; }
+  if (cmd==="PING"){ DEMO_PODS.forEach(p=>simEmit(T.estado, {pod:p, online:1, rssi:-50-Math.round(Math.random()*15)})); return; }
+  if (cmd.startsWith("TIEMPO")){
+    const [a,b] = cmd.slice(6).trim().split(/\s+/).map(Number), cl = v => Math.min(10000, Math.max(300, v||3000));
+    sim.tMin = cl(a); sim.tiempo = cl(isNaN(b) ? a : b); if (sim.tMin > sim.tiempo) [sim.tMin, sim.tiempo] = [sim.tiempo, sim.tMin];
+    return;
+  }
+  if (cmd.startsWith("ESPERA")){ const [a,b] = cmd.slice(6).trim().split(/\s+/).map(Number); sim.espMin = a||0; sim.espMax = Math.max(sim.espMin, isNaN(b)?sim.espMin:b); return; }
+  if (cmd==="TARA"||cmd.startsWith("BRILLO")) return toast(`Demo: ${cmd}`);
+  if (cmd==="SIMON"){ sim.simonLargo=4; simRound("SIMON", null, tag, pod); return; }
+  if (/^[XOSVACW]+$/.test(cmd)) simRound("COMBO", cmd, tag, pod);
+}
+// Cada nombre tiene su "habilidad" en el demo, para que el ranking tenga sentido
+const skillOf = n => n ? 0.8 + ((colFor(n).charCodeAt(2) + n.length*7) % 40)/100 : 0.75 + Math.random()*0.5;
+function simRound(modo, combo, tag, pod){
+  simClear();
+  const P = pod || "P1";
+  const emit = (t,o) => simEmit(t, Object.assign({pod:P}, o));
+  const s = ++sim.sesion, de = modo==="SIMON" ? sim.simonLargo : combo.length;
+  const cols = modo==="SIMON" ? Array.from({length:de},()=>["ROJO","VERDE","AZUL","AMARILLO"][Math.floor(Math.random()*4)]) : [...combo].map(l=>LETRA_COLOR[l]);
+  const letras = modo==="SIMON" ? cols.map(()=>"-") : [...combo];
+  emit(T.inicio, { sesion:s, modo, combo:combo||"", de, tag, _cols:cols });
+  let t = modo==="SIMON" ? de*600+700 : 0, golpes=0, fallos=0, suma=0, mejor=1e9, fsum=0, fmax=0;
+  const skill = skillOf(tag) * (0.92 + Math.random()*0.16);
+  let perdio = false;
+  for (let i=0;i<de;i++){
+    t += modo==="SIMON" ? 80 : sim.espMin + Math.random()*(sim.espMax-sim.espMin);
+    const tl = t;
+    const rtBase = 210 + Math.random()*230;
+    const lim = Math.round(sim.tMin + Math.random()*(sim.tiempo - sim.tMin));   // tiempo al azar (o fijo si min = max)
+    simAt(tl, ()=>emit(T.luz, { sesion:s, modo, paso:i+1, de, color:cols[i], letra:letras[i], limite_ms:lim }));
+    const miss = Math.random() < (modo==="SIMON" ? 0.04*(de-3) : 0.07) || rtBase*skill > lim;
+    const rt = Math.round(rtBase * skill), f = Math.round(350 + Math.random()*1100);
+    if (miss){
+      t += lim; fallos++;
+      simAt(t, ()=>emit(T.golpe, { sesion:s, modo, paso:i+1, de, color:cols[i], letra:letras[i], reaccion_ms:lim, fuerza_N:0, acel_g:0, fallo:1, tag }));
+      if (modo==="SIMON"){ perdio = true; break; }
+      t += 300;
+    } else {
+      t += rt; golpes++; suma+=rt; mejor=Math.min(mejor,rt); fsum+=f; fmax=Math.max(fmax,f);
+      simAt(t, ()=>emit(T.golpe, { sesion:s, modo, paso:i+1, de, color:cols[i], letra:letras[i], reaccion_ms:rt, fuerza_N:f, acel_g:+(f/25).toFixed(1), fallo:0, tag }));
+    }
+  }
+  t += 100;
+  const fin = { sesion:s, modo, combo:combo||"", completo: perdio?0:1, nivel: perdio?de-1:de, golpes, fallos, adelantados:0,
+    reaccion_prom_ms: golpes?Math.round(suma/golpes):0, reaccion_mejor_ms: golpes?mejor:0, fuerza_prom_N: golpes?Math.round(fsum/golpes):0, fuerza_max_N:fmax, duracion_ms:Math.round(t), tag };
+  simAt(t, ()=>emit(T.fin, fin));
+  if (modo==="SIMON" && !perdio){ simAt(t+2000, ()=>{ sim.simonLargo++; simRound("SIMON", null, tag, pod); }); }
+}
+function simonPreview(d){
+  // en el demo se ve la vista previa de Simón en el arco
+  const cols = d._cols || [];
+  cols.forEach((c,i)=>{ simAt(i*600, ()=>lightLeds(COLORES[c])); simAt(i*600+450, ()=>lightLeds(null)); });
+}
+function toggleDemo(){
+  demo = !demo;
+  $("demoBtn").classList.toggle("on", demo);
+  $("demoBtn").textContent = demo ? "Demo activo ✕" : "Modo demo";
+  if (demo){
+    seedDemo(); simCmd("PING"); clearInterval(sim.ping); sim.ping = setInterval(()=>simCmd("PING"), 10000);
+    toast("Modo demo: el pod está simulado. Nada se manda al broker.");
+  } else { simClear(); clearInterval(sim.ping); if (orq) stopOrq(true); DEMO_PODS.forEach(p=>delete pods[p]); setPill("pillPod", "off", "Pod sin señal"); podOnline=false; }
+  renderPodsUI();
+  renderAll();
+}
+function seedDemo(){
+  if (records.some(r=>r.demo)) return;
+  const names = ["Ana R.","Diego M.","Sofía L.","Toño G.","Mariana P.","Kamil","Derek"];
+  const now = Date.now();
+  names.forEach((n,k)=>{
+    for (let j=0;j<3;j++){
+      const reac = 230 + k*14 + Math.round(Math.random()*40), fmax = 700 + Math.round(Math.random()*900);
+      const golpes = 3 + (j%2)*3;
+      const p = golpes*(1000-reac) + golpes*Math.min(500,Math.round(fmax*0.8/3));
+      records.push({ id:"demo"+k+"_"+j, ts:now - (k*5+j*31)*3600e3*0.6, jugador:n, modo: j===2?"SIMON":"COMBO",
+        combo: j===2?"SIMON":COMBOS[(k+j)%COMBOS.length][0], rutina: j===2?"SIMON":COMBOS[(k+j)%COMBOS.length][1],
+        reac, mejor:reac-30, fmax, fprom:Math.round(fmax*0.8), golpes, fallos:j===2?1:0, adelantados:0, nivel: j===2? 4+((k*3)%6):0, pts:p, demo:true });
+    }
+  });
+  lsSet(LS.rec, records);
+}
+
+/* =====================================================================
+   CONFETI
+   ===================================================================== */
+function confeti(){
+  const cv = $("confeti"), ctx = cv.getContext("2d");
+  cv.width = innerWidth; cv.height = innerHeight;
+  const cols = ["#ffc404","#ff8a00","#3d7bff","#ff3b4e","#a04dff","#ffffff"];
+  const ps = Array.from({length:140},()=>({ x:cv.width/2, y:cv.height/2.2, vx:(Math.random()-.5)*14, vy:-Math.random()*14-4, r:3+Math.random()*4, c:cols[Math.floor(Math.random()*cols.length)], a:Math.random()*6 }));
+  let f = 0;
+  (function step(){
+    ctx.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p=>{ p.vy+=0.35; p.x+=p.vx; p.y+=p.vy; p.a+=0.2; ctx.fillStyle=p.c; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.fillRect(-p.r,-p.r/2,p.r*2,p.r); ctx.restore(); });
+    if (++f < 120) requestAnimationFrame(step); else ctx.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+/* =====================================================================
+   ARRANQUE
+   ===================================================================== */
+function renderAll(){ renderPlayers(); renderCombos(); if (!orq) renderRival(); renderRanking(); renderHistory(); renderModes(); }
+$("ftTopic").textContent = `${MQTT_HOST}:${MQTT_PORT} · ${BASE}/#`;
+$("shareSw").classList.toggle("on", shareOn);
+buildLeds(); renderSlots(); setupCustomForm(); renderPodsUI(); updateSelLabel(); renderAll();
+if (new URLSearchParams(location.search).has("demo")) toggleDemo();
+connect();
+</script>
+</body>
+</html>
